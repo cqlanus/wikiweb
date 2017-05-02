@@ -10,32 +10,37 @@ module.exports = require('express').Router()
       .then(links => res.json(links))
       .catch(next)
   })
-  .get('/:userId/:sourceId/:targetId', (req, res, next) => {
-    const user = req.params.userId
-    const source = req.params.sourceId
-    const target = req.params.targetId
+  .get('/:userId', (req, res, next) => {
     Link.findAll({
+      where: { user_id: req.params.userId}
+    })
+    .then(links => res.json(links))
+  })
+  .post('/', (req, res, next) => {
+    const user = req.body.user
+    const source = req.body.source
+    const target = req.body.target
+    Link.findOrCreate({
       where: {
         user_id: user,
         $or: {
-          $and: {
-            source: source,
-            target: target
-          },
-          $and: {
-            source: target,
-            target: source
-          }
+          $and: { source: source, target: target },
+          $and: { source: target, target: source }
         }
+      },
+      defaults: {
+        value: 1
       }
     })
-    .then(links => res.json(links))
+    .spread((link, created) => {
+      if (created) {
+        res.json(link)
+      } else {
+        link.incrementValue()
+        res.sendStatus(204) // another status?
+      }
+    })
     .catch(next)
-  })
-  .post('/', (req, res, next) => {
-    Link.create(req.body)
-      .then(link => res.status(201).json(link))
-      .catch(next)
   })
   .get('/:id', (req, res, next) => {
     Link.findById(req.params.id)
