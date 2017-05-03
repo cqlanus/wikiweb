@@ -10,16 +10,18 @@ const Node = db.define('nodes', {
     type: Sequelize.STRING,
     allowNull: false,     //validate as url, + getter for full address
    },
-  vistCount: {
+  visitCount: {
     type: Sequelize.INTEGER,
     defaultValue: 1,
   }
 },{
    instanceMethods: {
       incrementVisitCount: function(){
-         return this.update({
-              visitCount: this.visitCount++       //test
+         this.update({
+              visitCount: ++this.visitCount
           })
+         this.save()
+         return this
       },
    }
  }
@@ -51,9 +53,11 @@ const Link = db.define('links', {
 },{
   instanceMethods: {
     incrementStrength: function(){
-        return this.update({
-            strength: this.strength++
+        this.update({
+            strength: ++this.strength
         })
+        this.save()
+        return this
     },
  }
 })
@@ -73,7 +77,11 @@ const History = db.define('histories', {
 })
 
   Node.belongsTo(User)  // we want Node.setUser()
+  User.hasMany(Node)
+
   Link.belongsTo(User)  // Link.setUser()
+  User.hasMany(Link)
+
   History.belongsTo(User)
   User.hasOne(History)
 

@@ -8,11 +8,11 @@ const data = {
   ],
 
   nodes: [
-    {title: 'A', url: 'wiki/A', vistCount: 4, userId: 1},
-    {title: 'B', url: 'wiki/B', vistCount: 2, userId: 1},
-    {title: 'C', url: 'wiki/C', vistCount: 1, userId: 1},
-    {title: 'D', url: 'wiki/D', vistCount: 1, userId: 1},
-    {title: 'E', url: 'wiki/E', vistCount: 1, userId: 1},
+    {title: 'A', url: 'wiki/A', visitCount: 4, userId: 1},
+    {title: 'B', url: 'wiki/B', visitCount: 2, userId: 1},
+    {title: 'C', url: 'wiki/C', visitCount: 1, userId: 1},
+    {title: 'D', url: 'wiki/D', visitCount: 1, userId: 1},
+    {title: 'E', url: 'wiki/E', visitCount: 1, userId: 1},
   ],
 
   links: [
