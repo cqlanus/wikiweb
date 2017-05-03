@@ -1,9 +1,6 @@
 'use strict'
 
-const db = require('../../db')
-console.log('db in server nodes ', db)
-const Node = db.Node
-const Link = db.Link
+const {Node, Link} = require('../../db/models')
 
 module.exports = require('express').Router()
   .get('/', (req, res, next) => {
@@ -13,13 +10,14 @@ module.exports = require('express').Router()
   })
   .post('/', (req, res, next) => {
     Node.findOrCreate({
-      where: req.body // body should have unique name/url combo
+      where: req.body, // body should have unique name/url combo
+      defaults: req.body
     })
     .spread((node, created) => {
       if (created) { res.status(201).json(node)}
       else {
-        node.incrementVisitCount() // is this async?
-        res.json(node)
+        const updated = node.incrementVisitCount()
+        res.json(updated)
       }
     })
     .catch(next)

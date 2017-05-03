@@ -3,15 +3,16 @@
 const path = require('path')
 const express = require('express')
 const bodyParser = require('body-parser')
-
-const app = express()
+const morgan = require('morgan')
 
 const db = require('../db')
-console.log('db server', db)
+const app = express()
+
 module.exports = app
 
   .use(bodyParser.urlencoded({extended: true}))
   .use(bodyParser.json())
+  .use(morgan('dev'))
 
   .use('/api', require('./api'))
 

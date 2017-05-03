@@ -1,8 +1,6 @@
 'use strict'
 
-const db = require('../../db')
-const Link = db.Link
-const Node = db.Node
+const {Node, Link} = require('../../db/models')
 
 module.exports = require('express').Router()
   .get('/', (req, res, next) => {
@@ -17,27 +15,28 @@ module.exports = require('express').Router()
     .then(links => res.json(links))
   })
   .post('/', (req, res, next) => {
-    const user = req.body.user
-    const source = req.body.source
-    const target = req.body.target
+    const user = req.body.userId
+    const source = req.body.source < req.body.target ? req.body.source : req.body.target
+    const target = req.body.source > req.body.target ? req.body.source : req.body.target
     Link.findOrCreate({
       where: {
         userId: user,
-        $or: {
-          $and: { source: source, target: target },
-          $and: { source: target, target: source }
-        }
+        source: source,
+        target: target
       },
       defaults: {
-        strength: 1
+        userId: user,
+        source: source,
+        target: target
       }
     })
     .spread((link, created) => {
       if (created) {
         res.status(201).json(link)
       } else {
-        link.incrementStrength()
-        res.json(link) // another status?
+        const updated = link.incrementStrength()
+        res.json(updated)
+
       }
     })
     .catch(next)
