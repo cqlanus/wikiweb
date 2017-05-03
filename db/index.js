@@ -1,17 +1,11 @@
-const Sequelize = require('Sequelize');
-const models = require('./models');
+const db = require('./db')
+require('./models')
 
 
-
-models.Node.sync({})
+const syncedPromise = db.sync({force: true})
   .then(function(){
-    return models.Link.sync({})
+    console.log('SYNCED')
   })
-  .then(function(){
-    return models.User.sync({})
-  })
-.then(function () {
-    return models.Category.sync({})
-})
-.catch(console.error);
+  .catch(console.log)
 
+module.exports = syncedPromise
