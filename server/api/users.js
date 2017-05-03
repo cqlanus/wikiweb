@@ -1,15 +1,15 @@
 'use strict'
 
-const db = require('../../db')
-const User = db.User
-const Node = db.Node
-const Link = db.Link
-//const Category = db.model.category
+const {User, Node, Link} = require('../../db/models')
 
+//const Category = db.model.category
 module.exports = require('express').Router()
   .get('/', (req, res, next) => {
+    console.log('what is user', User)
     User.findAll()
-    .then(users => res.json(users))
+    .then(users => {
+      console.log('hitting the route', users)
+      res.json(users)})
     .catch(next)
   })
   .post('/', (req, res, next) => {

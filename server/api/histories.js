@@ -1,8 +1,6 @@
 'use strict'
 
-const db = require('../../db')
-const History = db.History
-const User = db.User
+const {History, User} = require('../../db/models')
 
 module.exports = require('express').Router()
   .get('/', (req, res, next) => {
@@ -19,9 +17,12 @@ module.exports = require('express').Router()
     History.findOne({
       where: { userId: req.body.userId }
     })
-    then(history => {
-      history.history.push(req.body.nodeId)
-      return history.save()
+    .then(foundHistory => {
+      foundHistory.update({
+              history: [...foundHistory.history, parseInt(req.body.nodeId)]
+            })
+      foundHistory.save()
+      return foundHistory
     })
     .then(history => res.status(200).json(history))
     .catch(next)
