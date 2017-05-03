@@ -1,10 +1,10 @@
 'use strict'
 
 const db = require('../../db')
-const User = db.model('users')
-const Node = db.model('nodes')
-const Link = db.model('links')
-const Category = db.model('categories')
+const User = db.User
+const Node = db.Node
+const Link = db.Link
+//const Category = db.model.category
 
 module.exports = require('express').Router()
   .get('/', (req, res, next) => {
