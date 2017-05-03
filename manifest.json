@@ -1,0 +1,37 @@
+{
+  "manifest_version": 2,
+  "name": "Wiki Web",
+  "description": "This extension shows collects and displays wikipedia history",
+  "version": "1.0.0",
+
+  "icons": { 
+    "128": "./chromeExtension/rainbow.png"
+  },
+
+  "page_action" : {
+    "default_title": "Wiki Web - default title",
+    "default_icon" : "./chromeExtension/rainbow.png",
+    "default_popup": "./chromeExtension/popup.html"
+  },
+
+
+  "permissions": [
+    "http://*/",
+    "activeTab",
+    "tabs",
+    "https://ajax.googleapis.com/"
+  ],
+
+  "background": {                // two types: persistent, event
+    "scripts" : ["./chromeExtension/jquery-3.2.1.min.js", "./chromeExtension/background.js"],
+    "persistent" : false          //  if false then you are using event pages
+  },
+
+  "content_scripts": [            // asscess dom, executed on refresh
+    {
+        "matches": ["https://en.wikipedia.org/wiki/*"],
+        "js": ["./chromeExtension/content.js"]
+    }]
+  }
+
+
