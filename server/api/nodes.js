@@ -17,7 +17,7 @@ module.exports = require('express').Router()
     .spread((node, created) => {
       if (created) { res.status(201).json(node)}
       else {
-        node.incrementVisitCount()
+        node.incrementVisitCount() // is this async?
         res.json(node)
       }
     })

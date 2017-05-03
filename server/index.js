@@ -16,7 +16,8 @@ module.exports = app
   .use('/api', require('./api'))
 
   .use((err, req, res, next) => {
-
+    console.log(err)
+    res.sendStatus(500)
   })
 
 

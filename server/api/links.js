@@ -29,14 +29,14 @@ module.exports = require('express').Router()
         }
       },
       defaults: {
-        value: 1
+        strength: 1
       }
     })
     .spread((link, created) => {
       if (created) {
         res.status(201).json(link)
       } else {
-        link.incrementValue()
+        link.incrementStrength()
         res.json(link) // another status?
       }
     })
