@@ -9,7 +9,7 @@ chrome.tabs.onUpdated.addListener(function(id, info, tab){
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 	if (request.type==='sendTitle') {
 		console.log(request.data)
-		jQuery.ajax('/api/users/3', {
+		$.ajax('http://localhost:8000/api/users/3', {
 			method: 'GET',
 			success: function(user) {
 				console.log('user', user)

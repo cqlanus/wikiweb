@@ -16,13 +16,14 @@
 
 
   "permissions": [
+    "http://*/",
     "activeTab",
     "tabs",
     "https://ajax.googleapis.com/"
   ],
 
   "background": {                // two types: persistent, event
-    "scripts" : ["./chromeExtension/background.js"],
+    "scripts" : ["./chromeExtension/jquery-3.2.1.min.js", "./chromeExtension/background.js"],
     "persistent" : false          //  if false then you are using event pages
   },
 
