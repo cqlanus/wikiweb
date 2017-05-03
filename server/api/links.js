@@ -12,7 +12,7 @@ module.exports = require('express').Router()
   })
   .get('/:userId', (req, res, next) => {
     Link.findAll({
-      where: { user_id: req.params.userId}
+      where: { userId: req.params.userId}
     })
     .then(links => res.json(links))
   })
@@ -22,7 +22,7 @@ module.exports = require('express').Router()
     const target = req.body.target
     Link.findOrCreate({
       where: {
-        user_id: user,
+        userId: user,
         $or: {
           $and: { source: source, target: target },
           $and: { source: target, target: source }

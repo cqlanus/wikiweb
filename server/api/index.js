@@ -6,6 +6,7 @@ api
   .use('/users', require('./users'))
   .use('/nodes', require('./nodes'))
   .use('/links', require('./links'))
+  .use('/history', require('./histories'))
   // .use('/categories', require('./categories'))
 
 // No routes matched? 404.
