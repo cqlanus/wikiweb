@@ -34,10 +34,10 @@ module.exports = require('express').Router()
     })
     .spread((link, created) => {
       if (created) {
-        res.json(link)
+        res.status(201).json(link)
       } else {
         link.incrementValue()
-        res.sendStatus(204) // another status?
+        res.json(link) // another status?
       }
     })
     .catch(next)
@@ -57,6 +57,6 @@ module.exports = require('express').Router()
   .delete('/:id', (req, res, next) => {
     Link.findById(req.params.id)
     .then(link => link.destroy())
-    .then(() => res.status(200).end())
+    .then(() => res.sendStatus(204))
     .catch(next)
   })

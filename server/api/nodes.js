@@ -11,9 +11,17 @@ module.exports = require('express').Router()
       .catch(next)
   })
   .post('/', (req, res, next) => {
-    Node.create(req.body)
-      .then(node => res.status(201).json(node))
-      .catch(next)
+    Node.findOrCreate({
+      where: req.body // body should have unique name/url combo
+    })
+    .spread((node, created) => {
+      if (created) { res.status(201).json(node)}
+      else {
+        node.incrementVisitCount()
+        res.json(node)
+      }
+    })
+    .catch(next)
   })
   .get('/:id', (req, res, next) => {
     Node.findById(req.params.id, {
@@ -32,6 +40,6 @@ module.exports = require('express').Router()
   .delete('/:id', (req, res, next) => {
     Node.findById(req.params.id)
     .then(node => node.destroy())
-    .then(() => res.status(200).end())
+    .then(() => res.sendStatus(204))
     .catch(next)
   })
