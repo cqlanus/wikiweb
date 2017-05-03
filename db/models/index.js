@@ -66,13 +66,21 @@ const Category = db.define('categories', {
   }
 })
 
+const History = db.define('histories', {
+  history: {
+    type: Sequelize.ARRAY(Sequelize.INTEGER)
+  }
+})
+
   Node.belongsTo(User)  // we want Node.setUser()
   Link.belongsTo(User)  // Link.setUser()
-
+  History.belongsTo(User)
+  User.hasOne(History)
 
 module.exports = {
   Node: Node,
   Link: Link,
   User: User,
   Category: Category,
+  History: History,
 };
