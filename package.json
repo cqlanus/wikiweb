@@ -15,5 +15,10 @@
   "bugs": {
     "url": "https://github.com/cqlanus/wikiweb/issues"
   },
-  "homepage": "https://github.com/cqlanus/wikiweb#readme"
+  "homepage": "https://github.com/cqlanus/wikiweb#readme",
+  "dependencies": {
+    "pg": "^6.1.5",
+    "pg-hstore": "^2.3.2",
+    "sequelize": "^3.30.4"
+  }
 }
