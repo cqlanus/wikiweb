@@ -1,13 +1,13 @@
 'use strict'
 
 const path = require('path')
-const express = require('path')
+const express = require('express')
 const bodyParser = require('body-parser')
 
 const app = express()
 
 const db = require('../db')
-
+console.log('db server', db)
 module.exports = app
 
   .use(bodyParser.urlencoded({extended: true}))
@@ -25,7 +25,4 @@ module.exports = app
     if (err) { throw err }
     console.log('--- Started HTTP Server ---')
     console.log('--- Listening on http://localhost:8000 ---')
-
-    db.sync()
-      .then(() => console.log('DB synced and connected'))
   })

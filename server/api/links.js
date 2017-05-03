@@ -1,8 +1,8 @@
 'use strict'
 
 const db = require('../../db')
-const Link = db.models('links')
-const Node = db.models('nodes')
+const Link = db.Link
+const Node = db.Node
 
 module.exports = require('express').Router()
   .get('/', (req, res, next) => {

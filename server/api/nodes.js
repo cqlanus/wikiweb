@@ -1,8 +1,9 @@
 'use strict'
 
 const db = require('../../db')
-const Node = db.models('nodes')
-const Link = db.models('links')
+console.log('db in server nodes ', db)
+const Node = db.Node
+const Link = db.Link
 
 module.exports = require('express').Router()
   .get('/', (req, res, next) => {
