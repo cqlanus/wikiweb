@@ -14,19 +14,30 @@ module.exports = require('express').Router()
     })
   })
   .post('/', (req, res, next) => {
-    History.findOne({
-      where: { userId: req.body.userId }
+    const userId = req.body.userId
+    const newNode = parseInt(req.body.newNode)
+    History.findOrCreate({
+      where: { 
+        userId: userId
+      }, 
+      defaults: {
+        userId: userId,
+        history: [newNode]
+      }
     })
-    .then(foundHistory => {
-      foundHistory.update({
-              history: [...foundHistory.history, parseInt(req.body.nodeId)]
-            })
-      foundHistory.save()
+    .spread((foundHistory, created) => {
+      if (!created) {
+        foundHistory.update({
+                history: [...foundHistory.history, (req.body.newNode)]
+              })
+        foundHistory.save()
+      }
       return foundHistory
     })
     .then(history => res.status(200).json(history))
     .catch(next)
   })
+
   .delete('/:id', (req, res, next) => {
     History.findById(req.params.id)
     .then(history => history.destroy())
