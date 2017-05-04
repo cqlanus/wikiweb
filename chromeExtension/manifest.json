@@ -4,62 +4,33 @@
   "description": "This extension shows collects and displays wikipedia history",
   "version": "1.0.0",
 
-  "page_action" : {
-    "default_icon" : { "128" : "rainbow.png" },
-    "default_title": "Wiki Web - default title",
-    "default_popup": "popup.html"
+  "icons": {
+    "128": "assets/rainbow.png"
   },
 
+  "page_action" : {
+    "default_title": "Wiki Web - default title",
+    "default_icon" : "assets/rainbow.png",
+    "default_popup": "views/popup.html"
+  },
+
+
   "permissions": [
+    "http://*/",
     "activeTab",
     "tabs",
     "https://ajax.googleapis.com/"
   ],
-  "icons":{ "128": "rainbow.png"},
-  "background": {                // two types: persistent, event
-    "scripts" : ["background.js"],
-    "persistent" : false          //  if false then you are using event pages
+
+  "background": {
+    "scripts" : ["js/jquery-3.2.1.min.js", "js/background.js"],
+    "persistent" : false
   },
-  "content_scripts": [            // asscess dom, executed on refresh
+
+  "content_scripts": [
     {
         "matches": ["https://en.wikipedia.org/wiki/*"],
-        "js": ["content.js"]
-
-
-  "icons": { 
-    "128": "rainbow.png"
-  },
-
-  "page_action" : {
-    "default_title": "Wiki Web - default title",
-    "default_icon" : "rainbow.png",
-    "default_popup": "popup.html"
-  },
-
-
-  "permissions": [
-    "activeTab",
-    "tabs",
-  ],
-
-  "background": {                // two types: persistent, event
-    "scripts" : ["./jquery-3.2.1.min.js", "./background.js"],
-    "persistent" : false          //  if false then you are using event pages
-  },
-
-  "content_scripts": [            // asscess dom, executed on refresh
-    {
-        "matches": ["https://en.wikipedia.org/wiki/*"],
-        "js": ["./jquery-3.2.1.min.js", "./content.js"]
-<<<<<<< HEAD
->>>>>>> a43a8ce8b3fdce2fb577370b12b4e4db28ad995b
-=======
-<<<<<<< HEAD
-=======
->>>>>>> a43a8ce8b3fdce2fb577370b12b4e4db28ad995b
->>>>>>> master
->>>>>>> bc1fb32d0b53098596a083f34624b0b6d8691b4d
+        "js": ["js/content.js"]
     }]
   }
-
 
