@@ -4,6 +4,31 @@
   "description": "This extension shows collects and displays wikipedia history",
   "version": "1.0.0",
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+  "page_action" : {
+    "default_icon" : { "128" : "rainbow.png" },
+    "default_title": "Wiki Web - default title",
+    "default_popup": "popup.html"
+  },
+
+  "permissions": [
+    "activeTab",
+    "tabs",
+    "https://ajax.googleapis.com/"
+  ],
+  "icons":{ "128": "rainbow.png"},
+  "background": {                // two types: persistent, event
+    "scripts" : ["background.js"],
+    "persistent" : false          //  if false then you are using event pages
+  },
+  "content_scripts": [            // asscess dom, executed on refresh
+    {
+        "matches": ["https://en.wikipedia.org/wiki/*"],
+        "js": ["content.js"]
+=======
+>>>>>>> master
   "icons": { 
     "128": "rainbow.png"
   },
@@ -29,6 +54,10 @@
     {
         "matches": ["https://en.wikipedia.org/wiki/*"],
         "js": ["./jquery-3.2.1.min.js", "./content.js"]
+<<<<<<< HEAD
+=======
+>>>>>>> a43a8ce8b3fdce2fb577370b12b4e4db28ad995b
+>>>>>>> master
     }]
   }
 
