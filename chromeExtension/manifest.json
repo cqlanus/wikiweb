@@ -17,13 +17,14 @@
 
   "permissions": [
     "http://*/",
+    "https://d3js.org/d3.v4.min.js",
     "activeTab",
     "tabs",
     "https://ajax.googleapis.com/"
   ],
 
   "background": {
-    "scripts" : ["js/jquery-3.2.1.min.js", "js/background.js"],
+    "scripts" : ["js/jquery-3.2.1.min.js", "js/d3.min.js", "js/background.js"],
     "persistent" : false
   },
 

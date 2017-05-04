@@ -6,7 +6,7 @@ let title = document.getElementById("firstHeading").innerHTML
 console.log('TITLE', title)
 
 
-chrome.runtime.sendMessage({type: POST_NODE, data: {title: title, url: window.location.href}})
+chrome.runtime.sendMessage({type: POST_NODE, data: {title: title, url: window.location.href, userId: 1}})
 
 
 
