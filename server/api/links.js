@@ -18,16 +18,19 @@ module.exports = require('express').Router()
     const user = req.body.userId
     const source = req.body.source < req.body.target ? req.body.source : req.body.target
     const target = req.body.source > req.body.target ? req.body.source : req.body.target
+    const isHyperText = req.body.isHyperText
     Link.findOrCreate({
       where: {
         userId: user,
         source: source,
-        target: target
+        target: target,
+        isHyperText: isHyperText
       },
       defaults: {
         userId: user,
         source: source,
-        target: target
+        target: target,
+        isHyperText: isHyperText
       }
     })
     .spread((link, created) => {
