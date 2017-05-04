@@ -9,8 +9,9 @@ module.exports = require('express').Router()
       .catch(next)
   })
   .post('/', (req, res, next) => {
+    console.log('req body',req.body)
     Node.findOrCreate({
-      where: req.body, // body should have unique name/url combo
+      where: { url: req.body.url, title: req.body.title}, // body should have unique name/url combo
       defaults: req.body
     })
     .spread((node, created) => {
