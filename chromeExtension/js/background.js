@@ -22,22 +22,34 @@ const postNode = (body) => {
 	.then((res) => {
 		return res.json()
 	})
-	.then(resjson=> {
-	  store.previousNode=store.currentNode
-	  store.currentNode=resjson.id
+	.then(nodeData=> {
+	  store.previousNode = store.currentNode
+	  store.currentNode = nodeData.id
+	  let historyData= {
+	  	userId: 1,
+	  	newNode: nodeData.id
+	  }
+	  fetch('http://localhost:8000/api/history', {
+    	method: 'POST',
+    	headers: {
+      	"Content-type": "application/json"
+    	},
+      	body: JSON.stringify(historyData),
+    	})
+	  .then((res) => {
+		return res.json()
+		})
+	.then((historyData) => {
 	  let linkData = {
 	  	source: store.previousNode,
 	  	target: store.currentNode, 
 	  	isHyperText: true,
 	  	userId: 1
 	  }
-	  console.log('linkData', linkData)
-	  return linkData;
+	  return linkData
 	})
 	.then(linkData=> {
-		console.log('in then')
 	  if (linkData.source!='') {
-	  	console.log('going to fetch')
 	  fetch('http://localhost:8000/api/links', {
 	  	method: 'POST', 
 	  	headers: {
@@ -52,6 +64,7 @@ const postNode = (body) => {
 	  	console.log('row inserted into links: ', resjson)
 	  })
 	}
+	})
 	})
 	}
 
