@@ -21,16 +21,17 @@ const postNode = (body) => {
 		})
 }
 
-const getUser = (sendReponse) => {
-	 fetch('http://localhost:8000/api/users', {
+const getUser = (userId) => {
+	 return fetch(`http://localhost:8000/api/users/${userId}`, {
     method: 'GET',
     })
 		.then((res) => {
 			return res.json()
 		})
-		.then(resjson=> {
-			sendResponse(resjson)
-		})
+    .then(results => {
+      console.log('results inside getUser', results)
+      return results
+    })
 }
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
@@ -39,11 +40,16 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 				postNode(request.data)
 				break
 			case 'getUser':
-				getUser(sendResponse)
+				getUser(request.data, sendResponse)
+        .then(results => {
+          console.log('results returned from getUser', results)
+          sendResponse(results)
+        })
 				break
 			default:
 				return console.error('error in switch')
 		}
 
+    return true
 
 })
