@@ -1,5 +1,10 @@
+const POST_NODE = "postNode"
 
-let post = document.getElementById("firstHeading")
-let title = post.innerHTML
-console.log('TITLE', title)
-chrome.runtime.sendMessage({type: 'sendTitle', data: title})
+
+let title = document.getElementById("firstHeading").innerHTML
+//console.log('TITLE', title)
+
+chrome.runtime.sendMessage({type: POST_NODE, data: {title: title, url: window.location.href}})
+
+
+
