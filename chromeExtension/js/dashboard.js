@@ -1,5 +1,3 @@
-
-
 const GET_USER = 'getUser'
 
 const svg = d3.select("svg"),
