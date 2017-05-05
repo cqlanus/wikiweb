@@ -1,8 +1,3 @@
-/* ******* dont forget :
-	- create new History array for user doesn't work yet
-********/
-
-
 
 /* ******* STORE ********/
 
@@ -12,12 +7,20 @@ store = {
 	history: [],
 }
 
+
 /* ******* ACTIVATE EXTENSION WHEN MATCHING  ********/
 
 chrome.tabs.onUpdated.addListener(function(id, info, tab){
   if(tab.url.indexOf('wikipedia.org') > -1){
     chrome.pageAction.show(tab.id)
   }
+})
+
+/* ******* SENDS MESSAGE TO CONTENT WHEN NEW ACTIVE TAB  ********/
+
+chrome.tabs.onActivated.addListener(function(tabId) {
+	console.log('Tab Changed with current Id: ', tabId)
+	chrome.tabs.sendMessage(tabId.tabId, {action: "requestPageInfo"}, function(response) {})
 })
 
 /* ******* ACTIONS  ********/
@@ -54,8 +57,6 @@ const postLink = function() {
 	 }
 }
 
-
-
 /* ******* ASYNC THUNKS  ********/
 
 const fetchUser = function(userId) {
@@ -66,7 +67,7 @@ const fetchUser = function(userId) {
 			return res.json()
 		})
     	.then(results => {
-      		console.log('results inside getUser', results)
+      		//console.log('results inside getUser', results)
       		return results
     	})
 }
@@ -108,8 +109,6 @@ const fetchLinkData = function(linkInfo) {
 
 }
 
-
-
 /* ******* SWITCH LISTENER  ********/
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
@@ -127,11 +126,11 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 				})
 				break
 			case 'getUser':
-				fetchUser(request.data)
-				.then((user)=>{
-					sendResponse(user)
-				})
-				return true
+			// 	// fetchUser(request.data)
+			// 	// .then((user)=>{
+			// 	// 	sendResponse(user)
+			// 	// })
+			// 	return true
 				
 
 			default:
