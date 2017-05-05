@@ -1,0 +1,78 @@
+@import url('https://fonts.googleapis.com/css?family=Muli');
+body {
+  background-color: #333;
+  color: white;
+  font-family: 'Muli';
+}
+
+.canvas-container {
+  display: flex;
+  margin: 0 auto;
+  width: 95%;
+  background-color: black;
+  border: 2px solid white;
+  border-radius: 20px;
+}
+
+svg {
+  /*border: 2px solid red;*/
+}
+
+.links line {
+  stroke: #fff;
+  stroke-opacity: 0.6;
+}
+
+.nodes circle {
+  stroke: #000;
+  stroke-width: 2px;
+}
+
+.navigation {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 20px;
+}
+
+#title {
+  font-size: 2.5em;
+}
+
+.navigation ul {
+  display: flex;
+  justify-content: space-around;
+  list-style: none;
+  width: 50%;
+}
+
+.navigation a {
+  color: white;
+  text-decoration: none;
+  font-size: 1.5em;
+}
+
+.navigation a:hover {
+  color: yellow;
+}
+
+.navigation li {
+  display: inline-block;
+}
+
+.toolTip {
+    font-family: "Muli", Helvetica, Arial, sans-serif;
+    position: absolute;
+    display: none;
+    width: auto;
+    height: auto;
+    background: none repeat scroll 0 0 white;
+    border: 0 none;
+    border-radius: 8px 8px 8px 8px;
+    box-shadow: -3px 3px 15px #333;
+    color: black;
+    font: 12px sans-serif;
+    padding: 5px;
+    text-align: center;
+    z-index: 9999;
+}

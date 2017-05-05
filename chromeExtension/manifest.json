@@ -5,12 +5,12 @@
   "version": "1.0.0",
 
   "icons": {
-    "128": "assets/rainbow.png"
+    "128": "assets/wikiweb-logo2.png"
   },
 
   "page_action" : {
-    "default_title": "Wiki Web - default title",
-    "default_icon" : "assets/rainbow.png",
+    "default_title": "Wiki Web",
+    "default_icon" : "assets/wikiweb-logo2.png",
     "default_popup": "views/popup.html"
   },
 
