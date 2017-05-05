@@ -2,40 +2,6 @@
 	- create new History array for user doesn't work yet
 ********/
 
-/******  OAUTH *******/
-
-// var oauth = ChromeExOAuth.initBackgroundPage({
-//   'request_url': 'https://www.google.com/accounts/OAuthGetRequestToken',
-//   'authorize_url': 'https://www.google.com/accounts/OAuthAuthorizeToken',
-//   'access_url': 'https://www.google.com/accounts/OAuthGetAccessToken',
-//   'consumer_key': 'anonymous',
-//   'consumer_secret': 'anonymous',
-//   'scope': 'https://docs.google.com/auth/drive',
-//   'app_name': 'WikiWebJr'
-// });
-
-
-
-// function callback(resp, xhr) {
-// 	console.log('in callback reponse', resp)
-// }
-
-// function onAuthorized() {
-//   var url = 'https://docs.google.com/feeds/default/private/full';
-//   var request = {
-//     'method': 'GET',
-//     'parameters': {'alt': 'json'}
-//   }
-
-//   // Send: GET https://docs.google.com/feeds/default/private/full?alt=json
-//   oauth.sendSignedRequest(url, callback, request);
-// }
-
-// oauth.authorize(onAuthorized);
-
-
-
-
 /* ******* STORE ********/
 
 store = {
@@ -86,6 +52,9 @@ const postLink = function() {
 	 }
 }
 
+const getUserId = function(){
+  return chrome.identity.getProfileUserInfo(function(info){ return info.id })
+}
 
 
 /* ******* ASYNC THUNKS  ********/
@@ -166,13 +135,12 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 				})
 				return true
 
-				case 'START_AUTH':
-
+				case 'START_AUTH':     // this is run when log in button is clicked
 					chrome.identity.getAuthToken({ 'interactive': true }, function(token) {
 							if (chrome.runtime.lastError) {
 								console.log(chrome.runtime.lastError);
 							} else {
-								console.log('token', token)
+								//console.log('sucesully got token', token)
 							}
 					});
 					break
@@ -180,15 +148,5 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 			default:
 				return console.error('error in switch')
 		}
-
     return true
-
 })
-
-
-// chrome.identity.getAuthToken({"interactive": true}, function(token){
-					// 	if
-    			// 	console.log('this is token', token)
-
-
-
