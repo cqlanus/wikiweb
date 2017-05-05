@@ -158,17 +158,24 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 					console.log('row inserted into links: ', resjson)
 				})
 				break
+
 			case 'getUser':
 				fetchUser(request.data)
 				.then((user)=>{
 					sendResponse(user)
 				})
 				return true
+
 				case 'START_AUTH':
-					 chrome.identity.getAuthToken({"interactive": true}, function(token){
-    				console.log('this is token', token)
-  				})
-					break;
+
+					chrome.identity.getAuthToken({ 'interactive': true }, function(token) {
+							if (chrome.runtime.lastError) {
+								console.log(chrome.runtime.lastError);
+							} else {
+								console.log('token', token)
+							}
+					});
+					break
 
 			default:
 				return console.error('error in switch')
@@ -177,3 +184,11 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     return true
 
 })
+
+
+// chrome.identity.getAuthToken({"interactive": true}, function(token){
+					// 	if
+    			// 	console.log('this is token', token)
+
+
+
