@@ -9,6 +9,7 @@
 store = {
 	currentNode: '',
 	previousNode: '',
+	history: [],
 }
 
 /* ******* ACTIVATE EXTENSION WHEN MATCHING  ********/
@@ -23,41 +24,37 @@ chrome.tabs.onUpdated.addListener(function(id, info, tab){
 
 
 const postNode = (nodeOb) => {
-  	fetchNodeData(nodeOb)
+  	return fetchNodeData(nodeOb)
 	.then(nodeData=> {
 	  store.previousNode = store.currentNode
 	  store.currentNode = nodeData.id
-	  let historyData= {
-	  	userId: 1,
-	  	newNode: nodeData.id
+	})
+}
+
+const postHistory = function(userId) {
+	let historyData= {
+	  	userId: userId,
+	  	newNode: store.currentNode
 	  }
-	  fetchHistoryData(historyData)
-	  .then((historyData) => {
-	  	let linkData = {
+	  return fetchHistoryData(historyData)
+	  .then(historyRow=>{
+	  	store.history = historyRow.history
+	  })
+}
+
+const postLink = function() {
+	let linkData = {
 	  	source: store.previousNode,
 	  	target: store.currentNode, 
 	  	isHyperText: true,
 	  	userId: 1
-	  	}
-	  	if (linkData.source!='') {
-	  	  fetchLinkData(linkData)
-	  	  .then(res=>{
- 			return res.json()
-	  	  })
-	 	  .then(resjson=> {
-	  		console.log('row inserted into links: ', resjson)
-	  	  })
-		}
-	})
-	})
-	}
+	 }
+	 if (linkData.source!='') {
+	  	return fetchLinkData(linkData)
+	 }
+}
 
-	const getUser = (userId) => {
-	  fetchUser(userId)
-	    .then(res=>{
-	    	console.log('res', res)
-	    })
-	}
+
 
 /* ******* ASYNC THUNKS  ********/
 
@@ -71,7 +68,7 @@ const fetchUser = function(userId) {
     	.then(results => {
       		console.log('results inside getUser', results)
       		return results
-    })
+    	})
 }
 
 const fetchNodeData = function(nodeInfo) {
@@ -118,11 +115,25 @@ const fetchLinkData = function(linkInfo) {
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 		switch(request.type){
 			case 'postNode':
-				postNode(request.data)
+				return postNode(request.data)
+				.then(()=>{
+					return postHistory(1)
+				})
+				.then(()=>{
+					return postLink();
+				})
+				.then((resjson)=>{
+					console.log('row inserted into links: ', resjson)
+				})
 				break
 			case 'getUser':
-				getUser(request.data)
-				break
+				fetchUser(request.data)
+				.then((user)=>{
+					sendResponse(user)
+				})
+				return true
+				
+
 			default:
 				return console.error('error in switch')
 		}
