@@ -55,6 +55,7 @@ const postLink = function() {
 }
 
 
+
 /* ******* ASYNC THUNKS  ********/
 
 const fetchUser = function(userId) {
@@ -132,6 +133,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 				})
 				return true
 				
+
 			default:
 				return console.error('error in switch')
 		}
