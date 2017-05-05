@@ -48,7 +48,7 @@ const postNode = (nodeOb) => {
 	  		console.log('row inserted into links: ', resjson)
 	  	  })
 		}
-	  })
+	})
 	})
 	}
 
