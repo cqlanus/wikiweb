@@ -67,7 +67,7 @@ const postLink = function() {
 }
 
 const getUserId = function(){
-  return chrome.identity.getProfileUserInfo(function(info){ return info.id })
+  return chrome.identity.getProfileUserInfo(function(info){ return info })
 }
 
 /* ******* ASYNC THUNKS  ********/
@@ -150,10 +150,12 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 							if (chrome.runtime.lastError) {
 								console.log(chrome.runtime.lastError);
 							} else {
-								//console.log('sucesully got token', token)
+								console.log('sucesully got token', token)
+										console.log(chrome.identity.getProfileUserInfo(function(info){ console.log(info) }))
+
 							}
 					});
-					break
+					return true
 			default:
 				return console.error('error in switch')
 		}

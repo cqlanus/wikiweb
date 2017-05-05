@@ -2,7 +2,7 @@ const POST_NODE = "postNode"
 const GET_USER = "getUser"
 console.log('in content')
 
-//chrome.runtime.sendMessage({type: GET_USER, data: 2})
+console.log('this is the chrome',  chrome)
 
 chrome.runtime.onMessage.addListener(function(request, sender) {
 	if (request.action === 'requestPageInfo') {

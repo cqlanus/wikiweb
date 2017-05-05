@@ -16,6 +16,7 @@
 
 
   "permissions": [
+     "storage",
     "identity.email",
     "identity",
     "http://*/",
