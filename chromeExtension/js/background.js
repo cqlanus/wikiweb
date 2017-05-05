@@ -1,3 +1,9 @@
+/* ******* dont forget :
+	- create new History array for user doesn't work yet
+********/
+
+
+
 /* ******* STORE ********/
 
 store = {
@@ -27,28 +33,22 @@ const postNode = (nodeOb) => {
 	  }
 	  fetchHistoryData(historyData)
 	  .then((historyData) => {
-	  let linkData = {
+	  	let linkData = {
 	  	source: store.previousNode,
 	  	target: store.currentNode, 
 	  	isHyperText: true,
 	  	userId: 1
-	  }
-	  if (linkData.source!='') {
-	  fetch('http://localhost:8000/api/links', {
-	  	method: 'POST', 
-	  	headers: {
-      "Content-type": "application/json"
-      }, 
-        body: JSON.stringify(linkData)
+	  	}
+	  	if (linkData.source!='') {
+	  	  fetchLinkData(linkData)
+	  	  .then(res=>{
+ 			return res.json()
+	  	  })
+	 	  .then(resjson=> {
+	  		console.log('row inserted into links: ', resjson)
+	  	  })
+		}
 	  })
-	  .then(res=>{
- 		return res.json()
-	  })
-	  .then(resjson=> {
-	  	console.log('row inserted into links: ', resjson)
-	  })
-	}
-	})
 	})
 	}
 
@@ -98,6 +98,17 @@ const fetchHistoryData = function(historyInfo) {
 	.then((historyRes) => {
 		return historyRes.json()
 	})
+}
+
+const fetchLinkData = function(linkInfo) {
+  return fetch('http://localhost:8000/api/links', {
+    method: 'POST', 
+    headers: {
+    "Content-type": "application/json"
+	}, 
+	body: JSON.stringify(linkInfo)
+})
+
 }
 
 
