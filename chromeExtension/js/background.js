@@ -1,8 +1,3 @@
-/* ******* dont forget :
-	- create new History array for user doesn't work yet
-********/
-
-
 
 /* ******* STORE ********/
 
@@ -19,6 +14,18 @@ chrome.tabs.onUpdated.addListener(function(id, info, tab){
   if(tab.url.indexOf('wikipedia.org') > -1){
     chrome.pageAction.show(tab.id)
   }
+
+  if (tab.status === 'complete' && tab.active && tab.favIconUrl) {
+
+    chrome.tabs.sendMessage(tab.id, {action: "requestPageInfo"}, function(response) {})
+  }
+})
+
+/* ******* SENDS MESSAGE TO CONTENT WHEN NEW ACTIVE TAB  ********/
+
+chrome.tabs.onActivated.addListener(function(tabId) {
+	// console.log('Tab Changed with current Id: ', tabId)
+	chrome.tabs.sendMessage(tabId.tabId, {action: "requestPageInfo"}, function(response) {})
 })
 
 /* ******* ACTIONS  ********/
@@ -46,7 +53,7 @@ const postHistory = function(userId) {
 const postLink = function() {
 	let linkData = {
 	  	source: store.previousNode,
-	  	target: store.currentNode, 
+	  	target: store.currentNode,
 	  	isHyperText: true,
 	  	userId: 1
 	 }
@@ -54,8 +61,6 @@ const postLink = function() {
 	  	return fetchLinkData(linkData)
 	 }
 }
-
-
 
 /* ******* ASYNC THUNKS  ********/
 
@@ -67,7 +72,7 @@ const fetchUser = function(userId) {
 			return res.json()
 		})
     	.then(results => {
-      		console.log('results inside getUser', results)
+      		//console.log('results inside getUser', results)
       		return results
     	})
 }
@@ -100,16 +105,14 @@ const fetchHistoryData = function(historyInfo) {
 
 const fetchLinkData = function(linkInfo) {
   return fetch('http://localhost:8000/api/links', {
-    method: 'POST', 
+    method: 'POST',
     headers: {
     "Content-type": "application/json"
-	}, 
+	},
 	body: JSON.stringify(linkInfo)
 })
 
 }
-
-
 
 /* ******* SWITCH LISTENER  ********/
 
@@ -133,7 +136,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 					sendResponse(user)
 				})
 				return true
-				
+
 
 			default:
 				return console.error('error in switch')
