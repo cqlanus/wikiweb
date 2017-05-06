@@ -18,12 +18,15 @@
   "homepage": "https://github.com/cqlanus/wikiweb#readme",
   "dependencies": {
     "body-parser": "^1.17.1",
+    "d3": "^4.8.0",
+    "d3-scale-chromatic": "^1.1.1",
     "express": "^4.15.2",
     "nodemon": "^1.11.0",
     "pg": "^6.1.5",
     "pg-hstore": "^2.3.2",
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
+    "react-router": "^3.0.0",
     "sequelize": "^3.30.4"
   },
   "devDependencies": {

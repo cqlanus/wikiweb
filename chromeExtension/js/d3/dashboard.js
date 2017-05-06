@@ -1,29 +1,31 @@
+const d3 = require('d3')
 
 const createForceChart = () => {
   const GET_USER = 'getUser'
-
-  /* GET SVG ELEMENT ON PAGE */
-  const svg = d3.select("svg"),
-      width = 700,
-      height = 700;
-
-  /* CREATE COLOR SCALE */
-  const color = d3.scaleOrdinal(d3.schemeCategory20);
-
-  /* DEFINE FORCE GRAPH RULES */
-  const simulation = d3.forceSimulation()
-    .force("link", d3.forceLink().id(function(d) { return d.id; }))
-    .force("charge", d3.forceManyBody())
-    .force("center", d3.forceCenter(window.innerWidth / 2, height / 2));
-
-  svg
-    .attr('class','canvas')
 
   /* MAKE A GET REQUEST FOR CURRENT USER */
   chrome.runtime.sendMessage({
     type: GET_USER,
     data: 1
   }, function(results) {
+
+
+    /* GET SVG ELEMENT ON PAGE */
+    const svg = d3.select("svg"),
+        width = 700,
+        height = 700;
+
+    console.log('this is svg', svg)
+
+    /* CREATE COLOR SCALE */
+    const color = d3.scaleOrdinal(d3.schemeCategory20);
+
+    /* DEFINE FORCE GRAPH RULES */
+    const simulation = d3.forceSimulation()
+      .force("link", d3.forceLink().id(function(d) { return d.id; }))
+      .force("charge", d3.forceManyBody())
+      .force("center", d3.forceCenter(window.innerWidth / 2, height / 2));
+
     console.log('we got results inside dashboard', results)
 
     /* ATTACH LINES TO SVG AS LINKS */
@@ -55,6 +57,7 @@ const createForceChart = () => {
       .force("link")
       .links(results.links);
 
+    /* CREATE HOVERABLE TOOLTIPS */
     const divTooltip = d3.select("body").append("div").attr("class", "toolTip")
         node.on("mousemove", function(d){
           divTooltip.style("left", d3.event.pageX+10+"px");
@@ -85,26 +88,25 @@ const createForceChart = () => {
           .attr("cx", function(d) { return d.x; })
           .attr("cy", function(d) { return d.y; });
     }
+
+    function dragstarted(d) {
+      if (!d3.event.active) simulation.alphaTarget(0.3).restart();
+      d.fx = d.x;
+      d.fy = d.y;
+    }
+
+    function dragged(d) {
+      d.fx = d3.event.x;
+      d.fy = d3.event.y;
+    }
+
+    function dragended(d) {
+      if (!d3.event.active) simulation.alphaTarget(0);
+      d.fx = null;
+      d.fy = null;
+    }
+
   })
-
-
-  function dragstarted(d) {
-    if (!d3.event.active) simulation.alphaTarget(0.3).restart();
-    d.fx = d.x;
-    d.fy = d.y;
-  }
-
-  function dragged(d) {
-    d.fx = d3.event.x;
-    d.fy = d3.event.y;
-  }
-
-  function dragended(d) {
-    if (!d3.event.active) simulation.alphaTarget(0);
-    d.fx = null;
-    d.fy = null;
-  }
-
 }
 
 export default createForceChart
