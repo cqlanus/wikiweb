@@ -14,11 +14,7 @@ body {
   border-radius: 20px;
 }
 
-svg {
-  /*border: 2px solid red;*/
-}
-
-.links line {
+.links {
   stroke: #fff;
   stroke-opacity: 0.6;
 }
