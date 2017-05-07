@@ -72,3 +72,7 @@ body {
     text-align: center;
     z-index: 9999;
 }
+
+.selected {
+  fill: yellow;
+}
