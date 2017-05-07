@@ -1,11 +1,13 @@
 const GET_USER = 'getUser'
 let UserId = 'old';
 
+console.log('hello')
 chrome.storage.local.get(/* String or Array */["userId"], function(items){   //ascy
+  console.log('hello!')
   console.log(items.userId);
   UserId = items.userId;
-  console.log(UserId)
-  graphSetUp(1)
+  console.log('this is my id!',UserId)
+  graphSetUp(UserId)
 });
 
 
@@ -26,7 +28,7 @@ const graphSetUp = function(UserId){
 
   chrome.runtime.sendMessage({
     type: GET_USER,
-    data: 1
+    data: UserId
   }, function(results) {
     console.log('we got results', results)
 

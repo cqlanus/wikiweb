@@ -4,7 +4,7 @@ const {User, Node, Link, History} = require('./models')
 
 const data = {
   users: [
-    {name: 'Chris'}, {name: 'Nick'}, {name: 'Ellie'}
+    {name: 'Chris', googleId:'115893302668387505418'}, {name: 'Nick', googleId:'215893302668387505418'}, {name: 'Ellie', googleId: '315893302668387505418'}
   ],
 
   nodes: [

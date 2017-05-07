@@ -58,7 +58,7 @@ const postLink = function() {
 	  	source: store.previousNode,
 	  	target: store.currentNode,
 	  	isHyperText: true,
-	  	userId: store.userId
+	  	userId: 1
 	 }
 	 if (linkData.source!='') {
 	  	return fetchLinkData(linkData)
@@ -72,7 +72,7 @@ const getUserId = function(){
 /* ******* ASYNC THUNKS  ********/
 
 const fetchUser = function(userId) {
-	return fetch(`http://localhost:8000/api/users/${userId}`, {
+	return fetch(`http://localhost:8000/api/users/googleId/${userId}`, {
     	method: 'GET',
     	})
 		.then((res) => {
@@ -80,6 +80,7 @@ const fetchUser = function(userId) {
 		})
     	.then(results => {
       		//console.log('results inside getUser', results)
+					console.log('this is the resutl of my find my googlId', results)
       		return results
     	})
 }

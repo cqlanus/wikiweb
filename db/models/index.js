@@ -33,11 +33,10 @@ const User = db.define('users', {
       allowNull: false,
   },
   googleId: {
-    type: {
-      type: Sequelize.INTEGER,
-      allowNull: false
-    }
-  }
+        type: Sequelize.STRING,
+        allowNull: true
+      }
+
 })
 
 const Link = db.define('links', {
