@@ -32,6 +32,12 @@ const User = db.define('users', {
       type: Sequelize.STRING,
       allowNull: false,
   },
+  googleId: {
+    type: {
+      type: Sequelize.INTEGER,
+      allowNull: false
+    }
+  }
 })
 
 const Link = db.define('links', {

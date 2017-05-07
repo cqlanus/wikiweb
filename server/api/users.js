@@ -37,3 +37,6 @@ module.exports = require('express').Router()
     .then(() => res.status(200).end())
     .catch(next)
   })
+  .get('/googleId/:id', (req, res, next) => {
+
+  })

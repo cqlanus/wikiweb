@@ -2,7 +2,6 @@
 	- create new History array for user doesn't work yet
 ********/
 
-
 /* ******* STORE ********/
 
 store = {
@@ -36,7 +35,7 @@ chrome.tabs.onActivated.addListener(function(tabId) {
 
 
 const postNode = (nodeOb) => {
-  	return fetchNodeData(nodeOb)
+  	return fetchNodeData(nodeOb)  // user id is set to 1
 	.then(nodeData=> {
 	  store.previousNode = store.currentNode
 	  store.currentNode = nodeData.id
@@ -59,7 +58,7 @@ const postLink = function() {
 	  	source: store.previousNode,
 	  	target: store.currentNode,
 	  	isHyperText: true,
-	  	userId: 1
+	  	userId: store.userId
 	 }
 	 if (linkData.source!='') {
 	  	return fetchLinkData(linkData)
@@ -150,9 +149,11 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 							if (chrome.runtime.lastError) {
 								console.log(chrome.runtime.lastError);
 							} else {
-								console.log('sucesully got token', token)
-										console.log(chrome.identity.getProfileUserInfo(function(info){ console.log(info) }))
-
+								//console.log('sucesully got token', token)
+										chrome.identity.getProfileUserInfo(function(info){
+											store.userId = info.id
+											chrome.storage.local.set({ "userId": info.id }, function(){});
+										})
 							}
 					});
 					return true

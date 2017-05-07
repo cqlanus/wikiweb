@@ -1,5 +1,15 @@
 const GET_USER = 'getUser'
+let UserId = 'old';
 
+chrome.storage.local.get(/* String or Array */["userId"], function(items){   //ascy
+  console.log(items.userId);
+  UserId = items.userId;
+  console.log(UserId)
+  graphSetUp(1)
+});
+
+
+console.log("this is the user id in the dasboard", UserId)
 const svg = d3.select("svg"),
     width = 900,
     height = 900;
@@ -11,53 +21,57 @@ const simulation = d3.forceSimulation()
   .force("charge", d3.forceManyBody())
   .force("center", d3.forceCenter(width / 2, height / 2));
 
-chrome.runtime.sendMessage({
-  type: GET_USER,
-  data: 1
-}, function(results) {
-  console.log('we got results', results)
 
-  var link = svg.append("g")
-      .attr("class", "links")
-    .selectAll("line")
-    .data(results.links)
-    .enter().append("line")
-      .attr("stroke-width", function(d) { return d.strength; })
+const graphSetUp = function(UserId){
 
-  var node = svg.append("g")
-      .attr("class", "nodes")
-    .selectAll("circle")
-    .data(results.nodes)
-    .enter().append("circle")
-      .attr("r", function(d){return d.visitCount * 5})
-      .attr("fill", d => color(d.visitCount))
-      .call(d3.drag()
-          .on("start", dragstarted)
-          .on("drag", dragged)
-          .on("end", dragended));
+  chrome.runtime.sendMessage({
+    type: GET_USER,
+    data: 1
+  }, function(results) {
+    console.log('we got results', results)
 
-  node.append("title")
-      .text(function(d) { return d.title; });
+    var link = svg.append("g")
+        .attr("class", "links")
+      .selectAll("line")
+      .data(results.links)
+      .enter().append("line")
+        .attr("stroke-width", function(d) { return d.strength; })
 
-  simulation
-      .nodes(results.nodes)
-      .on("tick", ticked);
+    var node = svg.append("g")
+        .attr("class", "nodes")
+      .selectAll("circle")
+      .data(results.nodes)
+      .enter().append("circle")
+        .attr("r", function(d){return d.visitCount * 5})
+        .attr("fill", d => color(d.visitCount))
+        .call(d3.drag()
+            .on("start", dragstarted)
+            .on("drag", dragged)
+            .on("end", dragended));
 
-  simulation.force("link")
-      .links(results.links);
+    node.append("title")
+        .text(function(d) { return d.title; });
 
-  function ticked() {
-    link
-        .attr("x1", function(d) { return d.source.x; })
-        .attr("y1", function(d) { return d.source.y; })
-        .attr("x2", function(d) { return d.target.x; })
-        .attr("y2", function(d) { return d.target.y; });
+    simulation
+        .nodes(results.nodes)
+        .on("tick", ticked);
 
-    node
-        .attr("cx", function(d) { return d.x; })
-        .attr("cy", function(d) { return d.y; });
-  }
-})
+    simulation.force("link")
+        .links(results.links);
+
+    function ticked() {
+      link
+          .attr("x1", function(d) { return d.source.x; })
+          .attr("y1", function(d) { return d.source.y; })
+          .attr("x2", function(d) { return d.target.x; })
+          .attr("y2", function(d) { return d.target.y; });
+
+      node
+          .attr("cx", function(d) { return d.x; })
+          .attr("cy", function(d) { return d.y; });
+    }
+  })
+}
 
 
 function dragstarted(d) {
