@@ -2,16 +2,18 @@ const GET_USER = 'getUser'
 let UserId = 'old';
 
 console.log('hello')
+
 chrome.storage.local.get(/* String or Array */["userId"], function(items){   //ascy
   console.log('hello!')
   console.log(items.userId);
   UserId = items.userId;
   console.log('this is my id!',UserId)
-  graphSetUp(UserId)
+  graphSetUp(1)
 });
 
 
-console.log("this is the user id in the dasboard", UserId)
+console.log("this is the user id in the dasboard!", UserId)
+
 const svg = d3.select("svg"),
     width = 900,
     height = 900;
@@ -30,7 +32,7 @@ const graphSetUp = function(UserId){
     type: GET_USER,
     data: UserId
   }, function(results) {
-    console.log('we got results', results)
+    console.log('we got results!!!!!!!!!', results)
 
     var link = svg.append("g")
         .attr("class", "links")

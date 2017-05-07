@@ -11,6 +11,7 @@ store = {
 }
 
 
+
 /* ******* ACTIVATE EXTENSION WHEN MATCHING  ********/
 
 chrome.tabs.onUpdated.addListener(function(id, info, tab){
@@ -80,7 +81,6 @@ const fetchUser = function(userId) {
 		})
     	.then(results => {
       		//console.log('results inside getUser', results)
-					console.log('this is the resutl of my find my googlId', results)
       		return results
     	})
 }
