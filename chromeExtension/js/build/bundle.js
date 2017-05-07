@@ -8250,7 +8250,8 @@ var createForceChart = function createForceChart() {
         width = 700,
         height = 700;
 
-    console.log('this is svg', svg);
+    var xScale = d3.scale.linear().domain([0, width]).range([0, width]);
+    var yScale = d3.scale.linear().domain([0, height]).range([0, height]);
 
     /* CREATE COLOR SCALE */
     var color = d3.scaleOrdinal(d3.schemeCategory20);
