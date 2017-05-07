@@ -15,9 +15,9 @@ const createForceChart = () => {
         width = 700,
         height = 700;
 
-    var xScale = d3.scale.linear()
+    var xScale = d3.scaleLinear()
       .domain([0,width]).range([0,width]);
-      var yScale = d3.scale.linear()
+      var yScale = d3.scaleLinear()
       .domain([0,height]).range([0, height]);
 
     /* CREATE COLOR SCALE */
