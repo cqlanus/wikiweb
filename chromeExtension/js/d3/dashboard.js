@@ -1,6 +1,7 @@
 const d3 = require('d3')
 
 const createForceChart = (googleId) => {
+  console.log('calling in createForceChart', googleId)
   const GET_USER = 'getUser'
 
   /* MAKE A GET REQUEST FOR CURRENT USER */
@@ -23,9 +24,9 @@ const createForceChart = (googleId) => {
     const rect = gMain.append('rect')
       .attr('width', parentWidth)
       .attr('height', parentHeight)
-      // .attr('fill', 'white')
+      .attr('fill', 'white')
 
-    const gDraw = gMain.append('g')
+    const gDraw = gMain.append('g').classed('draw', true)
 
     /* CREATE ZOOM BEHAVIOR */
     const zoom = d3.zoom().on('zoom', zoomed)
@@ -34,14 +35,17 @@ const createForceChart = (googleId) => {
     gMain.call(zoom)
 
     function zoomed() { gDraw.attr('transform', d3.event.transform)}
+
     /* CREATE COLOR SCALE */
     const color = d3.scaleOrdinal(d3.schemeCategory20);
 
     const gBrushHolder = gDraw.append('g')
     let gBrush = null
+    let brushMode = false
+    let brushing = false
 
     /* ATTACH LINES TO SVG AS LINKS */
-    var link = gDraw.append("g")
+    let link = gDraw.append("g")
         .attr("class", "links")
       .selectAll("line")
       .data(results.links)
@@ -49,7 +53,7 @@ const createForceChart = (googleId) => {
         .attr("stroke-width", function(d) { return Math.sqrt(d.strength); })
 
     /* ATTACH CIRCLES TO SVG AS NODES */
-    var node = gDraw.append("g")
+    let node = gDraw.append("g")
         .attr("class", "nodes")
       .selectAll("circle")
       .data(results.nodes)
@@ -82,14 +86,14 @@ const createForceChart = (googleId) => {
           divTooltip.style("left", d3.event.pageX+10+"px");
           divTooltip.style("top", d3.event.pageY-25+"px");
           divTooltip.style("display", "inline-block");
-          var x = d3.event.pageX, y = d3.event.pageY
-          var elements = document.querySelectorAll(':hover');
-          var l = elements.length
+          let x = d3.event.pageX, y = d3.event.pageY
+          let elements = document.querySelectorAll(':hover');
+          let l = elements.length
           l = l-1
-          var elementData = elements[l].__data__
+          let elementData = elements[l].__data__
           // console.log(elementData)
           divTooltip.html(`
-            ${elementData.title}
+            ${elementData.id} ${elementData.title}
           `);
           });
         node.on("mouseout", function(d){
@@ -108,9 +112,6 @@ const createForceChart = (googleId) => {
           .attr("cy", function(d) { return d.y; });
     }
 
-    let brushMode = false
-    let brushing = false
-
     const brush = d3.brush()
       .on('start', brushstarted)
       .on('brush', brushed)
@@ -118,10 +119,13 @@ const createForceChart = (googleId) => {
 
     function brushstarted() {
       brushing = true
-      node.each(d => d.previouslySelected = shiftKey && d.selected)
+      node.each(d => {
+        if (d.previouslySelected) {console.log('this is previouslySelected', d)}
+        return d.previouslySelected = shiftKey && d.selected})
     }
 
     rect.on('click', () => {
+      console.log('getting called')
       node.each(d => {
         d.selected = false
         d.previouslySelected = false
@@ -135,6 +139,7 @@ const createForceChart = (googleId) => {
 
       const extent = d3.event.selection
       node.classed('selected', d => {
+        /* ^ is XOR operator -- toggles selected */
         return d.selected = d.previouslySelected ^
         (extent[0][0] <= d.x && d.x < extent[1][0]
          && extent[0][1] <= d.y && d.y < extent[1][1])
@@ -224,15 +229,14 @@ const createForceChart = (googleId) => {
         d.fy = null
       })
     }
-
   })
 }
 
-const createForceChartWrapper = () => {
-  	chrome.storage.local.get(["userId"], function(items){
-            const googleId = items.userId
+const createForceChartWrapper = (googleId) => {
+    // chrome.storage.local.get(["userId"], function(items){
+    //         const googleId = items.userId
+    // })
             createForceChart(googleId)
-    })
 }
 
 export default createForceChartWrapper
