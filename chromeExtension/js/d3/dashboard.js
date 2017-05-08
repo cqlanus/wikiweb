@@ -1,12 +1,12 @@
 const d3 = require('d3')
 
-const createForceChart = () => {
+const createForceChart = (googleId) => {
   const GET_USER = 'getUser'
 
   /* MAKE A GET REQUEST FOR CURRENT USER */
   chrome.runtime.sendMessage({
     type: GET_USER,
-    data: 1
+    data: googleId
   }, function(results) {
 
     let parentWidth = d3.select('svg').node().parentNode.clientWidth,
@@ -228,4 +228,11 @@ const createForceChart = () => {
   })
 }
 
-export default createForceChart
+const createForceChartWrapper = () => {
+  	chrome.storage.local.get(["userId"], function(items){
+            const googleId = items.userId
+            createForceChart(googleId)
+    })
+}
+
+export default createForceChartWrapper
