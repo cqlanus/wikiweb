@@ -26,7 +26,6 @@ chrome.tabs.onUpdated.addListener(function(id, info, tab){
 			console.log('line 26')
 			chrome.tabs.sendMessage(tab.id, {action: "requestPageInfo"}, function(response) { console.log('requesting page info')})
 		}
-
 		else {
        chrome.identity.getProfileUserInfo(function(info){
 				 if( info.id !== '' ) {
@@ -56,7 +55,6 @@ function startAuth() {
     }
   })
 }
-
 
 function requestPageInfo(tab) {
   chrome.tabs.sendMessage(tab.id, {action: "requestPageInfo"}, function(response) { console.log('requesting page info')})
@@ -183,18 +181,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 					sendResponse(user)
 				})
 				return true
-				case 'START_AUTH':     // this is run when log in button is clicked
-					chrome.identity.getAuthToken({ 'interactive': true }, function(token) {
-							if (chrome.runtime.lastError) {
-								console.log(chrome.runtime.lastError);
-							} else {
-								//console.log('sucesully got token', token)
-										chrome.identity.getProfileUserInfo(function(info){
-											chrome.storage.local.set({ "userId": info.id }, function(){});
-										})
-							}
-					});
-					return true
 			default:
 				return console.error('error in switch')
 		}
