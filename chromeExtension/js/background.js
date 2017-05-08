@@ -15,11 +15,28 @@ chrome.tabs.onUpdated.addListener(function(id, info, tab){
     chrome.pageAction.show(tab.id)
   }
 
-  if (tab.status === 'complete' && tab.active && tab.favIconUrl) {
-
-    chrome.tabs.sendMessage(tab.id, {action: "requestPageInfo"}, function(response) {})
+  if (info.status === 'complete' && tab.active) {
+    chrome.history.search({text: '', maxResults: 5}, function(data) {
+      if (!isMatchingHashedUrl(data[0].url, data[1].url)) {
+        console.log('in a new url', tab.url)
+        chrome.tabs.sendMessage(tab.id, {action: "requestPageInfo"})
+      } else {
+        console.log('in a sub page!')
+      }
+    })
   }
 })
+
+function isMatchingHashedUrl(url1, url2) {
+  const firstHash = url1.indexOf('#')
+  if (firstHash > -1) {
+    const rootUrl1 = url1.substring(0, firstHash)
+    const rootUrl2 = url2.substring(0, firstHash)
+
+    return (rootUrl1 === rootUrl2)
+  }
+  return false
+}
 
 /* ******* SENDS MESSAGE TO CONTENT WHEN NEW ACTIVE TAB  ********/
 
