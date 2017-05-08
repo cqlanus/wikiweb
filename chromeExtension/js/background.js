@@ -4,10 +4,11 @@
 
 /* ******* STORE ********/
 
-store = {
+let store = {
 	currentNode: '',
 	previousNode: '',
 	history: [],
+	googleID: ''
 }
 
 
@@ -20,10 +21,46 @@ chrome.tabs.onUpdated.addListener(function(id, info, tab){
   }
 
   if (tab.status === 'complete' && tab.active && tab.favIconUrl) {
+		console.log('this is store', store)
+    if( checkStoreGoogleId()){
+			console.log('line 26')
+			chrome.tabs.sendMessage(tab.id, {action: "requestPageInfo"}, function(response) { console.log('requesting page info')})
+		}
 
-    chrome.tabs.sendMessage(tab.id, {action: "requestPageInfo"}, function(response) {})
+		else {
+       chrome.identity.getProfileUserInfo(function(info){
+				 if( info.id !== '' ) {
+					 store.googleID  = info.id;
+					   chrome.tabs.sendMessage(tab.id, {action: "requestPageInfo"}, function(response) { console.log('requesting page info')})
+
+				 } else {
+						startAuth()
+				 }
+			 })
+    }
   }
 })
+
+function checkStoreGoogleId(){
+  return store.googleID === '' ? false : true
+}
+
+function startAuth() {
+  chrome.identity.getAuthToken({ 'interactive': true }, function(token) {
+    if (chrome.runtime.lastError) console.log(chrome.runtime.lastError)
+		else {
+      chrome.identity.getProfileUserInfo(function(info) {
+        store.googleID  = info.id;
+        chrome.tabs.sendMessage(tab.id, {action: "requestPageInfo"}, function(response) { console.log('requesting page info')})
+      })
+    }
+  })
+}
+
+
+function requestPageInfo(tab) {
+  chrome.tabs.sendMessage(tab.id, {action: "requestPageInfo"}, function(response) { console.log('requesting page info')})
+}
 
 /* ******* SENDS MESSAGE TO CONTENT WHEN NEW ACTIVE TAB  ********/
 
@@ -36,7 +73,7 @@ chrome.tabs.onActivated.addListener(function(tabId) {
 
 
 const postNode = (nodeOb) => {
-  	return fetchNodeData(nodeOb)  // user id is set to 1
+  	return fetchNodeData(nodeOb)
 	.then(nodeData=> {
 	  store.previousNode = store.currentNode
 	  store.currentNode = nodeData.id
@@ -55,6 +92,7 @@ const postHistory = function(userId) {
 }
 
 const postLink = function() {
+	console.log('store in postLink',store)
 	let linkData = {
 	  	source: store.previousNode,
 	  	target: store.currentNode,
@@ -67,7 +105,7 @@ const postLink = function() {
 }
 
 const getUserId = function(){
-  return chrome.identity.getProfileUserInfo(function(info){ return info })
+  return chrome.identity.getProfileUserInfo(function(info){ return info.id })
 }
 
 /* ******* ASYNC THUNKS  ********/
@@ -152,7 +190,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 							} else {
 								//console.log('sucesully got token', token)
 										chrome.identity.getProfileUserInfo(function(info){
-											store.userId = info.id
 											chrome.storage.local.set({ "userId": info.id }, function(){});
 										})
 							}
