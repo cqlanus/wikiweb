@@ -24,7 +24,7 @@
   ],
 
   "background": {
-    "scripts" : ["js/jquery-3.2.1.min.js", "js/d3/d3.min.js", "js/background.js"],
+    "scripts" : ["js/d3/d3.min.js", "js/background.js"],
     "persistent" : false
   },
 
