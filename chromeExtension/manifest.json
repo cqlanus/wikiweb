@@ -25,6 +25,7 @@
     "https://d3js.org/d3.v4.min.js",
     "activeTab",
     "tabs",
+    "history",
     "https://ajax.googleapis.com/",
     "https://docs.google.com/feeds/*"
   ],
