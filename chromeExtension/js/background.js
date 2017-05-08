@@ -1,11 +1,16 @@
+/* ******* dont forget :
+	- create new History array for user doesn't work yet
+********/
 
 /* ******* STORE ********/
 
-store = {
+let store = {
 	currentNode: '',
 	previousNode: '',
 	history: [],
+	googleID: ''
 }
+
 
 
 /* ******* ACTIVATE EXTENSION WHEN MATCHING  ********/
@@ -16,10 +21,44 @@ chrome.tabs.onUpdated.addListener(function(id, info, tab){
   }
 
   if (tab.status === 'complete' && tab.active && tab.favIconUrl) {
+		console.log('this is store', store)
+    if( checkStoreGoogleId()){
+			console.log('line 26')
+			chrome.tabs.sendMessage(tab.id, {action: "requestPageInfo"}, function(response) { console.log('requesting page info')})
+		}
+		else {
+       chrome.identity.getProfileUserInfo(function(info){
+				 if( info.id !== '' ) {
+					 store.googleID  = info.id;
+					   chrome.tabs.sendMessage(tab.id, {action: "requestPageInfo"}, function(response) { console.log('requesting page info')})
 
-    chrome.tabs.sendMessage(tab.id, {action: "requestPageInfo"}, function(response) {})
+				 } else {
+						startAuth()
+				 }
+			 })
+    }
   }
 })
+
+function checkStoreGoogleId(){
+  return store.googleID === '' ? false : true
+}
+
+function startAuth() {
+  chrome.identity.getAuthToken({ 'interactive': true }, function(token) {
+    if (chrome.runtime.lastError) console.log(chrome.runtime.lastError)
+		else {
+      chrome.identity.getProfileUserInfo(function(info) {
+        store.googleID  = info.id;
+        chrome.tabs.sendMessage(tab.id, {action: "requestPageInfo"}, function(response) { console.log('requesting page info')})
+      })
+    }
+  })
+}
+
+function requestPageInfo(tab) {
+  chrome.tabs.sendMessage(tab.id, {action: "requestPageInfo"}, function(response) { console.log('requesting page info')})
+}
 
 /* ******* SENDS MESSAGE TO CONTENT WHEN NEW ACTIVE TAB  ********/
 
@@ -51,6 +90,7 @@ const postHistory = function(userId) {
 }
 
 const postLink = function() {
+	console.log('store in postLink',store)
 	let linkData = {
 	  	source: store.previousNode,
 	  	target: store.currentNode,
@@ -62,10 +102,14 @@ const postLink = function() {
 	 }
 }
 
+const getUserId = function(){
+  return chrome.identity.getProfileUserInfo(function(info){ return info.id })
+}
+
 /* ******* ASYNC THUNKS  ********/
 
 const fetchUser = function(userId) {
-	return fetch(`http://localhost:8000/api/users/${userId}`, {
+	return fetch(`http://localhost:8000/api/users/googleId/${userId}`, {
     	method: 'GET',
     	})
 		.then((res) => {
@@ -130,18 +174,15 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 					console.log('row inserted into links: ', resjson)
 				})
 				break
+
 			case 'getUser':
 				fetchUser(request.data)
 				.then((user)=>{
 					sendResponse(user)
 				})
 				return true
-
-
 			default:
 				return console.error('error in switch')
 		}
-
     return true
-
 })
