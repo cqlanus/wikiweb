@@ -2,51 +2,55 @@
 	- create new History array for user doesn't work yet
 ********/
 
-/* ******* STORE ********/
-
 let store = {
 	currentNode: '',
 	previousNode: '',
 	history: [],
-	googleID: ''
+	googleId: ''
 }
 
+if (checkStoreGoogleId()) {
+  console.log('store.googleId already exists', store.googleId)
+  activateListeners();
+}
+else {
+  chrome.identity.getProfileUserInfo(function(info){
+    if( info.id !== '' ) {
+    	console.log('googleId on info exists')
+        store.googleId  = info.id
+        activateListeners();
+    } else { 
+    	console.log('needed to authenticate')
+    	startAuth() }
+    })
+    }
 
 
 /* ******* ACTIVATE EXTENSION WHEN MATCHING  ********/
+function activateListeners() {
+	chrome.tabs.onUpdated.addListener(function(id, info, tab){
+	  if(tab.url.indexOf('wikipedia.org') > -1){
+	    chrome.pageAction.show(tab.id)
+	  }
 
-chrome.tabs.onUpdated.addListener(function(id, info, tab){
-  if(tab.url.indexOf('wikipedia.org') > -1){
-    chrome.pageAction.show(tab.id)
-  }
-
-  if (info.status === 'complete' && tab.active) {
-    console.log('googleid?', store.googleID)
-    if (checkStoreGoogleId()) {
-      makeUniquePageRequest(tab)
-    }
-    else {
-      chrome.identity.getProfileUserInfo(function(info){
-        if( info.id !== '' ) {
-          store.googleID  = info.id
-          makeUniquePageRequest(tab)
-        } else { startAuth() }
-      })
-    }
-  }
-})
+	  if (info.status === 'complete' && tab.active) {
+	  	console.log('making page request to postNode, googleId: ', store.googleId)
+	  	makeUniquePageRequest(tab)
+	  }
+	})
+}
 
 function checkStoreGoogleId(){
-  return store.googleID === '' ? false : true
+  return store.googleId === '' ? false : true
 }
 
 function startAuth() {
   chrome.identity.getAuthToken({ 'interactive': true }, function(token) {
     if (chrome.runtime.lastError) console.log(chrome.runtime.lastError)
-		else {
+	else {
       chrome.identity.getProfileUserInfo(function(info) {
-        store.googleID  = info.id;
-        chrome.tabs.sendMessage(tab.id, {action: "requestPageInfo"}, function(response) { console.log('requesting page info')})
+        store.googleId  = info.id;
+        activateListeners();
       })
     }
   })
@@ -104,7 +108,6 @@ const postHistory = function(userId) {
 }
 
 const postLink = function() {
-	console.log('store in postLink',store)
 	let linkData = {
 	  	source: store.previousNode,
 	  	target: store.currentNode,
@@ -122,8 +125,8 @@ const getUserId = function(){
 
 /* ******* ASYNC THUNKS  ********/
 
-const fetchUser = function(userId) {
-	return fetch(`http://localhost:8000/api/users/googleId/${userId}`, {
+const fetchUser = function(googleId) {
+	return fetch(`http://localhost:8000/api/users/googleId/${googleId}`, {
     	method: 'GET',
     	})
 		.then((res) => {
@@ -136,13 +139,25 @@ const fetchUser = function(userId) {
 }
 
 const fetchNodeData = function(nodeInfo) {
-	return fetch('http://localhost:8000/api/nodes', {
-      method: 'POST',
-      headers: {
-      "Content-type": "application/json"
-      },
-      body: JSON.stringify(nodeInfo),
+	return fetch(`http://localhost:8000/api/users/googleId/${nodeInfo.googleId}`, {
+    	method: 'GET',
     })
+    .then(userRow=>{
+    	return userRow.json()
+    })
+    .then(userJSON=>{
+    	nodeInfo['userId'] = userJSON[0].id
+    	return nodeInfo
+    })
+    .then(nodeInfo=>{
+		return fetch('http://localhost:8000/api/nodes', {
+	      method: 'POST',
+	      headers: {
+	      "Content-type": "application/json"
+	      },
+	      body: JSON.stringify(nodeInfo),
+	    })
+	})
 	.then((nodeRes) => {
 		return nodeRes.json()
 	})
@@ -177,6 +192,7 @@ const fetchLinkData = function(linkInfo) {
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 		switch(request.type){
 			case 'postNode':
+				request.data['googleId'] = store.googleId
 				return postNode(request.data)
 				.then(()=>{
 					return postHistory(1)
