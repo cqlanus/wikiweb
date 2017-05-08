@@ -9,8 +9,6 @@ let store = {
 	googleId: ''
 }
 
-console.log('checking login')
-console.log('store', store)
 if (checkStoreGoogleId()) {
   console.log('store.googleId already exists', store.googleId)
   activateListeners();
@@ -26,10 +24,6 @@ else {
     	startAuth() }
     })
     }
-
-
-
-
 
 
 /* ******* ACTIVATE EXTENSION WHEN MATCHING  ********/
@@ -97,7 +91,6 @@ chrome.tabs.onActivated.addListener(function(tabId) {
 const postNode = (nodeOb) => {
   	return fetchNodeData(nodeOb)
 	.then(nodeData=> {
-      console.log('nodeData', nodeData)
 	  store.previousNode = store.currentNode
 	  store.currentNode = nodeData.id
 	})
@@ -115,7 +108,6 @@ const postHistory = function(userId) {
 }
 
 const postLink = function() {
-	console.log('store in postLink',store)
 	let linkData = {
 	  	source: store.previousNode,
 	  	target: store.currentNode,
@@ -147,7 +139,6 @@ const fetchUser = function(googleId) {
 }
 
 const fetchNodeData = function(nodeInfo) {
-	console.log('line 125', nodeInfo)
 	return fetch(`http://localhost:8000/api/users/googleId/${nodeInfo.googleId}`, {
     	method: 'GET',
     })
@@ -155,9 +146,7 @@ const fetchNodeData = function(nodeInfo) {
     	return userRow.json()
     })
     .then(userJSON=>{
-    	console.log('userRo!!!!', userJSON)
     	nodeInfo['userId'] = userJSON[0].id
-    	console.log('new ndoeinfo yo', nodeInfo)
     	return nodeInfo
     })
     .then(nodeInfo=>{
@@ -204,7 +193,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 		switch(request.type){
 			case 'postNode':
 				request.data['googleId'] = store.googleId
-				console.log('in postNode request.data', request.data)
 				return postNode(request.data)
 				.then(()=>{
 					return postHistory(1)
