@@ -9,38 +9,47 @@ const createForceChart = (googleId) => {
     data: googleId
   }, function(results) {
 
+    let parentWidth = d3.select('svg').node().parentNode.clientWidth,
+        parentHeight = d3.select('svg').node().parentNode.clientHeight;
 
     /* GET SVG ELEMENT ON PAGE */
-    const svg = d3.select("svg"),
-        width = 700,
-        height = 700;
+    const svg = d3.select("svg")
+      .attr('width', parentWidth)
+      .attr('height', parentHeight)
 
-    var xScale = d3.scaleLinear()
-      .domain([0,width]).range([0,width]);
-      var yScale = d3.scaleLinear()
-      .domain([0,height]).range([0, height]);
+    const gMain = svg.append('g')
+      .classed('g-main', true)
 
+    const rect = gMain.append('rect')
+      .attr('width', parentWidth)
+      .attr('height', parentHeight)
+      // .attr('fill', 'white')
+
+    const gDraw = gMain.append('g')
+
+    /* CREATE ZOOM BEHAVIOR */
+    const zoom = d3.zoom().on('zoom', zoomed)
+
+    /* ATTACH ZOOM BEHAVIOR */
+    gMain.call(zoom)
+
+    function zoomed() { gDraw.attr('transform', d3.event.transform)}
     /* CREATE COLOR SCALE */
     const color = d3.scaleOrdinal(d3.schemeCategory20);
 
-    /* DEFINE FORCE GRAPH RULES */
-    const simulation = d3.forceSimulation()
-      .force("link", d3.forceLink().id(function(d) { return d.id; }))
-      .force("charge", d3.forceManyBody())
-      .force("center", d3.forceCenter(window.innerWidth / 2, height / 2));
-
-    console.log('we got results inside dashboard', results)
+    const gBrushHolder = gDraw.append('g')
+    let gBrush = null
 
     /* ATTACH LINES TO SVG AS LINKS */
-    var link = svg.append("g")
+    var link = gDraw.append("g")
         .attr("class", "links")
       .selectAll("line")
       .data(results.links)
       .enter().append("line")
-        .attr("stroke-width", function(d) { return d.strength*2; })
+        .attr("stroke-width", function(d) { return Math.sqrt(d.strength); })
 
     /* ATTACH CIRCLES TO SVG AS NODES */
-    var node = svg.append("g")
+    var node = gDraw.append("g")
         .attr("class", "nodes")
       .selectAll("circle")
       .data(results.nodes)
@@ -51,6 +60,13 @@ const createForceChart = (googleId) => {
           .on("start", dragstarted)
           .on("drag", dragged)
           .on("end", dragended));
+
+    /* DEFINE FORCE GRAPH RULES */
+    const simulation = d3.forceSimulation()
+      .force("link", d3.forceLink().id(function(d) { return d.id; }).distance(d => 30/d.strength))
+      .force("charge", d3.forceManyBody().distanceMax(200))
+      .force("center", d3.forceCenter(window.innerWidth / 2, parentHeight / 2))
+      .velocityDecay(0.7)
 
     simulation
       .nodes(results.nodes)
@@ -92,21 +108,121 @@ const createForceChart = (googleId) => {
           .attr("cy", function(d) { return d.y; });
     }
 
+    let brushMode = false
+    let brushing = false
+
+    const brush = d3.brush()
+      .on('start', brushstarted)
+      .on('brush', brushed)
+      .on('end', brushended)
+
+    function brushstarted() {
+      brushing = true
+      node.each(d => d.previouslySelected = shiftKey && d.selected)
+    }
+
+    rect.on('click', () => {
+      node.each(d => {
+        d.selected = false
+        d.previouslySelected = false
+      })
+      node.classed('selected', false)
+    })
+
+    function brushed() {
+      if (!d3.event.sourceEvent) return
+      if (!d3.event.selection) return
+
+      const extent = d3.event.selection
+      node.classed('selected', d => {
+        return d.selected = d.previouslySelected ^
+        (extent[0][0] <= d.x && d.x < extent[1][0]
+         && extent[0][1] <= d.y && d.y < extent[1][1])
+      })
+    }
+
+    function brushended() {
+      if (!d3.event.sourceEvent) return;
+      if (!d3.event.selection) return;
+      if (!gBrush) return;
+
+      gBrush.call(brush.move, null)
+
+      if (!brushMode) {
+        gBrush.remove()
+        gBrush = null
+      }
+      brushing = false
+    }
+
+    d3.select('body').on('keydown', keydown)
+    d3.select('body').on('keyup', keyup)
+
+    let shiftKey
+
+    function keydown() {
+      shiftKey = d3.event.shiftKey
+      if (shiftKey) {
+        if (gBrush) return
+
+        brushMode = true
+
+        if (!gBrush) {
+          gBrush = gBrushHolder.append('g')
+          gBrush.call(brush)
+        }
+      }
+    }
+
+    function keyup() {
+      shiftKey = false
+      brushMode = false
+
+      if (!gBrush) return
+
+      if (!brushing) {
+        gBrush.remove()
+        gBrush = null
+      }
+    }
+
     function dragstarted(d) {
       if (!d3.event.active) simulation.alphaTarget(0.3).restart();
-      d.fx = d.x;
-      d.fy = d.y;
+
+      if (!d3.selected & !shiftKey) {
+        node.classed('selected', p => {
+          return p.selected = p.previouslySelected = false
+        })
+      }
+      d3.select(this).classed("selected", function(p) {
+        d.previouslySelected = d.selected;
+        return d.selected = true; })
+
+      node.filter(d => d.selected)
+        .each(d => {
+          d.fx = d.x;
+          d.fy = d.y;
+        })
     }
 
     function dragged(d) {
-      d.fx = d3.event.x;
-      d.fy = d3.event.y;
+      node.filter(d => d.selected)
+      .each(d => {
+        d.fx += d3.event.dx;
+        d.fy += d3.event.dy;
+      })
     }
 
     function dragended(d) {
       if (!d3.event.active) simulation.alphaTarget(0);
       d.fx = null;
       d.fy = null;
+
+      node.filter(d => d.selected)
+      .each(d => {
+        d.fx = null
+        d.fy = null
+      })
     }
 
   })
