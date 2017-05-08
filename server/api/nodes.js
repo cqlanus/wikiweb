@@ -24,9 +24,7 @@ module.exports = require('express').Router()
     .catch(next)
   })
   .get('/:id', (req, res, next) => {
-    Node.findById(req.params.id, {
-      include: [Link]
-    })
+    Node.findById(req.params.id)
     .then(node => res.json(node))
     .catch(next)
   })

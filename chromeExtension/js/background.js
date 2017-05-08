@@ -172,6 +172,17 @@ const fetchLinkData = function(linkInfo) {
 
 }
 
+const fetchSingleNode = function(nodeId) {
+  console.log('we have a nodeid', nodeId)
+  return fetch(`http://localhost:8000/api/nodes/${nodeId}`, {
+    method: 'GET'
+  })
+  .then(res => res.json())
+  .then(node => {
+    return node
+  })
+}
+
 /* ******* SWITCH LISTENER  ********/
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
@@ -195,6 +206,15 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 					sendResponse(user)
 				})
 				return true
+
+      case 'GET_SINGLE_NODE':
+        fetchSingleNode(request.data)
+        .then(node => {
+          console.log('node?')
+          sendResponse(node)
+        })
+        return true
+
 			default:
 				return console.error('error in switch')
 		}
