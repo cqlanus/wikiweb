@@ -17,6 +17,22 @@ module.exports = require('express').Router()
     .then(user => res.status(201).json(user))
     .catch(next)
   })
+  .get('/googleId/:googleId', (req, res, next) => {
+    User.findOrCreate( {
+        where: {
+          googleId: req.params.googleId
+        },
+        defaults: {
+          googleId: req.params.googleId
+        },
+        include: [Node, Link]
+    })
+    .then(foundUser => {
+      res.json(foundUser)
+    })
+    .catch(next)
+  }
+)
   .get('/:id', (req, res, next) => {
     User.findById(req.params.id, {
       include: [Node, Link]
@@ -37,12 +53,4 @@ module.exports = require('express').Router()
     .then(() => res.status(200).end())
     .catch(next)
   })
-  .get('/googleId/:id', (req, res, next) => {
-      console.log('hitting the route')
-       User.findOne( {
-        where: {googleId: req.params.id},
-        include: [Node, Link]
-    })
-    .then(user => res.json(user))
-    .catch(next)
-  })
+
