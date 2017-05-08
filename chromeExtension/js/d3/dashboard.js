@@ -35,6 +35,20 @@ const createForceChart = () => {
 
     function zoomed() { gDraw.attr('transform', d3.event.transform)}
 
+    const rect = gMain.append('rect')
+      .attr('width', parentWidth)
+      .attr('height', parentHeight)
+      // .attr('fill', 'white')
+
+    const gDraw = gMain.append('g')
+
+    /* CREATE ZOOM BEHAVIOR */
+    const zoom = d3.zoom().on('zoom', zoomed)
+
+    /* ATTACH ZOOM BEHAVIOR */
+    gMain.call(zoom)
+
+    function zoomed() { gDraw.attr('transform', d3.event.transform)}
     /* CREATE COLOR SCALE */
     const color = d3.scaleOrdinal(d3.schemeCategory20);
 
