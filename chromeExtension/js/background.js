@@ -8,7 +8,7 @@ let store = {
 	currentNode: '',
 	previousNode: '',
 	history: [],
-	googleID: ''
+	googleId: ''
 }
 
 
@@ -24,13 +24,13 @@ chrome.tabs.onUpdated.addListener(function(id, info, tab){
 		console.log('this is store', store)
     if( checkStoreGoogleId()){
 			console.log('line 26')
-			chrome.tabs.sendMessage(tab.id, {action: "requestPageInfo"}, function(response) { console.log('requesting page info')})
+			chrome.tabs.sendMessage(tab.id, {action: "requestPageInfo"}, function(response) { console.log('requesting page info line 27')})
 		}
 		else {
        chrome.identity.getProfileUserInfo(function(info){
 				 if( info.id !== '' ) {
-					 store.googleID  = info.id;
-					   chrome.tabs.sendMessage(tab.id, {action: "requestPageInfo"}, function(response) { console.log('requesting page info')})
+					 store.googleId  = info.id;
+					 chrome.tabs.sendMessage(tab.id, {action: "requestPageInfo"}, function(response) { console.log('requesting page info line 33')})
 
 				 } else {
 						startAuth()
@@ -41,7 +41,7 @@ chrome.tabs.onUpdated.addListener(function(id, info, tab){
 })
 
 function checkStoreGoogleId(){
-  return store.googleID === '' ? false : true
+  return store.googleId === '' ? false : true
 }
 
 function startAuth() {
@@ -49,8 +49,8 @@ function startAuth() {
     if (chrome.runtime.lastError) console.log(chrome.runtime.lastError)
 		else {
       chrome.identity.getProfileUserInfo(function(info) {
-        store.googleID  = info.id;
-        chrome.tabs.sendMessage(tab.id, {action: "requestPageInfo"}, function(response) { console.log('requesting page info')})
+        store.googleId  = info.id;
+        chrome.tabs.sendMessage(tab.id, {action: "requestPageInfo"}, function(response) { console.log('requesting page info line 53')})
       })
     }
   })
@@ -73,6 +73,7 @@ chrome.tabs.onActivated.addListener(function(tabId) {
 const postNode = (nodeOb) => {
   	return fetchNodeData(nodeOb)
 	.then(nodeData=> {
+      console.log('nodeData', nodeData)
 	  store.previousNode = store.currentNode
 	  store.currentNode = nodeData.id
 	})
@@ -122,13 +123,26 @@ const fetchUser = function(userId) {
 }
 
 const fetchNodeData = function(nodeInfo) {
-	return fetch('http://localhost:8000/api/nodes', {
-      method: 'POST',
-      headers: {
-      "Content-type": "application/json"
-      },
-      body: JSON.stringify(nodeInfo),
+	console.log('line 125', nodeInfo.googleId)
+	return fetch(`http://localhost:8000/api/users/googleId/${nodeInfo.googleId}`, {
+    	method: 'GET',
     })
+    .then(userRow=>{
+    	return userRow.json()
+    })
+    .then(userJSON=>{
+    	nodeInfo['userId'] = userJSON.id
+    	return nodeInfo
+    })
+    .then(nodeInfo=>{
+		return fetch('http://localhost:8000/api/nodes', {
+	      method: 'POST',
+	      headers: {
+	      "Content-type": "application/json"
+	      },
+	      body: JSON.stringify(nodeInfo),
+	    })
+	})
 	.then((nodeRes) => {
 		return nodeRes.json()
 	})
@@ -163,6 +177,7 @@ const fetchLinkData = function(linkInfo) {
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 		switch(request.type){
 			case 'postNode':
+				request.data['googleId'] = store.googleId
 				return postNode(request.data)
 				.then(()=>{
 					return postHistory(1)
