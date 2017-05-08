@@ -38,7 +38,7 @@ module.exports = require('express').Router()
     .catch(next)
   })
   .get('/googleId/:id', (req, res, next) => {
-      console.log('fucker',req.params.id)
+      console.log('hitting the route')
        User.findOne( {
         where: {googleId: req.params.id},
         include: [Node, Link]
