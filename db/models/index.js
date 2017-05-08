@@ -45,7 +45,6 @@ function addVisitDate (node) {
 const User = db.define('users', {
   name: {
       type: Sequelize.STRING,
-      allowNull: false,
   },
   googleId: {
         type: Sequelize.STRING,
