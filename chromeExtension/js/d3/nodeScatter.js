@@ -10,6 +10,16 @@ const createNodeScatter = () => {
   }, function(node) {
     const dates = node.datesVisited
 
+    function fixTime(dbDate) {
+      var date = new Date(dbDate)
+      var offsetms = date.getTimezoneOffset() * 60 * 1000;
+      let timeCorrect = Date.parse(dbDate) - offsetms
+
+      return new Date(timeCorrect)
+    }
+
+    console.log('correctTime', new Date(dates[0]), fixTime(dates[0]))
+
     let parentWidth = d3.select('svg').node().parentNode.clientWidth,
         parentHeight = d3.select('svg').node().parentNode.clientHeight;
 
@@ -19,26 +29,29 @@ const createNodeScatter = () => {
       .attr('height', parentHeight)
 
     /* CREATE DATE PARSING FUNCTION */
-    const parseDate = d3.utcParse("%Y-%m-%dT%H:%M:%S.%LZ")
+    const parseDate = d3.timeParse("%Y-%m-%dT%H:%M:%S.%LZ")
 
     /* CREATE TIME FORMATTING FUNCTION */
-    const timeFormat = d3.timeFormat("%I:%M:%S %p")
-    const timeParse = d3.utcParse("%I:%M:%S %p")
+    const timeSpecifier = "%I:%M:%S %p"
+    const timeFormat = d3.timeFormat(timeSpecifier)
+    const timeParse = d3.timeParse(timeSpecifier)
 
-    const time24Format = d3.timeFormat('%H:%M:%S')
-    const time24Parse = d3.utcParse('%H:%M:%S')
+    const time24Specifier = "%X"
+    const time24Format = d3.timeFormat(time24Specifier)
+    const time24Parse = d3.timeParse(time24Specifier)
 
     /* CREATE DATE FORMATTING FUNCTION x*/
-    const dateFormat = d3.timeFormat("%d-%m-%Y")
-    const dateParse = d3.utcParse("%d-%m-%Y")
+    const dateSpecifier = "%x"
+    const dateFormat = d3.timeFormat(dateSpecifier)
+    const dateParse = d3.timeParse(dateSpecifier)
 
     /* PARSE DATES ARRAY INTO DATES AND TIMES */
     const modDatesArr = dates.map(date => {
       return {
-        full: parseDate(date),
-        date: dateParse(dateFormat(parseDate(date))),
-        time: timeParse(timeFormat(parseDate(date))),
-        time24: time24Parse(time24Format(parseDate(date)))
+        full: fixTime(date),
+        date: dateParse(dateFormat(fixTime(date))),
+        time: timeParse(timeFormat(fixTime(date))),
+        time24: time24Parse(time24Format(fixTime(date)))
       }
     })
 
@@ -50,14 +63,11 @@ const createNodeScatter = () => {
       .domain(dateDomain)
       .range([0, parentWidth-100])
 
-
     /* CREATE Y-SCALE & DOMAIN */
-    const timeDomain = d3.extent(modDatesArr.map(obj => obj.time))
     const yScale = d3.scaleTime()
       .domain([new Date(1900, 0, 1), new Date(1900, 0, 2)])
       .range([parentHeight-100, 50])
       .nice(d3.timeDay)
-
 
     /* BUILD X AND Y AXIS */
     const xAxis = d3.axisBottom(xScale)
@@ -88,9 +98,7 @@ const createNodeScatter = () => {
       .enter().append('circle')
       .attr('class', 'dots')
       .attr('cx', d => xScale(d.date))
-      .attr('cy', d => {
-        console.log(yScale(d.time))
-        return yScale(d.time)})
+      .attr('cy', d => yScale(d.time))
       .attr('r', 10)
       .attr('fill', 'indianred')
       .attr('stroke', 'black')
