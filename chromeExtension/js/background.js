@@ -62,6 +62,19 @@ function makeUniquePageRequest(tab) {
   })
 }
 
+function postFetch(endRoute, method, body) {
+	return fetch(`http://localhost:8000/api/${endRoute}`, {
+  	  method: method,
+      headers: {
+      "Content-type": "application/json"
+      },
+      body: JSON.stringify(body),
+   })
+}
+
+/* ******* HELPER FUNCTIONS ********/
+
+
 function isMatchingHashedUrl(url1, url2) {
   const firstHash = url1.indexOf('#')
   if (firstHash > -1) {
@@ -75,25 +88,21 @@ function isMatchingHashedUrl(url1, url2) {
 
 /* ******* NEED TO PROMISIFY ********/
 
-
 chrome.tabs.onActivated.addListener(function(tabId) {
 	chrome.tabs.sendMessage(tabId.tabId, {action: "requestPageInfo"}, function(response) {})
 })
 
-/* ******* RETURNS PROMISES  ********/
+/* ******* RETURN PROMISES  ********/
 
 //postNode returns a promise for info on insertedNode
 const postNodePromise = (nodeOb) => {
-  return fetch('http://localhost:8000/api/nodes/postNode', {
-  	method: 'POST',
-      headers: {
-      "Content-type": "application/json"
-      },
-      body: JSON.stringify(nodeOb),
-   })
-   .then((nodeResponse)=>{
-		return nodeResponse.json()
-	})
+   let nodeInfoPromise = 
+     postFetch('nodes/postNode', 'POST', nodeOb)
+     .then((nodeResponse)=>{
+   	   console.log('scuess')
+	   return nodeResponse.json()
+     })
+   return nodeInfoPromise
 }
 
 const postHistoryPromise = function(userId) {
@@ -101,16 +110,12 @@ const postHistoryPromise = function(userId) {
 	  	userId: userId,
 	  	newNode: store.currentNode
 	  }
-	return promiseForUpdatedHistory = fetch('http://localhost:8000/api/history/', {
-  	  method: 'POST',
-      headers: {
-      "Content-type": "application/json"
-      },
-      body: JSON.stringify(historyData),
-   	})
-   	.then(hisResponse=>{
+	let historyInfoPromise = 
+	  postFetch('/history', 'POST', historyData)
+	  .then(hisResponse=>{
    		return hisResponse.json()
    	})
+	return historyInfoPromise
 }
 
 const postLinkPromise = function(userId) {
@@ -120,18 +125,13 @@ const postLinkPromise = function(userId) {
 	  	isHyperText: true,
 	  	userId: userId
 	 }
-	 console.log('linkData', linkData)
 	 if (linkData.source!='') {
-	  	return fetch('http://localhost:8000/api/links', {
-	    	method: 'POST',
-	    	headers: {
-	      	"Content-type": "application/json"
-	    	},
-	      	body: JSON.stringify(linkData),
-	   	})
+	  	linkInfoPromise = 
+	  	postFetch('/links', 'POST', linkData)
 	   	.then(linkResponse=>{
 	   		return linkResponse.json()
 	   	})
+	  return linkInfoPromise
 	 }
 }
 
@@ -140,7 +140,14 @@ const getUserPromise = function(googleId) {
     	method: 'GET',
     	})
 		.then((res) => {
-			return res.json()
+		  return res.json()
+		})
+		.then(resJson=>{
+			return resJson[0]
+		})
+		.then(ew=>{
+			console.log('this is what im returning', ew)
+			return ew
 		})
 }
 
@@ -150,7 +157,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 		switch(request.type){
 			case 'postNode':
 				request.data['googleId'] = store.googleId
-				return postNodePromise(request.data)
+				postNodePromise(request.data)
 				.then(node=>{
 					store.previousNode = store.currentNode
 					store.currentNode = node.id
@@ -177,6 +184,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 			default:
 				return console.error('error in switch')
 		}
-    return true
+	//Ellie took this out to fix promises... check if dashboard still works properly
+    //return true
 })
 
