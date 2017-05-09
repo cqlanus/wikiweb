@@ -62,14 +62,20 @@ function makeUniquePageRequest(tab) {
   })
 }
 
-function postFetch(endRoute, method, body) {
+function post(endRoute, body) {
 	return fetch(`http://localhost:8000/api/${endRoute}`, {
-  	  method: method,
+  	  method: 'POST',
       headers: {
       "Content-type": "application/json"
       },
       body: JSON.stringify(body),
    })
+}
+
+function get(endRoute) {
+	return fetch(`http://localhost:8000/api/${endRoute}`, {
+    	method: 'GET',
+    	})
 }
 
 /* ******* HELPER FUNCTIONS ********/
@@ -96,8 +102,9 @@ chrome.tabs.onActivated.addListener(function(tabId) {
 
 //postNode returns a promise for info on insertedNode
 const postNodePromise = (nodeOb) => {
+   console.log('in postNodePromise', nodeOb)
    let nodeInfoPromise = 
-     postFetch('nodes/postNode', 'POST', nodeOb)
+     post('nodes/postNode', nodeOb)
      .then((nodeResponse)=>{
    	   console.log('scuess')
 	   return nodeResponse.json()
@@ -111,7 +118,7 @@ const postHistoryPromise = function(userId) {
 	  	newNode: store.currentNode
 	  }
 	let historyInfoPromise = 
-	  postFetch('/history', 'POST', historyData)
+	  post('/history', historyData)
 	  .then(hisResponse=>{
    		return hisResponse.json()
    	})
@@ -127,7 +134,7 @@ const postLinkPromise = function(userId) {
 	 }
 	 if (linkData.source!='') {
 	  	linkInfoPromise = 
-	  	postFetch('/links', 'POST', linkData)
+	  	post('/links', linkData)
 	   	.then(linkResponse=>{
 	   		return linkResponse.json()
 	   	})
@@ -136,19 +143,17 @@ const postLinkPromise = function(userId) {
 }
 
 const getUserPromise = function(googleId) {
-	return fetch(`http://localhost:8000/api/users/googleId/${googleId}`, {
-    	method: 'GET',
-    	})
-		.then((res) => {
-		  return res.json()
-		})
-		.then(resJson=>{
-			return resJson[0]
-		})
-		.then(ew=>{
-			console.log('this is what im returning', ew)
-			return ew
-		})
+	return get(`users/googleId/${googleId}`)
+	.then((res) => {
+	  return res.json()
+	})
+	.then(resJson=>{
+	  return resJson[0]
+	})
+	.then(ew=>{
+	  console.log('this is what im returning', ew)
+	  return ew
+	})
 }
 
 /* ******* SWITCH LISTENER FOR INCOMING MESSAGES********/
@@ -176,6 +181,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 				break
 
 			case 'getUser':
+				console.log('request.data', request.data)
 				getUserPromise(request.data)
 				.then((user)=>{
 					sendResponse(user)
