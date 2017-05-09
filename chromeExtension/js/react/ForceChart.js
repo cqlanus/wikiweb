@@ -1,5 +1,5 @@
 import React from 'react'
-import createForceChart from '../d3/dashboard.js'
+import createForceChart from '../d3/dashboard.js' //Never used
 
 const ForceChart = props => {
   return (
