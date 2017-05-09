@@ -1,14 +1,24 @@
 const d3 = require('d3')
 
-const createNodeScatter = () => {
+const createNodeScatter = (nodesObj) => {
   const GET_SINGLE_NODE = 'GET_SINGLE_NODE'
 
   /* MAKE A GET REQUEST FOR SINGLE NODE */
   chrome.runtime.sendMessage({
     type: GET_SINGLE_NODE,
-    data: 17
+    data: {
+      userId: 1,
+      nodes: nodesObj
+    }
   }, function(node) {
-    const dates = node.datesVisited
+    console.log(node)
+    let dates = []
+
+    const nodesArray = [node]
+
+    nodesArray.forEach(page => {
+      dates = [...dates, ...page.datesVisited]
+    })
 
     function fixTime(dbDate) {
       var date = new Date(dbDate)
@@ -17,8 +27,6 @@ const createNodeScatter = () => {
 
       return new Date(timeCorrect)
     }
-
-    console.log('correctTime', new Date(dates[0]), fixTime(dates[0]))
 
     let parentWidth = d3.select('svg').node().parentNode.clientWidth,
         parentHeight = d3.select('svg').node().parentNode.clientHeight;
@@ -59,8 +67,10 @@ const createNodeScatter = () => {
 
     /* CREATE X-SCALE & DOMAIN */
     const dateDomain = d3.extent(modDatesArr.map(obj => obj.date))
+    const originDate = new Date(2017, 4, 1)
+    const endDate = new Date(2017, 5, 1)
     const xScale = d3.scaleTime()
-      .domain(dateDomain)
+      .domain([originDate, endDate])
       .range([0, parentWidth-100])
 
     /* CREATE Y-SCALE & DOMAIN */
@@ -74,7 +84,7 @@ const createNodeScatter = () => {
       .ticks(10)
 
     const yAxis = d3.axisLeft(yScale)
-      .ticks(24)
+      .ticks(10)
       .tickFormat(d3.timeFormat('%I %p'))
 
     const g = svg.append('g')

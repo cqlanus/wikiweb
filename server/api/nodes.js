@@ -28,6 +28,13 @@ module.exports = require('express').Router()
     .then(node => res.json(node))
     .catch(next)
   })
+  .get('/user/:userId', (req, res, next) => {
+    Node.findAll({
+      where: {userId: req.params.userId}
+    })
+    .then(nodes => res.json(nodes))
+    .catch(next)
+  })
   .put('/:id', (req, res, next) => {
     Node.update(req.body, {
       where: { id: req.params.id }

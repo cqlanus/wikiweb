@@ -187,14 +187,16 @@ const fetchLinkData = function(linkInfo) {
 
 }
 
-const fetchSingleNode = function(nodeId) {
-  console.log('we have a nodeid', nodeId)
-  return fetch(`http://localhost:8000/api/nodes/${nodeId}`, {
+const fetchSelectedNodes = function(requestData) {
+  return fetch(`http://localhost:8000/api/nodes/users/${requestData.userId}`, {
     method: 'GET'
   })
   .then(res => res.json())
-  .then(node => {
-    return node
+  .then(nodesArr => {
+    const nodesToReturn = nodesArr.filter(node => {
+      return requestData.nodes[node.id]
+    })
+    return nodesToReturn
   })
 }
 
@@ -224,9 +226,8 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 				return true
 
       case 'GET_SINGLE_NODE':
-        fetchSingleNode(request.data)
+        fetchSelectedNodes(request.data)
         .then(node => {
-          console.log('node?')
           sendResponse(node)
         })
         return true
