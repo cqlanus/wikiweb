@@ -8,7 +8,7 @@ const createForceChart = (googleId) => {
     type: GET_USER,
     data: googleId
   }, function(results) {
-
+    console.log('results', results)
     let parentWidth = d3.select('svg').node().parentNode.clientWidth,
         parentHeight = d3.select('svg').node().parentNode.clientHeight;
 

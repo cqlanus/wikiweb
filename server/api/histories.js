@@ -14,8 +14,10 @@ module.exports = require('express').Router()
     })
   })
   .post('/', (req, res, next) => {
+    console.log('IN HISTORY ROUTE!!', req.body)
     const userId = req.body.userId
     const newNode = parseInt(req.body.newNode)
+    console.log('userId and newNode', userId, newNode)
     History.findOrCreate({
       where: {
         userId: userId
