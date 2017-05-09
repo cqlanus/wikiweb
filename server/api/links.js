@@ -19,6 +19,7 @@ module.exports = require('express').Router()
     const source = req.body.source < req.body.target ? req.body.source : req.body.target
     const target = req.body.source > req.body.target ? req.body.source : req.body.target
     const isHyperText = req.body.isHyperText
+    console.log('params', user, source, target, isHyperText)
     Link.findOrCreate({
       where: {
         userId: user,
@@ -38,8 +39,7 @@ module.exports = require('express').Router()
         res.status(201).json(link)
       } else {
         const updated = link.incrementStrength()
-        res.json(updated)
-
+        res.json(link)
       }
     })
     .catch(next)

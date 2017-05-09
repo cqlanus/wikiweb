@@ -19,7 +19,7 @@ const Main = props => (
 
 const onWebEnter = () => {
   console.log('calling in main component')
-  createForceChart('115893302668387505418')
+  createForceChart('115897382801290454219')
 }
 
 ReactDOM.render(
