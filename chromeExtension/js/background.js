@@ -29,11 +29,12 @@ else {
 /* ******* ACTIVATE EXTENSION WHEN MATCHING  ********/
 function activateListeners() {
 	chrome.tabs.onUpdated.addListener(function(id, info, tab){
+		console.log('tab', tab.url)
 	  if(tab.url.indexOf('wikipedia.org') > -1){
 	    chrome.pageAction.show(tab.id)
 	  }
 
-	  if (info.status === 'complete' && tab.active) {
+	  if (info.status==='complete' && tab.active && tab.url!='https://www.wikipedia.org/' && tab.url!='https://en.wikipedia.org/wiki/Main_Page' ) {
 	  	console.log('making page request to postNode, googleId: ', store.googleId)
 	  	makeUniquePageRequest(tab)
 	  }
