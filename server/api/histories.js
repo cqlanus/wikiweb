@@ -8,18 +8,21 @@ module.exports = require('express').Router()
       .then(histories => res.json(histories))
       .catch(next)
   })
+  //THis is confusing. I would expect it to take the ID of the History you want. Not conventational REST
+  // Maybe use a query param to filter user ID
   .get('/:userId', (req, res, next) => {
     History.findAll({
       where: { userId: req.params.userId}
     })
+    //res.send/.catch(next)
   })
   .post('/', (req, res, next) => {
     const userId = req.body.userId
-    const newNode = parseInt(req.body.newNode)
+    const newNode = parseInt(req.body.newNode) //Sequelize wouldn't do this by default?
     History.findOrCreate({
-      where: { 
+      where: {
         userId: userId
-      }, 
+      },
       defaults: {
         userId: userId,
         history: [newNode]
@@ -27,8 +30,10 @@ module.exports = require('express').Router()
     })
     .spread((foundHistory, created) => {
       if (!created) {
+        //If not created, post updates??
+        //Also, update already saves,
         foundHistory.update({
-                history: [...foundHistory.history, (req.body.newNode)]
+                history: [...foundHistory.history, req.body.newNode]
               })
         foundHistory.save()
       }

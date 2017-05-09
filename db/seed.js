@@ -1,7 +1,7 @@
 const Promise = require('bluebird')
 const db = require('./db.js')
 const {User, Node, Link, History} = require('./models')
-
+// Could we put all this data into a JSON file?
 const data = {
   users: [
     {name: 'Chris', googleId:'115893302668387505418'}, {name: 'Nick', googleId:'215893302668387505418'}, {name: 'Ellie', googleId: '315893302668387505418'}
@@ -68,7 +68,7 @@ db.sync({force:true})
     console.log('now creating data for nodes and links')
     const creatingNodes = Promise.map(data.nodes, node => Node.create(node))
     const creatingLinks = Promise.map(data.links, link => Link.create(link))
-    const creatingHistory = Promise.map(data.histories, history => History.create(history))
+    const creatingHistory = Promise.map(data.histories, history => History.create(history)) //Why am I just used? You kick off the async operation but never wait for it to resolve
 
     return Promise.all([creatingNodes, creatingLinks])
   })

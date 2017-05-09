@@ -1,3 +1,5 @@
+//What is this and who is jr conlin?
+
 // /* OAuthSimple
 //   * A simpler version of OAuth
 //   *

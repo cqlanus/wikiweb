@@ -19,7 +19,7 @@ else {
     	console.log('googleId on info exists')
         store.googleId  = info.id
         activateListeners();
-    } else { 
+    } else {
     	console.log('needed to authenticate')
     	startAuth() }
     })
@@ -126,6 +126,8 @@ const getUserId = function(){
 /* ******* ASYNC THUNKS  ********/
 
 const fetchUser = function(googleId) {
+	//Maybe don't hardcode your server. what about PROD?
+	//indentation! get a .eslint.json
 	return fetch(`http://localhost:8000/api/users/googleId/${googleId}`, {
     	method: 'GET',
     	})
@@ -162,8 +164,9 @@ const fetchNodeData = function(nodeInfo) {
 		return nodeRes.json()
 	})
 }
-
+//Name is super confusing. Don't use the word fetch
 const fetchHistoryData = function(historyInfo) {
+	//Maybe write a wrapper around fetch to send JSON POSTS and make GETs?
 	return fetch('http://localhost:8000/api/history', {
     	method: 'POST',
     	headers: {
@@ -175,7 +178,7 @@ const fetchHistoryData = function(historyInfo) {
 		return historyRes.json()
 	})
 }
-
+//Name is super confusing. Don't use the word fetch
 const fetchLinkData = function(linkInfo) {
   return fetch('http://localhost:8000/api/links', {
     method: 'POST',
