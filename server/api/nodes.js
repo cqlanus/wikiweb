@@ -29,6 +29,7 @@ module.exports = require('express').Router()
     .catch(next)
   })
   .get('/user/:userId', (req, res, next) => {
+    console.log('userId', req.params.userId)
     Node.findAll({
       where: {userId: req.params.userId}
     })

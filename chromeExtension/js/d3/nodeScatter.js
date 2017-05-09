@@ -10,11 +10,11 @@ const createNodeScatter = (nodesObj) => {
       userId: 1,
       nodes: nodesObj
     }
-  }, function(node) {
-    console.log(node)
+  }, function(nodesArray) {
+    console.log(nodesArray)
     let dates = []
 
-    const nodesArray = [node]
+    // const nodesArray = [node]
 
     nodesArray.forEach(page => {
       dates = [...dates, ...page.datesVisited]
@@ -54,7 +54,8 @@ const createNodeScatter = (nodesObj) => {
     const dateParse = d3.timeParse(dateSpecifier)
 
     /* PARSE DATES ARRAY INTO DATES AND TIMES */
-    const modDatesArr = dates.map(date => {
+    const modDatesArr = dates.map((date, i) => {
+      // console.log('what is this', nodesArray[i].url)
       return {
         full: fixTime(date),
         date: dateParse(dateFormat(fixTime(date))),
@@ -112,6 +113,26 @@ const createNodeScatter = (nodesObj) => {
       .attr('r', 10)
       .attr('fill', 'indianred')
       .attr('stroke', 'black')
+
+    /* CREATE HOVERABLE TOOLTIPS */
+    const divTooltip = d3.select("body").append("div").attr("class", "toolTip")
+        g.on("mousemove", function(d){
+          divTooltip.style("left", d3.event.pageX+10+"px");
+          divTooltip.style("top", d3.event.pageY-25+"px");
+          divTooltip.style("display", "inline-block");
+          let x = d3.event.pageX, y = d3.event.pageY
+          let elements = document.querySelectorAll(':hover');
+          let l = elements.length
+          l = l-1
+          let elementData = elements[l].__data__
+          // console.log(elementData)
+          divTooltip.html(`
+            hello
+          `);
+          });
+        g.on("mouseout", function(d){
+          divTooltip.style("display", "none");
+          })
   })
 }
 

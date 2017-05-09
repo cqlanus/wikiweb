@@ -23,7 +23,7 @@ const onWebEnter = () => {
 }
 
 const onScatterEnter = () => {
-  createNodeScatter({'17': true, '16': true})
+  createNodeScatter({'17': true, '16': true, '1': true})
 }
 
 ReactDOM.render(

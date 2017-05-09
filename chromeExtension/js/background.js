@@ -188,11 +188,12 @@ const fetchLinkData = function(linkInfo) {
 }
 
 const fetchSelectedNodes = function(requestData) {
-  return fetch(`http://localhost:8000/api/nodes/users/${requestData.userId}`, {
+  return fetch(`http://localhost:8000/api/nodes/user/${requestData.userId}`, {
     method: 'GET'
   })
   .then(res => res.json())
   .then(nodesArr => {
+    console.log('nodesArr from background', nodesArr)
     const nodesToReturn = nodesArr.filter(node => {
       return requestData.nodes[node.id]
     })
