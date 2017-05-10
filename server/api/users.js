@@ -1,6 +1,6 @@
 'use strict'
 
-const {User, Node, Link} = require('../../db/models')
+const {User, Node, Link, History} = require('../../db/models')
 
 //const Category = db.model.category
 module.exports = require('express').Router()
@@ -25,7 +25,7 @@ module.exports = require('express').Router()
         defaults: {
           googleId: req.params.googleId
         },
-        include: [Node, Link]
+        include: [Node, Link, History]
     })
     .then(foundUser => {
       res.json(foundUser)

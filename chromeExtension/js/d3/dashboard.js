@@ -10,27 +10,32 @@ const createForceChart = (googleId) => {
   }, function(results) {
     console.log('results', results)
     let parentWidth = d3.select('svg').node().parentNode.clientWidth,
-        parentHeight = d3.select('svg').node().parentNode.clientHeight;
+        parentHeight = 500/*d3.select('svg').node().parentNode.clientHeight*/;
 
     /* GET SVG ELEMENT ON PAGE */
     const svg = d3.select("svg")
       .attr('width', parentWidth)
       .attr('height', parentHeight)
 
+    /* PARENT EL */
     const gMain = svg.append('g')
       .classed('g-main', true)
 
+    /* ATTACH RECT TO SIMULATE EMPTY SPACE FOR ZOOM/PAN BEHAVIOR */
     const rect = gMain.append('rect')
+      .attr('class', 'rect')
       .attr('width', parentWidth)
       .attr('height', parentHeight)
-      .attr('fill', 'white')
+      .attr('fill', 'lightsteelblue')
 
     const gDraw = gMain.append('g').classed('draw', true)
 
     /* CREATE ZOOM BEHAVIOR */
-    const zoom = d3.zoom().on('zoom', zoomed)
+    const zoom = d3.zoom()
+      .scaleExtent([0.5, 16])
+      .on('zoom', zoomed)
 
-    /* ATTACH ZOOM BEHAVIOR */
+    /* ATTACH ZOOM BEHAVIOR TO PARENT EL (gMain) */
     gMain.call(zoom)
 
     function zoomed() { gDraw.attr('transform', d3.event.transform)}
