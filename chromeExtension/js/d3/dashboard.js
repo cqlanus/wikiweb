@@ -104,8 +104,8 @@ console.log('got here')
           divTooltip.style("display", "none");
         })
 
-        function singleNodeClick() {
-           node.on("click", function(d){
+
+        function makeModal(d) {
             var elementExists = document.getElementById("infoModal");
             if(elementExists) elementExists.remove()
             const infoModal = d3.select("body").append("div").attr("id","infoModal")
@@ -114,7 +114,7 @@ console.log('got here')
             infoModal.style("height", "150px")
             infoModal.style("background-color","ivory")
             infoModal.style("color","black")
-            infoModal.html(`<h2>${d.url}</h2><h2>${d.visitCount}</h2><h2>${d.title}</h2>`)
+             infoModal.html(`<h2>${d.url}</h2><h2>${d.visitCount}</h2><h2>${d.title}</h2>`)
             infoModal.html(`
               <table>
                 <tr><th>Page Title</th><th>Visit Count</th><th>Page Url</th></tr>
@@ -122,9 +122,13 @@ console.log('got here')
               <table>
             <a href="https://www.w3schools.com">View In Depth analysis</a>
             `)
-          })
         }
-        singleNodeClick()
+
+        function singleNodeClick() {
+           node.on("click", function(d){ makeModal(d) } )
+        }
+
+      singleNodeClick()
 
      function collectSeletedNodes() {
       let selnodes = svg.selectAll('.selected')._groups[0]
