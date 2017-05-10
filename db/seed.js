@@ -4,56 +4,56 @@ const {User, Node, Link, History} = require('./models')
 
 const data = {
   users: [
-    {name: 'Chris', googleId:'115893302668387505418'}, {name: 'Nick', googleId:'215893302668387505418'}, {name: 'Ellie', googleId: '315893302668387505418'}
+    {name: 'Chris', googleId:'115893302668387505418'}, {name: 'Nick', googleId:'215893302668387505418'}, {name: 'Ellie', googleId: '115897382801290454219'}
   ],
 
   nodes: [
-    {title: 'A', url: 'wiki/A', visitCount: 4, userId: 1}, // 1
-    {title: 'B', url: 'wiki/B', visitCount: 2, userId: 1}, // 2
-    {title: 'C', url: 'wiki/C', visitCount: 1, userId: 1}, // 3
-    {title: 'D', url: 'wiki/D', visitCount: 1, userId: 1},//4
-    {title: 'E', url: 'wiki/E', visitCount: 2, userId: 1},//5
+    {title: 'A', url: 'wiki/A', visitCount: 4, userId: 3}, // 1
+    {title: 'B', url: 'wiki/B', visitCount: 2, userId: 3}, // 2
+    {title: 'C', url: 'wiki/C', visitCount: 1, userId: 3}, // 3
+    {title: 'D', url: 'wiki/D', visitCount: 1, userId: 3},//4
+    {title: 'E', url: 'wiki/E', visitCount: 2, userId: 3},//5
 
-    {title: 'F', url: 'wiki/F', visitCount: 1, userId: 1},//6
-    {title: 'G', url: 'wiki/G', visitCount: 1, userId: 1},//7
-    {title: 'H', url: 'wiki/H', visitCount: 2, userId: 1},//8
-    {title: 'I', url: 'wiki/I', visitCount: 1, userId: 1},//9
-    {title: 'J', url: 'wiki/J', visitCount: 2, userId: 1},//10
-    {title: 'K', url: 'wiki/K', visitCount: 2, userId: 1},//11
-    {title: 'L', url: 'wiki/L', visitCount: 1, userId: 1},//12
-    {title: 'M', url: 'wiki/M', visitCount: 1, userId: 1},//13
-    {title: 'N', url: 'wiki/N', visitCount: 2, userId: 1},//14
-    {title: 'O', url: 'wiki/O', visitCount: 1, userId: 1},//15
-    {title: 'P', url: 'wiki/P', visitCount: 1, userId: 1},//16
+    {title: 'F', url: 'wiki/F', visitCount: 1, userId: 3},//6
+    {title: 'G', url: 'wiki/G', visitCount: 1, userId: 3},//7
+    {title: 'H', url: 'wiki/H', visitCount: 2, userId: 3},//8
+    {title: 'I', url: 'wiki/I', visitCount: 1, userId: 3},//9
+    {title: 'J', url: 'wiki/J', visitCount: 2, userId: 3},//10
+    {title: 'K', url: 'wiki/K', visitCount: 2, userId: 3},//11
+    {title: 'L', url: 'wiki/L', visitCount: 1, userId: 3},//12
+    {title: 'M', url: 'wiki/M', visitCount: 1, userId: 3},//13
+    {title: 'N', url: 'wiki/N', visitCount: 2, userId: 3},//14
+    {title: 'O', url: 'wiki/O', visitCount: 1, userId: 3},//15
+    {title: 'P', url: 'wiki/P', visitCount: 1, userId: 3},//16
 
   ],
 
   links: [
-    {source: 1, target: 2, isHyperText: true, strength: 2, userId: 1},
-    {source: 2, target: 3, isHyperText: true, strength: 1, userId: 1},
-    {source: 3, target: 1, isHyperText: true, strength: 1, userId: 1},
-    {source: 2, target: 5, isHyperText: true, strength: 1, userId: 1},
-    {source: 5, target: 1, isHyperText: true, strength: 1, userId: 1},
-    {source: 1, target: 4, isHyperText: true, strength: 2, userId: 1},
-    {source: 1, target: 6, isHyperText: true, strength: 1, userId: 1},
-    {source: 6, target: 7, isHyperText: true, strength: 1, userId: 1},
-    {source: 7, target: 8, isHyperText: true, strength: 1, userId: 1},
-    {source: 8, target: 3, isHyperText: true, strength: 1, userId: 1},
-    {source: 3, target: 9, isHyperText: true, strength: 1, userId: 1},
-    {source: 9, target: 10, isHyperText: true, strength: 1, userId: 1},
-    {source: 10, target: 5, isHyperText: true, strength: 2, userId: 1},
-    {source: 10, target: 8, isHyperText: true, strength: 1, userId: 1},
-    {source: 11, target: 12, isHyperText: true, strength: 1, userId: 1},
-    {source: 12, target: 13, isHyperText: true, strength: 1, userId: 1},
-    {source: 13, target: 11, isHyperText: true, strength: 1, userId: 1},
-    {source: 11, target: 14, isHyperText: true, strength: 1, userId: 1},
-    {source: 14, target: 15, isHyperText: true, strength: 1, userId: 1},
-    {source: 15, target: 16, isHyperText: true, strength: 1, userId: 1},
-    {source: 16, target: 14, isHyperText: true, strength: 1, userId: 1},
+    {source: 1, target: 2, isHyperText: true, strength: 2, userId: 3},
+    {source: 2, target: 3, isHyperText: true, strength: 1, userId: 3},
+    {source: 3, target: 1, isHyperText: true, strength: 1, userId: 3},
+    {source: 2, target: 5, isHyperText: true, strength: 1, userId: 3},
+    {source: 5, target: 1, isHyperText: true, strength: 1, userId: 3},
+    {source: 1, target: 4, isHyperText: true, strength: 2, userId: 3},
+    {source: 1, target: 6, isHyperText: true, strength: 1, userId: 3},
+    {source: 6, target: 7, isHyperText: true, strength: 1, userId: 3},
+    {source: 7, target: 8, isHyperText: true, strength: 1, userId: 3},
+    {source: 8, target: 3, isHyperText: true, strength: 1, userId: 3},
+    {source: 3, target: 9, isHyperText: true, strength: 1, userId: 3},
+    {source: 9, target: 10, isHyperText: true, strength: 1, userId: 3},
+    {source: 10, target: 5, isHyperText: true, strength: 2, userId: 3},
+    {source: 10, target: 8, isHyperText: true, strength: 1, userId: 3},
+    {source: 11, target: 12, isHyperText: true, strength: 1, userId: 3},
+    {source: 12, target: 13, isHyperText: true, strength: 1, userId: 3},
+    {source: 13, target: 11, isHyperText: true, strength: 1, userId: 3},
+    {source: 11, target: 14, isHyperText: true, strength: 1, userId: 3},
+    {source: 14, target: 15, isHyperText: true, strength: 1, userId: 3},
+    {source: 15, target: 16, isHyperText: true, strength: 1, userId: 3},
+    {source: 16, target: 14, isHyperText: true, strength: 1, userId: 3},
   ],
 
   histories: [
-    {userId: 1, history: [1,2,3,1,2,5,1,4,1,6,7,8,3,9,10,5,10,8,11,12,13,11,14,15,16,14]}
+    {userId: 3, history: [1,2,3,1,2,5,1,4,1,6,7,8,3,9,10,5,10,8,11,12,13,11,14,15,16,14]}
   ]
 }
 

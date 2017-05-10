@@ -1,6 +1,6 @@
 'use strict'
 
-const {Node, Link} = require('../../db/models')
+const {Node, Link, User} = require('../../db/models')
 
 module.exports = require('express').Router()
   .get('/', (req, res, next) => {
@@ -8,6 +8,34 @@ module.exports = require('express').Router()
       .then(nodes => res.json(nodes))
       .catch(next)
   })
+
+  .post('/postNode', (req, res, next) => {
+    User.findOne({
+      where: {googleId: req.body.googleId}
+    })
+    .then(user=>{
+      return user.dataValues.id
+    })
+    .then(userId=>{
+      req.body['userId'] = userId;
+      return Node.findOrCreate({
+        where: {title: req.body.title},
+        defaults: req.body
+      })
+    })
+    .spread((node, created) => {
+      console.log('node', node)
+      if (created) { 
+        res.status(201).json(node)}
+      else {
+        const updated = node.incrementVisitCount()
+        res.json(node)
+      }
+    })
+    .catch(next)
+    })
+  
+
   .post('/', (req, res, next) => {
     console.log('req body',req.body)
     Node.findOrCreate({
