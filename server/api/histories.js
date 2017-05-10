@@ -19,9 +19,9 @@ module.exports = require('express').Router()
     const newNode = parseInt(req.body.newNode)
     console.log('userId and newNode', userId, newNode)
     History.findOrCreate({
-      where: { 
+      where: {
         userId: userId
-      }, 
+      },
       defaults: {
         userId: userId,
         history: [newNode]

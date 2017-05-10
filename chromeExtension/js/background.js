@@ -1,4 +1,4 @@
-/* ******* 
+/* *******
 RUNS AS SOON AS EXTENSION IS OPENED
 ********/
 
@@ -19,7 +19,7 @@ else {
     	console.log('googleId on google profile exists')
         store.googleId  = info.id
         activateListeners();
-    } else { 
+    } else {
     	console.log('needed to authenticate')
     	startAuth() }
     })
@@ -103,7 +103,7 @@ chrome.tabs.onActivated.addListener(function(tabId) {
 //postNode returns a promise for info on insertedNode
 const postNodePromise = (nodeOb) => {
    console.log('in postNodePromise', nodeOb)
-   let nodeInfoPromise = 
+   let nodeInfoPromise =
      post('nodes/postNode', nodeOb)
      .then((nodeResponse)=>{
    	   console.log('scuess')
@@ -117,7 +117,7 @@ const postHistoryPromise = function(userId) {
 	  	userId: userId,
 	  	newNode: store.currentNode
 	  }
-	let historyInfoPromise = 
+	let historyInfoPromise =
 	  post('/history', historyData)
 	  .then(hisResponse=>{
    		return hisResponse.json()
@@ -133,7 +133,7 @@ const postLinkPromise = function(userId) {
 	  	userId: userId
 	 }
 	 if (linkData.source!='') {
-	  	linkInfoPromise = 
+	  	linkInfoPromise =
 	  	post('/links', linkData)
 	   	.then(linkResponse=>{
 	   		return linkResponse.json()
@@ -154,6 +154,17 @@ const getUserPromise = function(googleId) {
 	  console.log('this is what im returning', ew)
 	  return ew
 	})
+}
+
+const getSelectedNodes = function(requestData) {
+  return get(`nodes/user/${requestData.userId}`)
+  .then(res => res.json())
+  .then(nodesArr => {
+    const nodesToReturn = nodesArr.filter(node => {
+      return requestData.nodes[node.id]
+    })
+    return nodesToReturn
+  })
 }
 
 /* ******* SWITCH LISTENER FOR INCOMING MESSAGES********/
@@ -187,6 +198,14 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 					sendResponse(user)
 				})
 				return true
+
+      case 'GET_SINGLE_NODE':
+        getSelectedNodes(request.data)
+        .then(node => {
+          sendResponse(node)
+        })
+        return true
+
 			default:
 				return console.error('error in switch')
 		}

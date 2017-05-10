@@ -1,7 +1,6 @@
 const d3 = require('d3')
 
 const createForceChart = (googleId) => {
-  console.log('calling in createForceChart', googleId)
   const GET_USER = 'getUser'
 
   /* MAKE A GET REQUEST FOR CURRENT USER */
