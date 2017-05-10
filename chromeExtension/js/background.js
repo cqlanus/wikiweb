@@ -19,7 +19,7 @@ else {
     	console.log('googleId on info exists')
         store.googleId  = info.id
         activateListeners();
-    } else { 
+    } else {
     	console.log('needed to authenticate')
     	startAuth() }
     })
@@ -134,7 +134,7 @@ const fetchUser = function(googleId) {
 		})
     	.then(results => {
       		//console.log('results inside getUser', results)
-      		return results
+      		return results[0]
     	})
 }
 
