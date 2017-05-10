@@ -52,10 +52,16 @@ module.exports = require('express').Router()
     .catch(next)
   })
   .get('/:id', (req, res, next) => {
-    Node.findById(req.params.id, {
-      include: [Link]
-    })
+    Node.findById(req.params.id)
     .then(node => res.json(node))
+    .catch(next)
+  })
+  .get('/user/:userId', (req, res, next) => {
+    console.log('userId', req.params.userId)
+    Node.findAll({
+      where: {userId: req.params.userId}
+    })
+    .then(nodes => res.json(nodes))
     .catch(next)
   })
   .put('/:id', (req, res, next) => {
