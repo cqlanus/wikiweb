@@ -38,8 +38,15 @@ module.exports = require('express').Router()
 )
 
   .post('/', (req, res, next) => {
-    User.create(req.body)
-    .then(user => res.status(201).json(user))
+    console.log('in post for user', req.body)
+    User.findOrCreate({
+      where: {googleId: req.body.googleId}, 
+      defaults: {googleId: req.body.googleId}
+    })
+    .then(res2 => {
+      console.log('res', res2)
+      res.status(201).json(res2)
+    })
     .catch(next)
   })
   
@@ -50,7 +57,7 @@ module.exports = require('express').Router()
     .then(user => res.json(user))
     .catch(next)
   })
-  
+
   .delete('/:id', (req, res, next) => {
     User.findById(req.params.id)
     .then(user => user.destroy())
