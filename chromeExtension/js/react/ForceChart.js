@@ -7,41 +7,71 @@ class ForceChart extends React.Component {
     super()
 
     this.state = {
-      history: false,
-      currentNodeId: 0
+      historyView: false,
+      currentNodeId: 0,
+      pageHistory: []
     }
     this.handleToggle = this.handleToggle.bind(this)
     this.handleNextNode = this.handleNextNode.bind(this)
     this.handlePrevNode = this.handlePrevNode.bind(this)
+    this.getHistory = this.getHistory.bind(this)
+  }
+
+  componentDidMount() {
+    this.getHistory()
+  }
+
+  getHistory() {
+    chrome.runtime.sendMessage({
+    type: 'getUser',
+    data: '115893302668387505418'
+  }, (results) => {
+      this.setState({
+        pageHistory: results.history.history
+      })
+    })
   }
 
   handleToggle(evt) {
     console.log('toggle')
     this.setState({
-      history: !this.state.history
+      historyView: !this.state.historyView,
+      currentNodeId: this.state.currentNodeId + 1
     })
 
   this.zoomFn()
-
   }
 
   zoomFn() {
-    const selectedCircle = d3.selectAll('.selected')
-    const circleData = selectedCircle._groups[0][0] ? selectedCircle._groups[0][0].__data__ : {x: 250, y: 110}
-    let x = circleData.x
-    let y = circleData.y
-    const zoom = d3.zoom().on('zoom', zoomed)
 
-    function zoomed() {
-      const k = 500 / 180
-      const center = [540/2, 500/2]
-      console.log('zoomed called')
+    const d3NodeArr = d3.selectAll('circle').empty() ? 'empty' : d3.selectAll('circle').nodes()
+    const nodeDataArr = d3.selectAll('circle').empty() ? 'empty' : d3.selectAll('circle').nodes().map(node => node.__data__)
+    const currentNodeData = nodeDataArr.find(node => {
+      return node.id === this.state.pageHistory[this.state.currentNodeId]
+    })
+    // console.log('d3NodeArr', d3NodeArr)
+    const currentD3Node = d3NodeArr.find(node => node.__data__.id === currentNodeData.id)
+    console.log('currentNodeData', currentNodeData, currentD3Node)
+    d3.select(currentD3Node).attr('class', 'selected')
+
+    const xOffset = currentNodeData.x,
+          yOffset = currentNodeData.y
+
+    const zoom = d3.zoom().on('zoom', zoomer)
+
+    function zoomer() {
+      const scaleMultipler = 4,
+            height = d3.selectAll('.rect').node().getBBox().height,
+            width = d3.selectAll('.rect').node().getBBox().width,
+            center = [width/2, height/2],
+            xTranlation = center[0] - xOffset * scaleMultipler,
+            yTranslation = center[1]-yOffset * scaleMultipler
+
       drawSpace.transition().duration(1000)
-      .attr('transform', `translate(${center[0]-x * k}, ${center[1]-y * k})scale(3)`)
+      .attr('transform', `translate(${xTranlation}, ${yTranslation})scale(${scaleMultipler})`)
     }
+
     const drawSpace = d3.selectAll('.draw')
-
-
     drawSpace.call(zoom.transform, d3.zoomIdentity)
   }
 
@@ -49,23 +79,24 @@ class ForceChart extends React.Component {
     this.setState({
       currentNodeId: this.state.currentNodeId + 1
     })
+    this.zoomFn()
   }
 
   handlePrevNode(evt) {
     this.setState({
       currentNodeId: this.state.currentNodeId - 1
     })
+    this.zoomFn()
   }
 
   render() {
-
-    this.zoomFn()
+    console.log('currentNodeId & history position', this.state.currentNodeId, this.state.pageHistory[this.state.currentNodeId])
   return (
   <div className="canvas-container">
     <svg height="700" width="100%"></svg>
     <div className='btns'>
       <button onClick={this.handleToggle}>history</button>
-    { this.state.history ?
+    { this.state.historyView ?
       <div>
         <button onClick={this.handlePrevNode}>back</button>
         <button onClick={this.handleNextNode}>forward</button>

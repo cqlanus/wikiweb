@@ -81,7 +81,7 @@ const createForceChart = (googleId) => {
 
     /* DEFINE FORCE GRAPH RULES */
     const simulation = d3.forceSimulation()
-      .force("link", d3.forceLink().id(function(d) { return d.id; }).distance(d => 30/d.strength))
+      .force("link", d3.forceLink().id(function(d) { return d.id; }).distance(d => 70/d.strength))
       .force("charge", d3.forceManyBody().distanceMax(200))
       .force("center", d3.forceCenter(window.innerWidth / 2, parentHeight / 2))
       .velocityDecay(0.7)
