@@ -9,8 +9,10 @@ module.exports = require('express').Router()
       .catch(next)
   })
   .get('/:userId', (req, res, next) => {
-    History.findAll({
-      where: { userId: req.params.userId}
+    console.log('reqparamsuserid', req.params.userId)
+    History.findById(req.params.userId)
+    .then(history=>{
+      res.json(history)
     })
   })
   .post('/', (req, res, next) => {

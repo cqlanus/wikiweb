@@ -9,10 +9,8 @@ module.exports = require('express').Router()
       .catch(next)
   })
   .get('/:userId', (req, res, next) => {
-    Link.findAll({
-      where: { userId: req.params.userId}
-    })
-    .then(links => res.json(links))
+    Link.findById(req.params.userId)
+    .then(link => res.json(link))
   })
   .post('/', (req, res, next) => {
     const user = req.body.userId
@@ -42,11 +40,6 @@ module.exports = require('express').Router()
         res.json(link)
       }
     })
-    .catch(next)
-  })
-  .get('/:id', (req, res, next) => {
-    Link.findById(req.params.id)
-    .then(link => res.json(link))
     .catch(next)
   })
   .put('/:id', (req, res, next) => {

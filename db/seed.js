@@ -61,7 +61,6 @@ db.sync({force:true})
   .then(() => {
     console.log('old data was dropped, now inserting')
     const creatingUsers = Promise.map(data.users, user => User.create(user))
-
     return Promise.resolve(creatingUsers)
   })
   .then(() => {
@@ -70,7 +69,7 @@ db.sync({force:true})
     const creatingLinks = Promise.map(data.links, link => Link.create(link))
     const creatingHistory = Promise.map(data.histories, history => History.create(history))
 
-    return Promise.all([creatingNodes, creatingLinks])
+    return Promise.all([creatingNodes, creatingLinks, creatingHistory])
   })
   .catch(err => {
     console.error('there was a problem', err, err.stack)
