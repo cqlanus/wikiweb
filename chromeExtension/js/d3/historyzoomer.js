@@ -26,7 +26,7 @@ function d3Zoom(history, idx) {
             xTranlation = center[0] - xOffset * scaleMultipler,
             yTranslation = center[1]-yOffset * scaleMultipler
 
-      drawSpace.transition().duration(1000)
+      drawSpace.transition().duration(500)
       .attr('transform', `translate(${xTranlation}, ${yTranslation})scale(${scaleMultipler})`)
     }
 
