@@ -1,3 +1,13 @@
+
+/************************************************
+
+Source Attribution:
+Mike Bostock - Force-Directed Graph
+https://bl.ocks.org/mbostock/4062045
+
+************************************************/
+
+
 const d3 = require('d3')
 
 const createForceChart = (googleId) => {

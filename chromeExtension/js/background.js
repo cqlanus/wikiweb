@@ -2,6 +2,10 @@
 RUNS AS SOON AS EXTENSION IS OPENED
 ********/
 
+//run startAuth
+//then findOrCreate
+startAuth()
+
 let store = {
 	currentNode: '',
 	previousNode: '',
@@ -9,21 +13,21 @@ let store = {
 	googleId: ''
 }
 
-if (store.googleId) {
-  console.log('googleId on store already exists', store.googleId)
-  activateListeners();
-}
-else {
-  chrome.identity.getProfileUserInfo(function(info){
-    if( info.id !== '' ) {
-    	console.log('googleId on google profile exists')
-        store.googleId  = info.id
-        activateListeners();
-    } else {
-    	console.log('needed to authenticate')
-    	startAuth() }
-    })
-}
+// if (store.googleId) {
+//   console.log('googleId on store already exists', store.googleId)
+//   activateListeners();
+// }
+// else {
+//   chrome.identity.getProfileUserInfo(function(info){
+//     if( info.id !== '' ) {
+//     	console.log('googleId on google profile exists')
+//         store.googleId  = info.id
+//         activateListeners();
+//     } else {
+//     	console.log('needed to authenticate')
+//     	startAuth() }
+//     })
+// }
 
 
 /* *******  Wrappers ********/
@@ -41,13 +45,17 @@ function activateListeners() {
 
 function startAuth() {
   chrome.identity.getAuthToken({ 'interactive': true }, function(token) {
-    if (chrome.runtime.lastError) console.log(chrome.runtime.lastError)
-	else {
+  	console.log('in the start auth function')
+  	console.log('got token', token)
+    //if (chrome.runtime.lastError) console.log(chrome.runtime.lastError)
+	// else {
       chrome.identity.getProfileUserInfo(function(info) {
+      	console.log('in getProfileUserInfo, going to set store', info)
         store.googleId  = info.id;
+        checkUser()
         activateListeners();
       })
-    }
+    //}
   })
 }
 
@@ -110,6 +118,17 @@ const postNodePromise = (nodeOb) => {
 	   return nodeResponse.json()
      })
    return nodeInfoPromise
+}
+
+const checkUser = (nodeOb) => {
+	console.log('in checkUser promise maker')
+   let checkUserPromise =
+     post('users/', store)
+    //  .then((nodeResponse)=>{
+   	//    console.log('scuess')
+	   // return nodeResponse.json()
+    //  })
+   //return nodeInfoPromise
 }
 
 const postHistoryPromise = function(userId) {

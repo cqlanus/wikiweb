@@ -9,6 +9,28 @@ module.exports = require('express').Router()
       .catch(next)
   })
 
+  .get('/:id', (req, res, next) => {
+    Node.findById(req.params.id)
+    .then(node => res.json(node))
+    .catch(next)
+  })
+
+  .post('/', (req, res, next) => {
+    console.log('req body',req.body)
+    Node.findOrCreate({
+      where: { title: req.body.title}, // body should have unique name/url combo
+      defaults: req.body
+    })
+    .spread((node, created) => {
+      if (created) { res.status(201).json(node)}
+      else {
+        const updated = node.incrementVisitCount()
+        res.json(updated)
+      }
+    })
+    .catch(next)
+  })
+
   .post('/postNode', (req, res, next) => {
     User.findOne({
       where: {googleId: req.body.googleId}
@@ -34,28 +56,7 @@ module.exports = require('express').Router()
     })
     .catch(next)
     })
-  
 
-  .post('/', (req, res, next) => {
-    console.log('req body',req.body)
-    Node.findOrCreate({
-      where: { title: req.body.title}, // body should have unique name/url combo
-      defaults: req.body
-    })
-    .spread((node, created) => {
-      if (created) { res.status(201).json(node)}
-      else {
-        const updated = node.incrementVisitCount()
-        res.json(updated)
-      }
-    })
-    .catch(next)
-  })
-  .get('/:id', (req, res, next) => {
-    Node.findById(req.params.id)
-    .then(node => res.json(node))
-    .catch(next)
-  })
   .get('/user/:userId', (req, res, next) => {
     console.log('userId', req.params.userId)
     Node.findAll({
@@ -64,6 +65,7 @@ module.exports = require('express').Router()
     .then(nodes => res.json(nodes))
     .catch(next)
   })
+
   .put('/:id', (req, res, next) => {
     Node.update(req.body, {
       where: { id: req.params.id }
@@ -71,6 +73,7 @@ module.exports = require('express').Router()
     .then(node => res.json(node))
     .catch(next)
   })
+  
   .delete('/:id', (req, res, next) => {
     Node.findById(req.params.id)
     .then(node => node.destroy())
