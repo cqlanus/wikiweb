@@ -106,22 +106,35 @@ console.log('got here')
 
 
         function makeModal(d) {
+          if(!Array.isArray(d)){
+            d = [d]
+          }
+            let tableRow = d.map(data => {
+              return `<tr><th>${data.title}</th><th>${data.visitCount}</th><th>/${data.url}</th></tr>`
+            }).join()
+            let htmlelement =
+              '<table><tr><th>Page Title</th><th>Visit Count</th><th>Page Url</th></tr>' +
+              tableRow +
+                '<table>'
+
             var elementExists = document.getElementById("infoModal");
             if(elementExists) elementExists.remove()
             const infoModal = d3.select("body").append("div").attr("id","infoModal")
             infoModal.style("position", 'absolute')
-            infoModal.style("width", "250px")
+            infoModal.style("width", "550px")
             infoModal.style("height", "150px")
+            infoModal.style("padding", "20px")
             infoModal.style("background-color","ivory")
             infoModal.style("color","black")
-             infoModal.html(`<h2>${d.url}</h2><h2>${d.visitCount}</h2><h2>${d.title}</h2>`)
-            infoModal.html(`
-              <table>
-                <tr><th>Page Title</th><th>Visit Count</th><th>Page Url</th></tr>
-                <tr><th>${d.title}</th><th>${d.visitCount}</th><th>wikipedia.org/wiki/${d.url}</th></tr>
-              <table>
-            <a href="https://www.w3schools.com">View In Depth analysis</a>
-            `)
+            //infoModal.html(`<h2>${d.url}</h2><h2>${d.visitCount}</h2><h2>${d.title}</h2>`)
+
+            infoModal.html(htmlelement)
+            // infoModal.html(`
+            //   <table>
+            //     <tr><th>Page Title</th><th>Visit Count</th><th>Page Url</th></tr>
+            //     <tr><th>${d.title}</th><th>${d.visitCount}</th><th>/${d.url}</th></tr>
+            //   <table>
+            // `)
         }
 
         function singleNodeClick() {
@@ -137,7 +150,8 @@ console.log('got here')
         return selnodes[num].__data__
         // return selnodes[num][0][0].__data__
       })
-      return result
+      makeModal(result)
+      // return result
       //console.log(selnodes[keyV[0][0]].__data__)
     }
 
