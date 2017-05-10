@@ -12,12 +12,15 @@ module.exports = require('express').Router()
       res.json(users)})
     .catch(next)
   })
-  .post('/', (req, res, next) => {
-    User.create(req.body)
-    .then(user => res.status(201).json(user))
+.get('/:id', (req, res, next) => {
+    User.findById(req.params.id, {
+      include: [Node, Link]
+    })
+    .then(user => res.json(user))
     .catch(next)
   })
-  .get('/googleId/:googleId', (req, res, next) => {
+//get user based on googleId
+.get('/googleId/:googleId', (req, res, next) => {
     User.findOrCreate( {
         where: {
           googleId: req.params.googleId
@@ -33,13 +36,13 @@ module.exports = require('express').Router()
     .catch(next)
   }
 )
-  .get('/:id', (req, res, next) => {
-    User.findById(req.params.id, {
-      include: [Node, Link]
-    })
-    .then(user => res.json(user))
+
+  .post('/', (req, res, next) => {
+    User.create(req.body)
+    .then(user => res.status(201).json(user))
     .catch(next)
   })
+  
   .put('/:id', (req, res, next) => {
     User.update(req.body, {
       where: { id: req.params.id }
@@ -47,6 +50,7 @@ module.exports = require('express').Router()
     .then(user => res.json(user))
     .catch(next)
   })
+  
   .delete('/:id', (req, res, next) => {
     User.findById(req.params.id)
     .then(user => user.destroy())
