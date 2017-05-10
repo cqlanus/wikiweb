@@ -20,27 +20,32 @@ const createForceChart = (googleId) => {
   }, function(results) {
     console.log('results', results)
     let parentWidth = d3.select('svg').node().parentNode.clientWidth,
-        parentHeight = d3.select('svg').node().parentNode.clientHeight;
+        parentHeight = 500/*d3.select('svg').node().parentNode.clientHeight*/;
 
     /* GET SVG ELEMENT ON PAGE */
     const svg = d3.select("svg")
       .attr('width', parentWidth)
       .attr('height', parentHeight)
 
+    /* PARENT EL */
     const gMain = svg.append('g')
       .classed('g-main', true)
 
+    /* ATTACH RECT TO SIMULATE EMPTY SPACE FOR ZOOM/PAN BEHAVIOR */
     const rect = gMain.append('rect')
+      .attr('class', 'rect')
       .attr('width', parentWidth)
       .attr('height', parentHeight)
-      .attr('fill', 'white')
+      .attr('fill', 'lightsteelblue')
 
     const gDraw = gMain.append('g').classed('draw', true)
 
     /* CREATE ZOOM BEHAVIOR */
-    const zoom = d3.zoom().on('zoom', zoomed)
+    const zoom = d3.zoom()
+      .scaleExtent([0.5, 16])
+      .on('zoom', zoomed)
 
-    /* ATTACH ZOOM BEHAVIOR */
+    /* ATTACH ZOOM BEHAVIOR TO PARENT EL (gMain) */
     gMain.call(zoom)
 
     function zoomed() { gDraw.attr('transform', d3.event.transform)}
@@ -76,7 +81,7 @@ const createForceChart = (googleId) => {
 
     /* DEFINE FORCE GRAPH RULES */
     const simulation = d3.forceSimulation()
-      .force("link", d3.forceLink().id(function(d) { return d.id; }).distance(d => 30/d.strength))
+      .force("link", d3.forceLink().id(function(d) { return d.id; }).distance(d => 70/d.strength))
       .force("charge", d3.forceManyBody().distanceMax(200))
       .force("center", d3.forceCenter(window.innerWidth / 2, parentHeight / 2))
       .velocityDecay(0.7)
