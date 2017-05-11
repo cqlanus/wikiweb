@@ -32,10 +32,7 @@ function startAuth() {
   chrome.identity.getAuthToken({ 'interactive': true }, function(token) {
   	console.log('in the start auth function')
   	console.log('got token', token)
-    //if (chrome.runtime.lastError) console.log(chrome.runtime.lastError)
-	// else {
       chrome.identity.getProfileUserInfo(function(info) {
-      	//console.log('in getProfileUserInfo, going to set store', info)
         store.googleId  = info.id;
         checkUser()
         activateListeners();
@@ -50,7 +47,6 @@ function makeUniquePageRequest(tab) {
       console.log('in a new url', tab.url)
       chrome.tabs.sendMessage(tab.id, {action: "requestPageInfo"})
     } else {
-      //console.log('in a sub page!')
     }
   })
 }
@@ -121,6 +117,7 @@ const getContentPromise = (title) => {
 		contentKeys.forEach(pageId=>{
 			finalCont+=contentOb[pageId].extract
 		})
+		console.log('content picked up', finalCont)
 		return finalCont
 	})
 	return contentPromise;
@@ -212,6 +209,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 				let title=formatTitle(request.data.title)
 				getContentPromise(title)
 				.then(contentText=>{
+					console.log('contentText', contentText)
 					request.data['content']=contentText
 					console.log('new request data', request.data)
 					return postNodePromise(request.data)
