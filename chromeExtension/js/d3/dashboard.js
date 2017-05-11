@@ -65,7 +65,6 @@ const createForceChart = (googleId) => {
       .data(results.links)
       .enter().append("line")
         .attr("stroke-width", function(d) { return Math.sqrt(d.strength); })
-
     /* ATTACH CIRCLES TO SVG AS NODES */
     let node = gDraw.append("g")
         .attr("class", "nodes")
@@ -105,14 +104,52 @@ const createForceChart = (googleId) => {
           let l = elements.length
           l = l-1
           let elementData = elements[l].__data__
-          // console.log(elementData)
           divTooltip.html(`
             ${elementData.id} ${elementData.title}
           `);
           });
         node.on("mouseout", function(d){
           divTooltip.style("display", "none");
-          })
+        })
+
+
+        function makeModal(d) {
+          if(!Array.isArray(d)){
+            d = [d]
+          }
+            let tableRow = d.map(data => {
+              return `<tr><th>${data.title}</th><th>${data.visitCount}</th><th>/${data.url}</th></tr>`
+            }).join('')
+            let htmlelement =  '<table><tr><th>Page Title</th><th>Visit Count</th><th>Page Url</th></tr>' + tableRow + '<table>'
+
+            var elementExists = document.getElementById("infoModal");
+            if(elementExists) elementExists.remove()
+            const infoModal = d3.select("body").append("div").attr("id","infoModal")
+            infoModal.style("position", 'absolute')
+            infoModal.style("width", "550px")
+            infoModal.style("height", "150px")
+            infoModal.style("padding", "20px")
+            infoModal.style("background-color","ivory")
+            infoModal.style("color","black")
+            infoModal.html(htmlelement)
+
+        }
+
+        function singleNodeClick() {
+           node.on("click", function(d){ makeModal(d) } )
+        }
+
+      singleNodeClick()
+
+     function collectSeletedNodes() {
+      let selnodes = svg.selectAll('.selected')._groups[0]
+      let keyV = Object.keys(selnodes)
+      let result = keyV.map( num =>{
+        return selnodes[num].__data__
+      })
+      makeModal(result)
+
+    }
 
     function ticked() {
       link
@@ -136,7 +173,6 @@ const createForceChart = (googleId) => {
       node.each(d => {
         return d.previouslySelected = shiftKey && d.selected})
     }
-
     function brushed() {
       if (!d3.event.sourceEvent) return
       if (!d3.event.selection) return
@@ -161,7 +197,9 @@ const createForceChart = (googleId) => {
         gBrush = null
       }
       brushing = false
+      collectSeletedNodes()
     }
+
 
     d3.select('body').on('keydown', keydown)
     d3.select('body').on('keyup', keyup)
@@ -189,6 +227,7 @@ const createForceChart = (googleId) => {
     }
 
     function keyup() {
+
       shiftKey = false
     }
 
@@ -234,10 +273,7 @@ const createForceChart = (googleId) => {
 }
 
 const createForceChartWrapper = (googleId) => {
-    // chrome.storage.local.get(["userId"], function(items){
-    //         const googleId = items.userId
-    // })
-            createForceChart(googleId)
+  createForceChart(googleId)
 }
 
 export default createForceChartWrapper

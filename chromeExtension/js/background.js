@@ -13,8 +13,6 @@ let store = {
 	googleId: ''
 }
 
-
-
 /* *******  Wrappers ********/
 function activateListeners() {
 	chrome.tabs.onUpdated.addListener(function(id, info, tab){
