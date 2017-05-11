@@ -13,21 +13,7 @@ let store = {
 	googleId: ''
 }
 
-// if (store.googleId) {
-//   console.log('googleId on store already exists', store.googleId)
-//   activateListeners();
-// }
-// else {
-//   chrome.identity.getProfileUserInfo(function(info){
-//     if( info.id !== '' ) {
-//     	console.log('googleId on google profile exists')
-//         store.googleId  = info.id
-//         activateListeners();
-//     } else {
-//     	console.log('needed to authenticate')
-//     	startAuth() }
-//     })
-// }
+
 
 
 /* *******  Wrappers ********/
@@ -70,6 +56,7 @@ function makeUniquePageRequest(tab) {
   })
 }
 
+
 function post(endRoute, body) {
 	return fetch(`http://localhost:8000/api/${endRoute}`, {
   	  method: 'POST',
@@ -100,6 +87,19 @@ function isMatchingHashedUrl(url1, url2) {
   return false
 }
 
+function formatTitle(title) {
+  let end=title.indexOf(' - Wikipedia')
+  console.log(end)
+	title = title.slice(0, end)
+	if (title.indexOf(' ')>-1) {
+	  newArr=[]
+	  title=title.split(' ').join('%20')
+	  return title
+	} else {
+	  return title
+	}
+}
+
 /* ******* NEED TO PROMISIFY ********/
 
 chrome.tabs.onActivated.addListener(function(tabId) {
@@ -109,6 +109,25 @@ chrome.tabs.onActivated.addListener(function(tabId) {
 /* ******* RETURN PROMISES  ********/
 
 //postNode returns a promise for info on insertedNode
+const getContentPromise = (title) => {
+	let contentPromise =  fetch(`https://en.wikipedia.org/w/api.php?action=query&prop=extracts&format=json&exintro=&titles=${title}`, {
+    	method: 'GET',
+	})
+	.then((contentRes)=>{
+		return (contentRes.json())
+	})
+	.then(contentOb=>{
+		let finalCont=''
+		contentOb = contentOb.query.pages
+		let contentKeys = Object.keys(contentOb)
+		contentKeys.forEach(pageId=>{
+			finalCont+=contentOb[pageId].extract
+		})
+		return finalCont
+	})
+	return contentPromise;
+}
+
 const postNodePromise = (nodeOb) => {
    console.log('in postNodePromise', nodeOb)
    let nodeInfoPromise =
@@ -192,7 +211,13 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 		switch(request.type){
 			case 'postNode':
 				request.data['googleId'] = store.googleId
-				postNodePromise(request.data)
+				let title=formatTitle(request.data.title)
+				getContentPromise(title)
+				.then(contentText=>{
+					request.data['content']=contentText
+					console.log('new request data', request.data)
+					return postNodePromise(request.data)
+				})
 				.then(node=>{
 					store.previousNode = store.currentNode
 					store.currentNode = node.id
@@ -206,6 +231,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 					return history.userId
 				})
 				.then(userId=>{
+					console.log('got to end')
 					return postLinkPromise(userId)
 				})
 				break
