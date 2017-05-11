@@ -15,7 +15,6 @@ let store = {
 
 
 
-
 /* *******  Wrappers ********/
 function activateListeners() {
 	chrome.tabs.onUpdated.addListener(function(id, info, tab){
@@ -36,7 +35,7 @@ function startAuth() {
     //if (chrome.runtime.lastError) console.log(chrome.runtime.lastError)
 	// else {
       chrome.identity.getProfileUserInfo(function(info) {
-      	console.log('in getProfileUserInfo, going to set store', info)
+      	//console.log('in getProfileUserInfo, going to set store', info)
         store.googleId  = info.id;
         checkUser()
         activateListeners();
@@ -51,11 +50,10 @@ function makeUniquePageRequest(tab) {
       console.log('in a new url', tab.url)
       chrome.tabs.sendMessage(tab.id, {action: "requestPageInfo"})
     } else {
-      console.log('in a sub page!')
+      //console.log('in a sub page!')
     }
   })
 }
-
 
 function post(endRoute, body) {
 	return fetch(`http://localhost:8000/api/${endRoute}`, {
@@ -130,18 +128,18 @@ const getContentPromise = (title) => {
 }
 
 const postNodePromise = (nodeOb) => {
-   console.log('in postNodePromise', nodeOb)
+   //console.log('in postNodePromise', nodeOb)
    let nodeInfoPromise =
      post('nodes/postNode', nodeOb)
      .then((nodeResponse)=>{
-   	   console.log('scuess')
+   	   //console.log('scuess')
 	   return nodeResponse.json()
      })
    return nodeInfoPromise
 }
 
 const checkUser = (nodeOb) => {
-	console.log('in checkUser promise maker')
+	//console.log('in checkUser promise maker')
    let checkUserPromise =
      post('users/', store)
     //  .then((nodeResponse)=>{
@@ -233,13 +231,13 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 					return history.userId
 				})
 				.then(userId=>{
-					console.log('got to end')
+					//console.log('got to end')
 					return postLinkPromise(userId)
 				})
 				break
 
 			case 'getUser':
-				console.log('request.data', request.data)
+				//console.log('request.data', request.data)
 				getUserPromise(request.data)
 				.then((user)=>{
 					sendResponse(user)

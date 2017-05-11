@@ -19,19 +19,26 @@ class ForceChart extends React.Component {
   }
 
   componentDidMount() {
+    //  chrome.identity.getProfileUserInfo(function(info) {
+    //   	console.log('in getProfileUserInfo, going to set store', info)
+    //   })
     this.getHistory()
   }
 
   getHistory() {
-    chrome.runtime.sendMessage({
-      type: 'getUser',
-      data: '115897382801290454219'
-    }, (results) => {
-        this.setState({
-          pageHistory: results.history.history
-        })
-    })
-  }
+    chrome.identity.getProfileUserInfo(function(info){
+      console.log('this is MY id',info.id)
+      chrome.runtime.sendMessage({
+        type: 'getUser',
+        data: info.id
+      }, (results) => {
+          this.setState({
+            pageHistory: results.history.history
+          })
+      })
+  })
+}
+
 
   handleToggle(evt) {
     console.log('toggle')
