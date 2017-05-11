@@ -22,6 +22,7 @@ const onWebEnter = () => {
   chrome.identity.getProfileUserInfo(function(info){
       createForceChart(info.id)
   })
+
 }
 
 const onScatterEnter = () => {

@@ -39,6 +39,7 @@ class ForceChart extends React.Component {
   })
 }
 
+
   handleToggle(evt) {
     console.log('toggle')
     this.setState({
