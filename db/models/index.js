@@ -1,6 +1,12 @@
 const db = require('../db');
 const Sequelize = require('sequelize')
 
+//set up Rosette
+const variables = require('../../variables.json')
+var Api = require('rosette-api')
+var api = new Api(variables.rosette)
+
+
 const Node = db.define('nodes', {
   title: {
     type: Sequelize.STRING,
@@ -16,6 +22,9 @@ const Node = db.define('nodes', {
   },
   content: {
     type: Sequelize.TEXT,
+  },
+  category: {
+    type: Sequelize.STRING,
   },
   datesVisited: {
     type: Sequelize.ARRAY(Sequelize.DATE),
@@ -42,8 +51,8 @@ const Node = db.define('nodes', {
 function addVisitDate (node) {
   const now = new Date()
   node.datesVisited = [...node.datesVisited, now]
-
 }
+
 
 const User = db.define('users', {
   name: {
