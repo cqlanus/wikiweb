@@ -8,8 +8,14 @@ module.exports = require('express').Router()
       .then(links => res.json(links))
       .catch(next)
   })
-  .get('/:userId', (req, res, next) => {
-    Link.findById(req.params.userId)
+  .get('/:id', (req, res, next) => {
+    Link.findById(req.params.id)
+    .then(link => res.json(link))
+  })
+  .get('/user/:userId', (req, res, next) => {
+    Link.findAll({
+      where: {userId: req.params.userId}
+    })
     .then(link => res.json(link))
   })
   .post('/', (req, res, next) => {
