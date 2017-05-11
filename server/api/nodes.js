@@ -32,6 +32,7 @@ module.exports = require('express').Router()
   })
 
   .post('/postNode', (req, res, next) => {
+    console.log('req.body', req.body)
     User.findOne({
       where: {googleId: req.body.googleId}
     })

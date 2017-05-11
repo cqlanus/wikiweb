@@ -14,6 +14,9 @@ const Node = db.define('nodes', {
     type: Sequelize.INTEGER,
     defaultValue: 1,
   },
+  content: {
+    type: Sequelize.TEXT,
+  },
   datesVisited: {
     type: Sequelize.ARRAY(Sequelize.DATE),
     defaultValue: []
