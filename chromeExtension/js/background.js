@@ -32,10 +32,7 @@ function startAuth() {
   chrome.identity.getAuthToken({ 'interactive': true }, function(token) {
   	console.log('in the start auth function')
   	console.log('got token', token)
-    //if (chrome.runtime.lastError) console.log(chrome.runtime.lastError)
-	// else {
       chrome.identity.getProfileUserInfo(function(info) {
-      	//console.log('in getProfileUserInfo, going to set store', info)
         store.googleId  = info.id;
         checkUser()
         activateListeners();
@@ -50,7 +47,6 @@ function makeUniquePageRequest(tab) {
       console.log('in a new url', tab.url)
       chrome.tabs.sendMessage(tab.id, {action: "requestPageInfo"})
     } else {
-      //console.log('in a sub page!')
     }
   })
 }

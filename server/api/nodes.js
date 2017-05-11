@@ -72,7 +72,6 @@ module.exports = require('express').Router()
               res.json(node)
             }
            })
-          //.catch(next)
         }
       })
     })

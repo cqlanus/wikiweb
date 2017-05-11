@@ -43,7 +43,6 @@ const Node = db.define('nodes', {
    },
    hooks: {
     beforeCreate: addVisitDate,
-    //afterCreate: putCategories,
     afterUpdate: addVisitDate,
    }
  }
@@ -54,30 +53,6 @@ function addVisitDate (node) {
   node.datesVisited = [...node.datesVisited, now]
 }
 
-// function putCategories (node, callback) {
-//   let endpoint='categories'
-//   let content = node.content
-//   api.parameters.content=content
-//   api.rosette(endpoint, (err, res)=>{
-//   if (err) {
-//     return callback(err)
-//   } else {
-//     console.log("node in async", node.category)
-//     let formattedCat = res.categories[0].label.split('_').join(' ')
-//     console.log('formattedCat', formattedCat)
-//     node.category='bs'
-//     return callback(err, res)
-//     }
-//   })
-// }
-
-// Node.beforeCreate(function(node, options, cb) {
-//   putCategories(node, function(err, res) {
-//     if (err) return cb(err);
-//     node.category=res
-//     return cb(null, options)
-//   })
-// })
 
 const User = db.define('users', {
   name: {
