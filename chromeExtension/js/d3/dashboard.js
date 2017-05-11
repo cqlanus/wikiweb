@@ -1,3 +1,13 @@
+
+/************************************************
+
+Source Attribution:
+Mike Bostock - Force-Directed Graph
+https://bl.ocks.org/mbostock/4062045
+
+************************************************/
+
+
 const d3 = require('d3')
 
 const createForceChart = (googleId) => {
@@ -8,29 +18,34 @@ const createForceChart = (googleId) => {
     type: GET_USER,
     data: googleId
   }, function(results) {
-
+    //console.log('results', results)
     let parentWidth = d3.select('svg').node().parentNode.clientWidth,
-        parentHeight = d3.select('svg').node().parentNode.clientHeight;
+        parentHeight = 500/*d3.select('svg').node().parentNode.clientHeight*/;
 
     /* GET SVG ELEMENT ON PAGE */
     const svg = d3.select("svg")
       .attr('width', parentWidth)
       .attr('height', parentHeight)
 
+    /* PARENT EL */
     const gMain = svg.append('g')
       .classed('g-main', true)
 
+    /* ATTACH RECT TO SIMULATE EMPTY SPACE FOR ZOOM/PAN BEHAVIOR */
     const rect = gMain.append('rect')
+      .attr('class', 'rect')
       .attr('width', parentWidth)
       .attr('height', parentHeight)
-      .attr('fill', 'white')
+      .attr('fill', 'lightsteelblue')
 
     const gDraw = gMain.append('g').classed('draw', true)
 
     /* CREATE ZOOM BEHAVIOR */
-    const zoom = d3.zoom().on('zoom', zoomed)
+    const zoom = d3.zoom()
+      .scaleExtent([0.5, 16])
+      .on('zoom', zoomed)
 
-    /* ATTACH ZOOM BEHAVIOR */
+    /* ATTACH ZOOM BEHAVIOR TO PARENT EL (gMain) */
     gMain.call(zoom)
 
     function zoomed() { gDraw.attr('transform', d3.event.transform)}
@@ -65,7 +80,7 @@ const createForceChart = (googleId) => {
 
     /* DEFINE FORCE GRAPH RULES */
     const simulation = d3.forceSimulation()
-      .force("link", d3.forceLink().id(function(d) { return d.id; }).distance(d => 30/d.strength))
+      .force("link", d3.forceLink().id(function(d) { return d.id; }).distance(d => 70/d.strength))
       .force("charge", d3.forceManyBody().distanceMax(200))
       .force("center", d3.forceCenter(window.innerWidth / 2, parentHeight / 2))
       .velocityDecay(0.7)
@@ -104,7 +119,7 @@ const createForceChart = (googleId) => {
           }
             let tableRow = d.map(data => {
               return `<tr><th>${data.title}</th><th>${data.visitCount}</th><th>/${data.url}</th></tr>`
-            }).join()
+            }).join('')
             let htmlelement =  '<table><tr><th>Page Title</th><th>Visit Count</th><th>Page Url</th></tr>' + tableRow + '<table>'
 
             var elementExists = document.getElementById("infoModal");
@@ -158,19 +173,9 @@ const createForceChart = (googleId) => {
       node.each(d => {
         return d.previouslySelected = shiftKey && d.selected})
     }
-
-    rect.on('click', () => {
-      node.each(d => {
-        d.selected = false
-        d.previouslySelected = false
-      })
-      node.classed('selected', false)
-    })
-
     function brushed() {
       if (!d3.event.sourceEvent) return
       if (!d3.event.selection) return
-
       const extent = d3.event.selection
       node.classed('selected', d => {
         /* ^ is XOR operator -- toggles selected */
@@ -204,28 +209,26 @@ const createForceChart = (googleId) => {
     function keydown() {
       shiftKey = d3.event.shiftKey
       if (shiftKey) {
-        if (gBrush) return
 
-        brushMode = true
+        brushMode = !brushMode
+        brushing = !brushing
+      }
+      toggleBrush()
+    }
 
-        if (!gBrush) {
+    function toggleBrush() {
+      if (!gBrush) {
           gBrush = gBrushHolder.append('g')
           gBrush.call(brush)
+        } else {
+          gBrush.remove()
+          gBrush = null
         }
-      }
     }
 
     function keyup() {
 
       shiftKey = false
-      brushMode = false
-
-      if (!gBrush) return
-
-      if (!brushing) {
-        gBrush.remove()
-        gBrush = null
-      }
     }
 
     function dragstarted(d) {

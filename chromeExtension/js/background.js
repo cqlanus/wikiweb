@@ -1,6 +1,10 @@
-/* ******* dont forget :
-	- create new History array for user doesn't work yet
+/* *******
+RUNS AS SOON AS EXTENSION IS OPENED
 ********/
+
+//run startAuth
+//then findOrCreate
+startAuth()
 
 let store = {
 	currentNode: '',
@@ -9,50 +13,29 @@ let store = {
 	googleId: ''
 }
 
-if (checkStoreGoogleId()) {
-  console.log('store.googleId already exists', store.googleId)
-  activateListeners();
-}
-else {
-  chrome.identity.getProfileUserInfo(function(info){
-    if( info.id !== '' ) {
-    	console.log('googleId on info exists')
-        store.googleId  = info.id
-        activateListeners();
-    } else {
-    	console.log('needed to authenticate')
-    	startAuth() }
-    })
-    }
-
-
-/* ******* ACTIVATE EXTENSION WHEN MATCHING  ********/
+/* *******  Wrappers ********/
 function activateListeners() {
 	chrome.tabs.onUpdated.addListener(function(id, info, tab){
 	  if(tab.url.indexOf('wikipedia.org') > -1){
 	    chrome.pageAction.show(tab.id)
 	  }
 
-	  if (info.status === 'complete' && tab.active) {
-	  	console.log('making page request to postNode, googleId: ', store.googleId)
+	  if (info.status==='complete' && tab.active && tab.url!='https://www.wikipedia.org/' && tab.url!='https://en.wikipedia.org/wiki/Main_Page' ) {
 	  	makeUniquePageRequest(tab)
 	  }
 	})
 }
 
-function checkStoreGoogleId(){
-  return store.googleId === '' ? false : true
-}
-
 function startAuth() {
   chrome.identity.getAuthToken({ 'interactive': true }, function(token) {
-    if (chrome.runtime.lastError) console.log(chrome.runtime.lastError)
-	else {
+  	console.log('in the start auth function')
+  	console.log('got token', token)
       chrome.identity.getProfileUserInfo(function(info) {
         store.googleId  = info.id;
+        checkUser()
         activateListeners();
       })
-    }
+    //}
   })
 }
 
@@ -62,10 +45,28 @@ function makeUniquePageRequest(tab) {
       console.log('in a new url', tab.url)
       chrome.tabs.sendMessage(tab.id, {action: "requestPageInfo"})
     } else {
-      console.log('in a sub page!')
     }
   })
 }
+
+function post(endRoute, body) {
+	return fetch(`http://localhost:8000/api/${endRoute}`, {
+  	  method: 'POST',
+      headers: {
+      "Content-type": "application/json"
+      },
+      body: JSON.stringify(body),
+   })
+}
+
+function get(endRoute) {
+	return fetch(`http://localhost:8000/api/${endRoute}`, {
+    	method: 'GET',
+    	})
+}
+
+/* ******* HELPER FUNCTIONS ********/
+
 
 function isMatchingHashedUrl(url1, url2) {
   const firstHash = url1.indexOf('#')
@@ -78,141 +79,176 @@ function isMatchingHashedUrl(url1, url2) {
   return false
 }
 
-/* ******* SENDS MESSAGE TO CONTENT WHEN NEW ACTIVE TAB  ********/
+function formatTitle(title) {
+  let end=title.indexOf(' - Wikipedia')
+  console.log(end)
+	title = title.slice(0, end)
+	if (title.indexOf(' ')>-1) {
+	  newArr=[]
+	  title=title.split(' ').join('%20')
+	  return title
+	} else {
+	  return title
+	}
+}
+
+/* ******* NEED TO PROMISIFY ********/
 
 chrome.tabs.onActivated.addListener(function(tabId) {
-	// console.log('Tab Changed with current Id: ', tabId)
 	chrome.tabs.sendMessage(tabId.tabId, {action: "requestPageInfo"}, function(response) {})
 })
 
-/* ******* ACTIONS  ********/
+/* ******* RETURN PROMISES  ********/
 
-
-const postNode = (nodeOb) => {
-  	return fetchNodeData(nodeOb)
-	.then(nodeData=> {
-	  store.previousNode = store.currentNode
-	  store.currentNode = nodeData.id
+//postNode returns a promise for info on insertedNode
+const getContentPromise = (title) => {
+	let contentPromise =  fetch(`https://en.wikipedia.org/w/api.php?action=query&prop=extracts&format=json&exintro=&titles=${title}`, {
+    	method: 'GET',
 	})
+	.then((contentRes)=>{
+		return (contentRes.json())
+	})
+	.then(contentOb=>{
+		let finalCont=''
+		contentOb = contentOb.query.pages
+		let contentKeys = Object.keys(contentOb)
+		contentKeys.forEach(pageId=>{
+			finalCont+=contentOb[pageId].extract
+		})
+		console.log('content picked up', finalCont)
+		return finalCont
+	})
+	return contentPromise;
 }
 
-const postHistory = function(userId) {
+const postNodePromise = (nodeOb) => {
+   //console.log('in postNodePromise', nodeOb)
+   let nodeInfoPromise =
+     post('nodes/postNode', nodeOb)
+     .then((nodeResponse)=>{
+   	   //console.log('scuess')
+	   return nodeResponse.json()
+     })
+   return nodeInfoPromise
+}
+
+const checkUser = (nodeOb) => {
+	//console.log('in checkUser promise maker')
+   let checkUserPromise =
+     post('users/', store)
+    //  .then((nodeResponse)=>{
+   	//    console.log('scuess')
+	   // return nodeResponse.json()
+    //  })
+   //return nodeInfoPromise
+}
+
+const postHistoryPromise = function(userId) {
 	let historyData= {
 	  	userId: userId,
 	  	newNode: store.currentNode
 	  }
-	  return fetchHistoryData(historyData)
-	  .then(historyRow=>{
-	  	store.history = historyRow.history
-	  })
+	let historyInfoPromise =
+	  post('/history', historyData)
+	  .then(hisResponse=>{
+   		return hisResponse.json()
+   	})
+	return historyInfoPromise
 }
 
-const postLink = function() {
+const postLinkPromise = function(userId) {
 	let linkData = {
 	  	source: store.previousNode,
 	  	target: store.currentNode,
 	  	isHyperText: true,
-	  	userId: 1
+	  	userId: userId
 	 }
 	 if (linkData.source!='') {
-	  	return fetchLinkData(linkData)
+	  	linkInfoPromise =
+	  	post('/links', linkData)
+	   	.then(linkResponse=>{
+	   		return linkResponse.json()
+	   	})
+	  return linkInfoPromise
 	 }
 }
 
-const getUserId = function(){
-  return chrome.identity.getProfileUserInfo(function(info){ return info.id })
-}
-
-/* ******* ASYNC THUNKS  ********/
-
-const fetchUser = function(googleId) {
-	return fetch(`http://localhost:8000/api/users/googleId/${googleId}`, {
-    	method: 'GET',
-    	})
-		.then((res) => {
-			return res.json()
-		})
-    	.then(results => {
-      		//console.log('results inside getUser', results)
-      		return results[0]
-    	})
-}
-
-const fetchNodeData = function(nodeInfo) {
-	return fetch(`http://localhost:8000/api/users/googleId/${nodeInfo.googleId}`, {
-    	method: 'GET',
-    })
-    .then(userRow=>{
-    	return userRow.json()
-    })
-    .then(userJSON=>{
-    	nodeInfo['userId'] = userJSON[0].id
-    	return nodeInfo
-    })
-    .then(nodeInfo=>{
-		return fetch('http://localhost:8000/api/nodes', {
-	      method: 'POST',
-	      headers: {
-	      "Content-type": "application/json"
-	      },
-	      body: JSON.stringify(nodeInfo),
-	    })
+const getUserPromise = function(googleId) {
+	return get(`users/googleId/${googleId}`)
+	.then((res) => {
+	  return res.json()
 	})
-	.then((nodeRes) => {
-		return nodeRes.json()
+	.then(resJson=>{
+	  return resJson[0]
+	})
+	.then(ew=>{
+	  console.log('this is what im returning', ew)
+	  return ew
 	})
 }
 
-const fetchHistoryData = function(historyInfo) {
-	return fetch('http://localhost:8000/api/history', {
-    	method: 'POST',
-    	headers: {
-      	"Content-type": "application/json"
-    	},
-      	body: JSON.stringify(historyInfo),
-   	})
-	.then((historyRes) => {
-		return historyRes.json()
-	})
+const getSelectedNodes = function(requestData) {
+  return get(`nodes/user/${requestData.userId}`)
+  .then(res => res.json())
+  .then(nodesArr => {
+    const nodesToReturn = nodesArr.filter(node => {
+      return requestData.nodes[node.id]
+    })
+    return nodesToReturn
+  })
 }
 
-const fetchLinkData = function(linkInfo) {
-  return fetch('http://localhost:8000/api/links', {
-    method: 'POST',
-    headers: {
-    "Content-type": "application/json"
-	},
-	body: JSON.stringify(linkInfo)
-})
-
-}
-
-/* ******* SWITCH LISTENER  ********/
+/* ******* SWITCH LISTENER FOR INCOMING MESSAGES********/
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 		switch(request.type){
 			case 'postNode':
 				request.data['googleId'] = store.googleId
-				return postNode(request.data)
-				.then(()=>{
-					return postHistory(1)
+				let title=formatTitle(request.data.title)
+				getContentPromise(title)
+				.then(contentText=>{
+					console.log('contentText', contentText)
+					request.data['content']=contentText
+					console.log('new request data', request.data)
+					return postNodePromise(request.data)
 				})
-				.then(()=>{
-					return postLink();
+				.then(node=>{
+					store.previousNode = store.currentNode
+					store.currentNode = node.id
+					return node.userId
 				})
-				.then((resjson)=>{
-					console.log('row inserted into links: ', resjson)
+				.then(userId => {
+					return postHistoryPromise(userId)
+				})
+				.then(history=>{
+					store.history = history.history
+					return history.userId
+				})
+				.then(userId=>{
+					//console.log('got to end')
+					return postLinkPromise(userId)
 				})
 				break
 
 			case 'getUser':
-				fetchUser(request.data)
+				//console.log('request.data', request.data)
+				getUserPromise(request.data)
 				.then((user)=>{
 					sendResponse(user)
 				})
 				return true
+
+      case 'GET_SINGLE_NODE':
+        getSelectedNodes(request.data)
+        .then(node => {
+          sendResponse(node)
+        })
+        return true
+
 			default:
 				return console.error('error in switch')
 		}
-    return true
+	//Ellie took this out to fix promises... check if dashboard still works properly
+    //return true
 })
+

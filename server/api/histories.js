@@ -8,18 +8,30 @@ module.exports = require('express').Router()
       .then(histories => res.json(histories))
       .catch(next)
   })
-  .get('/:userId', (req, res, next) => {
+  .get('/:id', (req, res, next) => {
+    History.findById(req.params.id)
+    .then(history=>{
+      res.json(history)
+    })
+  })
+  //get all histories for one user
+  .get('/user/:userId', (req, res, next) => {
     History.findAll({
-      where: { userId: req.params.userId}
+      where: {userId: req.params.userId}
+    })
+    .then(history=>{
+      res.json(history)
     })
   })
   .post('/', (req, res, next) => {
+    console.log('IN HISTORY ROUTE!!', req.body)
     const userId = req.body.userId
     const newNode = parseInt(req.body.newNode)
+    console.log('userId and newNode', userId, newNode)
     History.findOrCreate({
-      where: { 
+      where: {
         userId: userId
-      }, 
+      },
       defaults: {
         userId: userId,
         history: [newNode]

@@ -8,17 +8,22 @@ module.exports = require('express').Router()
       .then(links => res.json(links))
       .catch(next)
   })
-  .get('/:userId', (req, res, next) => {
+  .get('/:id', (req, res, next) => {
+    Link.findById(req.params.id)
+    .then(link => res.json(link))
+  })
+  .get('/user/:userId', (req, res, next) => {
     Link.findAll({
-      where: { userId: req.params.userId}
+      where: {userId: req.params.userId}
     })
-    .then(links => res.json(links))
+    .then(link => res.json(link))
   })
   .post('/', (req, res, next) => {
     const user = req.body.userId
     const source = req.body.source < req.body.target ? req.body.source : req.body.target
     const target = req.body.source > req.body.target ? req.body.source : req.body.target
     const isHyperText = req.body.isHyperText
+    console.log('params', user, source, target, isHyperText)
     Link.findOrCreate({
       where: {
         userId: user,
@@ -38,15 +43,9 @@ module.exports = require('express').Router()
         res.status(201).json(link)
       } else {
         const updated = link.incrementStrength()
-        res.json(updated)
-
+        res.json(link)
       }
     })
-    .catch(next)
-  })
-  .get('/:id', (req, res, next) => {
-    Link.findById(req.params.id)
-    .then(link => res.json(link))
     .catch(next)
   })
   .put('/:id', (req, res, next) => {
