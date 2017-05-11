@@ -18,14 +18,17 @@ const createForceChart = (googleId) => {
     const svg = d3.select("svg")
       .attr('width', parentWidth)
       .attr('height', parentHeight)
+console.log(' here')
 
     const gMain = svg.append('g')
       .classed('g-main', true)
+console.log(' 24')
 
     const rect = gMain.append('rect')
       .attr('width', parentWidth)
       .attr('height', parentHeight)
       .attr('fill', 'white')
+console.log(' 30')
 
     const gDraw = gMain.append('g').classed('draw', true)
 
@@ -52,6 +55,7 @@ const createForceChart = (googleId) => {
       .data(results.links)
       .enter().append("line")
         .attr("stroke-width", function(d) { return Math.sqrt(d.strength); })
+console.log('got here')
     /* ATTACH CIRCLES TO SVG AS NODES */
     let node = gDraw.append("g")
         .attr("class", "nodes")
@@ -100,11 +104,14 @@ const createForceChart = (googleId) => {
           divTooltip.style("display", "none");
         })
 
+
         function makeModal(d) {
-          if(!Array.isArray(d)){ d = [d] }
+          if(!Array.isArray(d)){
+            d = [d]
+          }
             let tableRow = d.map(data => {
               return `<tr><th>${data.title}</th><th>${data.visitCount}</th><th>/${data.url}</th></tr>`
-            }).join('')
+            }).join()
             let htmlelement =
               '<table><tr><th>Page Title</th><th>Visit Count</th><th>Page Url</th></tr>' +
               tableRow +
@@ -119,8 +126,15 @@ const createForceChart = (googleId) => {
             infoModal.style("padding", "20px")
             infoModal.style("background-color","ivory")
             infoModal.style("color","black")
+            //infoModal.html(`<h2>${d.url}</h2><h2>${d.visitCount}</h2><h2>${d.title}</h2>`)
 
             infoModal.html(htmlelement)
+            // infoModal.html(`
+            //   <table>
+            //     <tr><th>Page Title</th><th>Visit Count</th><th>Page Url</th></tr>
+            //     <tr><th>${d.title}</th><th>${d.visitCount}</th><th>/${d.url}</th></tr>
+            //   <table>
+            // `)
         }
 
         function singleNodeClick() {
@@ -140,6 +154,8 @@ const createForceChart = (googleId) => {
       // return result
       //console.log(selnodes[keyV[0][0]].__data__)
     }
+
+
 
     function ticked() {
       link
@@ -198,18 +214,25 @@ const createForceChart = (googleId) => {
         gBrush = null
       }
       brushing = false
+      console.log(collectSeletedNodes())
+      // let selnodes = svg.selectAll('.selected')._groups[0]
+      // console.log(selnodes)
+      //console.log('hi', svg.selectAll('.selected')
     }
+
 
     d3.select('body').on('keydown', keydown)
     d3.select('body').on('keyup', keyup)
 
     let shiftKey
+
     function keydown() {
       shiftKey = d3.event.shiftKey
-
       if (shiftKey) {
         if (gBrush) return
+
         brushMode = true
+
         if (!gBrush) {
           gBrush = gBrushHolder.append('g')
           gBrush.call(brush)
@@ -218,9 +241,12 @@ const createForceChart = (googleId) => {
     }
 
     function keyup() {
+
       shiftKey = false
       brushMode = false
+
       if (!gBrush) return
+
       if (!brushing) {
         gBrush.remove()
         gBrush = null
@@ -247,6 +273,7 @@ const createForceChart = (googleId) => {
     }
 
     function dragged(d) {
+      console.log('node dragged!')
       node.filter(d => d.selected)
       .each(d => {
         d.fx += d3.event.dx;
