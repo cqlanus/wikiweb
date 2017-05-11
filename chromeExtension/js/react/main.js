@@ -11,6 +11,7 @@ import Sentiment from './Sentiment'
 /* D3 CREATORS */
 import createForceChart from '../d3/dashboard.js'
 import createNodeScatter from '../d3/nodeScatter.js'
+import createSentimentMap from '../d3/sentimentmap.js'
 
 const Main = props => (
  <div>
@@ -33,9 +34,9 @@ const onScatterEnter = () => {
 const onSentimentEnter = () => {
   chrome.runtime.sendMessage({
     type: 'GET_SENTIMENT_BY_USERID',
-    data: {"2": true, "3": true, "4": true}
+    data: {}
   }, analysis => {
-    console.log('this is sentiment analysis', analysis)
+    createSentimentMap(analysis)
   })
 }
 

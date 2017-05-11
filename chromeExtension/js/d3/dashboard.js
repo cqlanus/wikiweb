@@ -20,7 +20,7 @@ const createForceChart = (googleId) => {
   }, function(results) {
     //console.log('results', results)
     let parentWidth = d3.select('svg').node().parentNode.clientWidth,
-        parentHeight = 500/*d3.select('svg').node().parentNode.clientHeight*/;
+        parentHeight = 500;
 
     /* GET SVG ELEMENT ON PAGE */
     const svg = d3.select("svg")

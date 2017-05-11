@@ -176,10 +176,7 @@ const getUserPromise = function(googleId) {
 	  return res.json()
 	})
 	.then(resJson=>{
-	  return resJson[0]
-	})
-	.then(ew=>{
-	  return ew
+	  return resJson
 	})
   .catch(console.log)
 }
@@ -196,8 +193,11 @@ const getSelectedNodes = function(requestData) {
   .catch(console.log)
 }
 
-const getSentiment = nodesObj => {
-  return post('rosette/sentiment', nodesObj)
+const getSentimentByUserId = (nodesObj, googleId) => {
+  return getUserPromise(store.googleId)
+  .then(user => {
+    return post('rosette/sentiment', {nodes: nodesObj, userId: user.id})
+  })
   .then(res => res.json())
   .then(analysis => analysis)
   .catch(console.log)
@@ -247,9 +247,8 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         return true
 
       case 'GET_SENTIMENT_BY_USERID':
-        getSentiment(request.data)
+        getSentimentByUserId(request.data)
         .then(analysis => {
-          console.log('analysis?', analysis)
           sendResponse(analysis)
         })
         return true

@@ -5,9 +5,14 @@ const getSentimentAnalysis = require('../../chromeExtension/js/rosette/sentiment
 
 module.exports = require('express').Router()
   .post('/sentiment', (req, res, next) => {
-    const nodeIdArr = Object.keys(req.body)
+    const nodeIdArr = Object.keys(req.body.nodes)
     Node.findAll({
-      where: { id: { $in: nodeIdArr }}
+      where: {
+        $or: [
+          {userId: req.body.userId},
+          {id: {$in: nodeIdArr}}
+        ]
+      }
     })
     .then(nodes => {
       const content = nodes.map(node => node.content).join('; ')
