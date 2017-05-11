@@ -8,9 +8,17 @@ module.exports = require('express').Router()
       .then(histories => res.json(histories))
       .catch(next)
   })
-  .get('/:userId', (req, res, next) => {
-    console.log('reqparamsuserid', req.params.userId)
-    History.findById(req.params.userId)
+  .get('/:id', (req, res, next) => {
+    History.findById(req.params.id)
+    .then(history=>{
+      res.json(history)
+    })
+  })
+  //get all histories for one user
+  .get('/user/:userId', (req, res, next) => {
+    History.findAll({
+      where: {userId: req.params.userId}
+    })
     .then(history=>{
       res.json(history)
     })
