@@ -1,7 +1,6 @@
 const d3 = require('d3')
 
 const createSentimentMap = (sentimentAnalysis) => {
-  // console.log(sentimentAnalysis)
   let parentWidth = d3.select('svg').node().parentNode.clientWidth,
       parentHeight = d3.select('svg').node().parentNode.clientHeight;
 
@@ -27,7 +26,7 @@ const createSentimentMap = (sentimentAnalysis) => {
 
   const pack = d3.pack()
     .size([parentWidth, parentHeight])
-    .padding(2)
+    .padding(1)
 
   const treeRoot = d3.hierarchy(tree)
     .sum(d => d.count)
@@ -36,7 +35,7 @@ const createSentimentMap = (sentimentAnalysis) => {
     })
 
   const nodes = pack(treeRoot).descendants()
-  console.log('tree', nodes)
+  // console.log('tree', nodes)
 
   const node = gDraw.selectAll('.node')
     .data(nodes)
@@ -46,6 +45,7 @@ const createSentimentMap = (sentimentAnalysis) => {
     })
 
   node.append('circle')
+    .attr('class', d => d.children ? null : 'bubble')
     .attr('r', d => d.r)
     .attr('fill', d => {
       if (d.data.sentiment && d.data.sentiment.label === 'pos') {
@@ -57,11 +57,31 @@ const createSentimentMap = (sentimentAnalysis) => {
       } else { return '#333'}
      })
 
-    // .enter().append('circle')
-    // .attr('class', 'nodes')
-    // .attr('r', d => d.data.count)
-    // .attr('opacity', '0.7')
-    // .attr('stroke', 'black')
+  /* CREATE HOVERABLE TOOLTIPS */
+    const divTooltip = d3.select("body").append("div").attr("class", "toolTip")
+        node.on("mousemove", function(d){
+          divTooltip.style("left", d3.event.pageX+10+"px");
+          divTooltip.style("top", d3.event.pageY-25+"px");
+          divTooltip.style("display", "inline-block");
+          let x = d3.event.pageX, y = d3.event.pageY
+          let elements = document.querySelectorAll(':hover');
+          let l = elements.length
+          l = l-1
+          let elementData = elements[l].__data__
+          elementData.data.mention ? divTooltip.html(`
+            ${elementData.data.mention}
+          `) : divTooltip.style('display', 'none')
+          });
+        node.on("mouseout", function(d){
+          divTooltip.style("display", "none");
+          })
+
+  node.filter(function(d) { return !d.children }).append("text")
+      .attr('class', 'bubbletext')
+      .attr('dx', d => d.r/-2)
+      .attr("dy", "0.3em")
+      .text(function(d) { return d.data.mention.substring(0, d.r / 4); })
+      .attr('fill', d => d.data.sentiment && d.data.sentiment.label === 'neu' ? 'black' : 'white')
 
 
 }
