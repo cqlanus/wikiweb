@@ -1,7 +1,6 @@
 const d3 = require('d3')
 
 const createForceChart = (googleId) => {
-  console.log('calling in createForceChart', googleId)
   const GET_USER = 'getUser'
 
   /* MAKE A GET REQUEST FOR CURRENT USER */
@@ -9,7 +8,6 @@ const createForceChart = (googleId) => {
     type: GET_USER,
     data: googleId
   }, function(results) {
-    console.log(results)
 
     let parentWidth = d3.select('svg').node().parentNode.clientWidth,
         parentHeight = d3.select('svg').node().parentNode.clientHeight;
@@ -18,17 +16,14 @@ const createForceChart = (googleId) => {
     const svg = d3.select("svg")
       .attr('width', parentWidth)
       .attr('height', parentHeight)
-console.log(' here')
 
     const gMain = svg.append('g')
       .classed('g-main', true)
-console.log(' 24')
 
     const rect = gMain.append('rect')
       .attr('width', parentWidth)
       .attr('height', parentHeight)
       .attr('fill', 'white')
-console.log(' 30')
 
     const gDraw = gMain.append('g').classed('draw', true)
 
@@ -55,7 +50,6 @@ console.log(' 30')
       .data(results.links)
       .enter().append("line")
         .attr("stroke-width", function(d) { return Math.sqrt(d.strength); })
-console.log('got here')
     /* ATTACH CIRCLES TO SVG AS NODES */
     let node = gDraw.append("g")
         .attr("class", "nodes")
@@ -95,7 +89,6 @@ console.log('got here')
           let l = elements.length
           l = l-1
           let elementData = elements[l].__data__
-          // console.log(elementData)
           divTooltip.html(`
             ${elementData.id} ${elementData.title}
           `);
@@ -112,10 +105,7 @@ console.log('got here')
             let tableRow = d.map(data => {
               return `<tr><th>${data.title}</th><th>${data.visitCount}</th><th>/${data.url}</th></tr>`
             }).join()
-            let htmlelement =
-              '<table><tr><th>Page Title</th><th>Visit Count</th><th>Page Url</th></tr>' +
-              tableRow +
-                '<table>'
+            let htmlelement =  '<table><tr><th>Page Title</th><th>Visit Count</th><th>Page Url</th></tr>' + tableRow + '<table>'
 
             var elementExists = document.getElementById("infoModal");
             if(elementExists) elementExists.remove()
@@ -126,15 +116,8 @@ console.log('got here')
             infoModal.style("padding", "20px")
             infoModal.style("background-color","ivory")
             infoModal.style("color","black")
-            //infoModal.html(`<h2>${d.url}</h2><h2>${d.visitCount}</h2><h2>${d.title}</h2>`)
-
             infoModal.html(htmlelement)
-            // infoModal.html(`
-            //   <table>
-            //     <tr><th>Page Title</th><th>Visit Count</th><th>Page Url</th></tr>
-            //     <tr><th>${d.title}</th><th>${d.visitCount}</th><th>/${d.url}</th></tr>
-            //   <table>
-            // `)
+
         }
 
         function singleNodeClick() {
@@ -148,14 +131,10 @@ console.log('got here')
       let keyV = Object.keys(selnodes)
       let result = keyV.map( num =>{
         return selnodes[num].__data__
-        // return selnodes[num][0][0].__data__
       })
       makeModal(result)
-      // return result
-      //console.log(selnodes[keyV[0][0]].__data__)
+
     }
-
-
 
     function ticked() {
       link
@@ -181,7 +160,6 @@ console.log('got here')
     }
 
     rect.on('click', () => {
-      console.log('getting called')
       node.each(d => {
         d.selected = false
         d.previouslySelected = false
@@ -214,10 +192,7 @@ console.log('got here')
         gBrush = null
       }
       brushing = false
-      console.log(collectSeletedNodes())
-      // let selnodes = svg.selectAll('.selected')._groups[0]
-      // console.log(selnodes)
-      //console.log('hi', svg.selectAll('.selected')
+      collectSeletedNodes()
     }
 
 
@@ -273,7 +248,6 @@ console.log('got here')
     }
 
     function dragged(d) {
-      console.log('node dragged!')
       node.filter(d => d.selected)
       .each(d => {
         d.fx += d3.event.dx;
@@ -296,10 +270,7 @@ console.log('got here')
 }
 
 const createForceChartWrapper = (googleId) => {
-    // chrome.storage.local.get(["userId"], function(items){
-    //         const googleId = items.userId
-    // })
-            createForceChart(googleId)
+  createForceChart(googleId)
 }
 
 export default createForceChartWrapper
