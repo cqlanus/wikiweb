@@ -27,6 +27,7 @@ class ForceChart extends React.Component {
 
   getHistory() {
     chrome.identity.getProfileUserInfo(function(info){
+      console.log('this is MY id',info.id)
       chrome.runtime.sendMessage({
         type: 'getUser',
         data: info.id
