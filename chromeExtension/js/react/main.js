@@ -6,6 +6,7 @@ import ReactDOM from 'react-dom'
 import NavBar from './NavBar'
 import ForceChart from './ForceChart'
 import History from './ScatterHistory'
+import Sentiment from './Sentiment'
 
 /* D3 CREATORS */
 import createForceChart from '../d3/dashboard.js'
@@ -29,12 +30,22 @@ const onScatterEnter = () => {
   createNodeScatter({'17': true, '16': true, '1': true})
 }
 
+const onSentimentEnter = () => {
+  chrome.runtime.sendMessage({
+    type: 'GET_SENTIMENT_BY_USERID',
+    data: {"2": true, "3": true, "4": true}
+  }, analysis => {
+    console.log('this is sentiment analysis', analysis)
+  })
+}
+
 ReactDOM.render(
   <Router history={hashHistory} >
     <Route path='/' component={Main}>
       <IndexRedirect to='/web' />
       <Route path='/web' component={ForceChart} onEnter={onWebEnter}/>
       <Route path='/history' component={History} onEnter={onScatterEnter}/>
+      <Route path='/sentiment' component={Sentiment} onEnter={onSentimentEnter}/>
     </Route>
   </Router>,
   document.getElementById('app'))

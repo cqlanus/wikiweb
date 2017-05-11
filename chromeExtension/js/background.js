@@ -30,7 +30,6 @@ function activateListeners() {
 
 function startAuth() {
   chrome.identity.getAuthToken({ 'interactive': true }, function(token) {
-  	console.log('in the start auth function')
   	console.log('got token', token)
       chrome.identity.getProfileUserInfo(function(info) {
         store.googleId  = info.id;
@@ -44,7 +43,6 @@ function startAuth() {
 function makeUniquePageRequest(tab) {
   chrome.history.search({text: '', maxResults: 5}, function(data) {
     if (!isMatchingHashedUrl(data[0].url, data[1].url)) {
-      console.log('in a new url', tab.url)
       chrome.tabs.sendMessage(tab.id, {action: "requestPageInfo"})
     } else {
     }
@@ -117,18 +115,15 @@ const getContentPromise = (title) => {
 		contentKeys.forEach(pageId=>{
 			finalCont+=contentOb[pageId].extract
 		})
-		console.log('content picked up', finalCont)
 		return finalCont
 	})
 	return contentPromise;
 }
 
 const postNodePromise = (nodeOb) => {
-   //console.log('in postNodePromise', nodeOb)
    let nodeInfoPromise =
      post('nodes/postNode', nodeOb)
      .then((nodeResponse)=>{
-   	   //console.log('scuess')
 	   return nodeResponse.json()
      })
    return nodeInfoPromise
@@ -184,9 +179,9 @@ const getUserPromise = function(googleId) {
 	  return resJson[0]
 	})
 	.then(ew=>{
-	  console.log('this is what im returning', ew)
 	  return ew
 	})
+  .catch(console.log)
 }
 
 const getSelectedNodes = function(requestData) {
@@ -198,6 +193,14 @@ const getSelectedNodes = function(requestData) {
     })
     return nodesToReturn
   })
+  .catch(console.log)
+}
+
+const getSentiment = nodesObj => {
+  return post('rosette/sentiment', nodesObj)
+  .then(res => res.json())
+  .then(analysis => analysis)
+  .catch(console.log)
 }
 
 /* ******* SWITCH LISTENER FOR INCOMING MESSAGES********/
@@ -209,9 +212,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 				let title=formatTitle(request.data.title)
 				getContentPromise(title)
 				.then(contentText=>{
-					console.log('contentText', contentText)
 					request.data['content']=contentText
-					console.log('new request data', request.data)
 					return postNodePromise(request.data)
 				})
 				.then(node=>{
@@ -227,13 +228,11 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 					return history.userId
 				})
 				.then(userId=>{
-					//console.log('got to end')
 					return postLinkPromise(userId)
 				})
 				break
 
 			case 'getUser':
-				//console.log('request.data', request.data)
 				getUserPromise(request.data)
 				.then((user)=>{
 					sendResponse(user)
@@ -244,6 +243,14 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         getSelectedNodes(request.data)
         .then(node => {
           sendResponse(node)
+        })
+        return true
+
+      case 'GET_SENTIMENT_BY_USERID':
+        getSentiment(request.data)
+        .then(analysis => {
+          console.log('analysis?', analysis)
+          sendResponse(analysis)
         })
         return true
 
