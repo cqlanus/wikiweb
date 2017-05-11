@@ -19,7 +19,9 @@ const Main = props => (
 )
 
 const onWebEnter = () => {
-  createForceChart('115893302668387505418')
+  chrome.identity.getProfileUserInfo(function(info){
+      createForceChart(info.id)
+  })
 }
 
 const onScatterEnter = () => {

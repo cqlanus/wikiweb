@@ -15,7 +15,6 @@ let store = {
 
 
 
-
 /* *******  Wrappers ********/
 function activateListeners() {
 	chrome.tabs.onUpdated.addListener(function(id, info, tab){
@@ -36,7 +35,7 @@ function startAuth() {
     //if (chrome.runtime.lastError) console.log(chrome.runtime.lastError)
 	// else {
       chrome.identity.getProfileUserInfo(function(info) {
-      	console.log('in getProfileUserInfo, going to set store', info)
+      	//console.log('in getProfileUserInfo, going to set store', info)
         store.googleId  = info.id;
         checkUser()
         activateListeners();
@@ -58,6 +57,7 @@ function makeUniquePageRequest(tab) {
 
 
 function post(endRoute, body) {
+	console.log('line 60', endRoute)
 	return fetch(`http://localhost:8000/api/${endRoute}`, {
   	  method: 'POST',
       headers: {
