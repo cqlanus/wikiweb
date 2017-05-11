@@ -134,23 +134,12 @@ const createForceChart = (googleId) => {
     function brushstarted() {
       brushing = true
       node.each(d => {
-        if (d.previouslySelected) {console.log('this is previouslySelected', d)}
         return d.previouslySelected = shiftKey && d.selected})
     }
-
-    rect.on('click', () => {
-      console.log('getting called')
-      node.each(d => {
-        d.selected = false
-        d.previouslySelected = false
-      })
-      node.classed('selected', false)
-    })
 
     function brushed() {
       if (!d3.event.sourceEvent) return
       if (!d3.event.selection) return
-
       const extent = d3.event.selection
       node.classed('selected', d => {
         /* ^ is XOR operator -- toggles selected */
@@ -182,27 +171,25 @@ const createForceChart = (googleId) => {
     function keydown() {
       shiftKey = d3.event.shiftKey
       if (shiftKey) {
-        if (gBrush) return
 
-        brushMode = true
+        brushMode = !brushMode
+        brushing = !brushing
+      }
+      toggleBrush()
+    }
 
-        if (!gBrush) {
+    function toggleBrush() {
+      if (!gBrush) {
           gBrush = gBrushHolder.append('g')
           gBrush.call(brush)
+        } else {
+          gBrush.remove()
+          gBrush = null
         }
-      }
     }
 
     function keyup() {
       shiftKey = false
-      brushMode = false
-
-      if (!gBrush) return
-
-      if (!brushing) {
-        gBrush.remove()
-        gBrush = null
-      }
     }
 
     function dragstarted(d) {
