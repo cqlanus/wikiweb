@@ -1,6 +1,11 @@
 'use strict'
 
 const {Node, Link, User} = require('../../db/models')
+//set up Rosette
+const variables = require('../../variables.json')
+var Api = require('rosette-api')
+var api = new Api(variables.rosette)
+let endpoint='categories'
 
 module.exports = require('express').Router()
   .get('/', (req, res, next) => {
@@ -32,31 +37,47 @@ module.exports = require('express').Router()
   })
 
   .post('/postNode', (req, res, next) => {
-    console.log('req.body', req.body)
     User.findOne({
       where: {googleId: req.body.googleId}
     })
     .then(user=>{
       return user.dataValues.id
     })
+
     .then(userId=>{
       req.body['userId'] = userId;
-      return Node.findOrCreate({
-        where: {title: req.body.title},
-        defaults: req.body
+      console.log('REQBODYFOR POSTNODE', req.body)
+      let content = req.body.content
+      api.parameters.content=content
+
+      api.rosette(endpoint, (err, result)=>{
+      if (err) {
+        console.log(err)
+      } else {
+        let formattedCat = result.categories[0].label.split('_').join(' ')
+        console.log('formattedCat', formattedCat)
+        req.body['category']=formattedCat
+        console.log('new req body', req.body) 
+        Node.findOrCreate({
+            where: {title: req.body.title},
+            defaults: req.body
+            })
+          .spread((node, created) => {
+            console.log('something happened')
+            if (created) { 
+              console.log('node created', node)
+              res.status(201).json(node)
+            } else {
+              const updated = node.incrementVisitCount()
+              res.json(node)
+            }
+           })
+          //.catch(next)
+        }
       })
     })
-    .spread((node, created) => {
-      console.log('node', node)
-      if (created) { 
-        res.status(201).json(node)}
-      else {
-        const updated = node.incrementVisitCount()
-        res.json(node)
-      }
-    })
-    .catch(next)
-    })
+
+  })
 
   .get('/user/:userId', (req, res, next) => {
     console.log('userId', req.params.userId)

@@ -123,6 +123,7 @@ const getContentPromise = (title) => {
 		contentKeys.forEach(pageId=>{
 			finalCont+=contentOb[pageId].extract
 		})
+		console.log('content picked up', finalCont)
 		return finalCont
 	})
 	return contentPromise;
@@ -214,6 +215,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 				let title=formatTitle(request.data.title)
 				getContentPromise(title)
 				.then(contentText=>{
+					console.log('contentText', contentText)
 					request.data['content']=contentText
 					console.log('new request data', request.data)
 					return postNodePromise(request.data)
