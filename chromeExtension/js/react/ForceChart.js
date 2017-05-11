@@ -25,7 +25,7 @@ class ForceChart extends React.Component {
   getHistory() {
     chrome.runtime.sendMessage({
       type: 'getUser',
-      data: '115893302668387505418'
+      data: '115897382801290454219'
     }, (results) => {
         this.setState({
           pageHistory: results.history.history
