@@ -57,14 +57,14 @@ module.exports = require('express').Router()
         let formattedCat = result.categories[0].label.split('_').join(' ')
         console.log('formattedCat', formattedCat)
         req.body['category']=formattedCat
-        console.log('new req body', req.body) 
+        console.log('new req body', req.body)
         Node.findOrCreate({
             where: {title: req.body.title},
             defaults: req.body
             })
           .spread((node, created) => {
             console.log('something happened')
-            if (created) { 
+            if (created) {
               console.log('node created', node)
               res.status(201).json(node)
             } else {
@@ -76,6 +76,20 @@ module.exports = require('express').Router()
       })
     })
 
+  })
+
+  .post('/text', (req, res, next) => {
+    const nodeIdArr = Object.keys(req.body.nodes).map(key => parseInt(key))
+    const textToFind = req.body.text
+    Node.findAll({
+      where: {
+        id: { $in: nodeIdArr},
+        content: {$like: `%${textToFind}%`}
+      }
+    })
+    .then(nodes => {
+      res.json(nodes)})
+    .catch(next)
   })
 
   .get('/user/:userId', (req, res, next) => {
@@ -94,7 +108,7 @@ module.exports = require('express').Router()
     .then(node => res.json(node))
     .catch(next)
   })
-  
+
   .delete('/:id', (req, res, next) => {
     Node.findById(req.params.id)
     .then(node => node.destroy())

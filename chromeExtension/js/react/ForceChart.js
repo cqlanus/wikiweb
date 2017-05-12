@@ -30,7 +30,6 @@ class ForceChart extends React.Component {
     this.getUserInfo()
   }
 
-
   getUserInfo() {
     const self = this
     chrome.identity.getProfileUserInfo(function(info){
@@ -104,22 +103,29 @@ class ForceChart extends React.Component {
   render() {
     this.state.pageHistory.length && this.state.historyView ? this.zoomFn() : null
   return (
-    <div>
-      <div className="canvas-container">
-        <svg height="700" width="100%"></svg>
-        <div className='btns'>
-          <button onClick={this.handleToggle}>history</button>
-        { this.state.historyView ?
-          <div>
-            <button onClick={this.handlePrevNode}>back</button>
-            <button onClick={this.handleNextNode}>forward</button>
-          </div> : null
-        }
-        </div>
+  <div>
+  <div className="canvas-container">
+    <svg height="700" width="100%"
+      onMouseOver={this.getSelected}
+      onClick={this.getSelected}
+    ></svg>
+    <div className='btn-div'>
+      <div className="retrace-container">
+        <div className="retrace">RETRACE YOUR STEPS</div>
       </div>
-        <Modal/>
-        <UserModal/>
+      <button className='main-button' onClick={this.handleToggle}>HISTORY</button>
+      { this.state.historyView ?
+        <div className='btn-div2'>
+          <button className='sub-button' onClick={this.handlePrevNode}>BACK</button>
+          <button className='sub-button' onClick={this.handleNextNode}>FORWARD</button>
+        </div> : null
+      }
+      </div>
     </div>
+    {/*<svg height="300" width="300" id="barchart"></svg>*/}
+    <Modal/>
+    <UserModal/>
+  </div>
   )}
 }
 

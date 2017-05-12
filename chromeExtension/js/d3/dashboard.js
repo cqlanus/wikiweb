@@ -26,7 +26,7 @@ const buildWikiWeb = (results) => {
     .attr('class', 'rect')
     .attr('width', parentWidth)
     .attr('height', parentHeight)
-    .attr('fill', 'lightsteelblue')
+    .attr('fill', '#7f7e7b')
 
   const gDraw = gMain.append('g').classed('draw', true)
 
@@ -79,6 +79,15 @@ const buildWikiWeb = (results) => {
     shiftKey
   })
   createToolTip(node)
+
+  rect.on('click', () => {
+      console.log('getting called')
+      node.each(d => {
+        d.selected = false
+        d.previouslySelected = false
+      })
+      node.classed('selected', false)
+    })
 
   function dragstarted(d) {
     if (!d3.event.active) simulation.alphaTarget(0.3).restart();
