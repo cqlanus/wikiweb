@@ -14,8 +14,6 @@ let store = {
   selectedNodes: {}
 }
 
-
-
 /* *******  Wrappers ********/
 function activateListeners() {
 	chrome.tabs.onUpdated.addListener(function(id, info, tab){
@@ -118,7 +116,10 @@ const getContentPromise = (title) => {
 		contentKeys.forEach(pageId=>{
 			finalCont+=contentOb[pageId].extract
 		})
+<<<<<<< HEAD
     console.log('final content', finalCont)
+=======
+>>>>>>> master
 		return finalCont
 	})
 	return contentPromise;

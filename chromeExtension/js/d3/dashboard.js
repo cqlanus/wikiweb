@@ -261,7 +261,6 @@ function createToolTip(node) {
 }
 
 const createForceChartWrapper = (googleId) => {
-
   /* MAKE A GET REQUEST FOR CURRENT USER */
   chrome.runtime.sendMessage({
     type: 'getUser',

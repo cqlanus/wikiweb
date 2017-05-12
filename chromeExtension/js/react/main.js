@@ -6,6 +6,7 @@ import ReactDOM from 'react-dom'
 import NavBar from './NavBar'
 import ForceChart from './ForceChart'
 import History from './ScatterHistory'
+import Modal from './Modal'
 import Sentiment from './Sentiment'
 
 /* D3 CREATORS */
