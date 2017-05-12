@@ -81,6 +81,33 @@ body {
   fill: yellow;
 }
 
+.tableHeader {
+  background-color: whitesmoke;
+  color: darkslategrey;
+  width: 90%;
+  align: center;
+  margin: 0 auto;
+  margin-top: 10px;
+
+}
+
+.descRow > th {
+  background-color:#e2e4eb;
+  margin: 20px;
+  font-size: 16px;
+  padding: 10px 0px 10px 0px;
+}
+
+.dataRow {
+  margin: 20px;
+  font-size: 14px;
+}
+
+.dataRow > th {
+  padding: 10px 0px 10px 0px;
+  border-bottom: solid  #e2e4eb;
+  }
+
 .bubble:hover {
   stroke: yellow;
   stroke-width: 3px;
@@ -88,4 +115,5 @@ body {
 
 .bubbletext {
   font-size: 9px;
+
 }
