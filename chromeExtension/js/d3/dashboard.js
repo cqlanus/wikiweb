@@ -57,6 +57,7 @@ const buildWikiWeb = (results) => {
     .enter().append("circle")
       .attr("r", function(d){return d.visitCount * 10})
       .attr("fill", d => color(d.visitCount))
+      .attr('id', d => d.id)
       .call(d3.drag()
         .on("start", dragstarted)
         .on("drag", dragged)

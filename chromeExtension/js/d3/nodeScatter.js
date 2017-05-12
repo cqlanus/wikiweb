@@ -7,11 +7,10 @@ const createNodeScatter = (nodesObj) => {
   chrome.runtime.sendMessage({
     type: GET_SINGLE_NODE,
     data: {
-      userId: 1,
       nodes: nodesObj
     }
   }, function(nodesArray) {
-    console.log(nodesArray)
+    console.log('nodesArray', nodesArray)
     let dates = []
 
     // const nodesArray = [node]

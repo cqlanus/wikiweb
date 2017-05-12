@@ -28,15 +28,24 @@ const onWebEnter = () => {
 }
 
 const onScatterEnter = () => {
-  createNodeScatter({'17': true, '16': true, '1': true})
+  chrome.runtime.sendMessage({
+    type: 'GET_SELECTED'
+  }, selectedNodes => {
+    createNodeScatter(selectedNodes)
+  })
 }
 
 const onSentimentEnter = () => {
   chrome.runtime.sendMessage({
-    type: 'GET_SENTIMENT_BY_USERID',
-    data: {}
-  }, analysis => {
-    createSentimentMap(analysis)
+    type: 'GET_SELECTED',
+  }, selectedNodes => {
+    console.log('these are selectedNodes', selectedNodes)
+    chrome.runtime.sendMessage({
+      type: 'GET_SENTIMENT_BY_USERID',
+      data: selectedNodes,
+    }, analysis => {
+      createSentimentMap(analysis)
+    })
   })
 }
 
