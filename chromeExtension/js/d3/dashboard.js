@@ -80,6 +80,15 @@ const buildWikiWeb = (results) => {
   })
   createToolTip(node)
 
+  rect.on('click', () => {
+      console.log('getting called')
+      node.each(d => {
+        d.selected = false
+        d.previouslySelected = false
+      })
+      node.classed('selected', false)
+    })
+
   function dragstarted(d) {
     if (!d3.event.active) simulation.alphaTarget(0.3).restart();
 

@@ -205,6 +205,13 @@ const getSentimentByUserId = (nodesObj, googleId) => {
   .catch(console.log)
 }
 
+const getNodesByText = (dataObj) => {
+ return post('nodes/text', dataObj)
+ .then(res => res.json())
+ .then(nodes => nodes)
+ .catch(console.log)
+}
+
 /* ******* SWITCH LISTENER FOR INCOMING MESSAGES********/
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
@@ -263,6 +270,11 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 
       case 'GET_SELECTED':
         sendResponse(store.selectedNodes)
+        return true
+
+      case 'GET_NODES_BY_TEXT_CONTENT':
+        getNodesByText(request.data)
+        .then(nodes => sendResponse(nodes))
         return true
 
 			default:

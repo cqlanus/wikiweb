@@ -110,7 +110,7 @@ body {
   background-color: whitesmoke;
   color: darkslategrey;
   width: 90%;
-  align: center;
+  text-align: center;
   margin: 0 auto;
   margin-top: 10px;
 
@@ -140,7 +140,14 @@ body {
 
 .bubbletext {
   font-size: 9px;
+}
 
+#barchart {
+  background-color: white;
+}
+
+.bar:hover {
+  fill: indianred;
 }
 
 .retrace-container {
