@@ -6,12 +6,15 @@ import ReactDOM from 'react-dom'
 import NavBar from './NavBar'
 import ForceChart from './ForceChart'
 import History from './ScatterHistory'
+import Modal from './Modal'
 import Sentiment from './Sentiment'
+
 
 /* D3 CREATORS */
 import createForceChart from '../d3/dashboard.js'
 import createNodeScatter from '../d3/nodeScatter.js'
 import createSentimentMap from '../d3/sentimentmap.js'
+
 
 const Main = props => (
  <div>
