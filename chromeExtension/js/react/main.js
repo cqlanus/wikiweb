@@ -7,10 +7,13 @@ import NavBar from './NavBar'
 import ForceChart from './ForceChart'
 import History from './ScatterHistory'
 import Modal from './Modal'
+import Sentiment from './Sentiment'
+
 
 /* D3 CREATORS */
 import createForceChart from '../d3/dashboard.js'
 import createNodeScatter from '../d3/nodeScatter.js'
+import createSentimentMap from '../d3/sentimentmap.js'
 
 
 const Main = props => (
@@ -28,7 +31,34 @@ const onWebEnter = () => {
 }
 
 const onScatterEnter = () => {
-  createNodeScatter({'17': true, '16': true, '1': true})
+  chrome.runtime.sendMessage({
+    type: 'GET_SELECTED'
+  }, selectedNodes => {
+    createNodeScatter(selectedNodes)
+  })
+}
+
+const onSentimentEnter = () => {
+  chrome.runtime.sendMessage({
+    type: 'GET_SELECTED',
+  }, selectedNodes => {
+    console.log('these are selectedNodes', selectedNodes)
+    chrome.runtime.sendMessage({
+      type: 'GET_SENTIMENT_BY_USERID',
+      data: selectedNodes,
+    }, analysis => {
+      createSentimentMap(analysis)
+    })
+  })
+}
+
+const onSentimentEnter = () => {
+  chrome.runtime.sendMessage({
+    type: 'GET_SENTIMENT_BY_USERID',
+    data: {}
+  }, analysis => {
+    createSentimentMap(analysis)
+  })
 }
 
 ReactDOM.render(
@@ -37,6 +67,7 @@ ReactDOM.render(
       <IndexRedirect to='/web' />
       <Route path='/web' component={ForceChart} onEnter={onWebEnter}/>
       <Route path='/history' component={History} onEnter={onScatterEnter}/>
+      <Route path='/sentiment' component={Sentiment} onEnter={onSentimentEnter}/>
     </Route>
   </Router>,
   document.getElementById('app'))

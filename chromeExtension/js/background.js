@@ -10,7 +10,8 @@ let store = {
 	currentNode: '',
 	previousNode: '',
 	history: [],
-	googleId: ''
+	googleId: '',
+  selectedNodes: {}
 }
 
 /* *******  Wrappers ********/
@@ -28,7 +29,6 @@ function activateListeners() {
 
 function startAuth() {
   chrome.identity.getAuthToken({ 'interactive': true }, function(token) {
-  	console.log('in the start auth function')
   	console.log('got token', token)
       chrome.identity.getProfileUserInfo(function(info) {
         store.googleId  = info.id;
@@ -42,7 +42,6 @@ function startAuth() {
 function makeUniquePageRequest(tab) {
   chrome.history.search({text: '', maxResults: 5}, function(data) {
     if (!isMatchingHashedUrl(data[0].url, data[1].url)) {
-      console.log('in a new url', tab.url)
       chrome.tabs.sendMessage(tab.id, {action: "requestPageInfo"})
     } else {
     }
@@ -81,7 +80,7 @@ function isMatchingHashedUrl(url1, url2) {
 
 function formatTitle(title) {
   let end=title.indexOf(' - Wikipedia')
-  console.log(end)
+
 	title = title.slice(0, end)
 	if (title.indexOf(' ')>-1) {
 	  newArr=[]
@@ -102,6 +101,7 @@ chrome.tabs.onActivated.addListener(function(tabId) {
 
 //postNode returns a promise for info on insertedNode
 const getContentPromise = (title) => {
+  console.log('title', title)
 	let contentPromise =  fetch(`https://en.wikipedia.org/w/api.php?action=query&prop=extracts&format=json&exintro=&titles=${title}`, {
     	method: 'GET',
 	})
@@ -109,24 +109,22 @@ const getContentPromise = (title) => {
 		return (contentRes.json())
 	})
 	.then(contentOb=>{
+    console.log('contentObj from wiki api', contentOb)
 		let finalCont=''
 		contentOb = contentOb.query.pages
 		let contentKeys = Object.keys(contentOb)
 		contentKeys.forEach(pageId=>{
 			finalCont+=contentOb[pageId].extract
 		})
-		console.log('content picked up', finalCont)
 		return finalCont
 	})
 	return contentPromise;
 }
 
 const postNodePromise = (nodeOb) => {
-   //console.log('in postNodePromise', nodeOb)
    let nodeInfoPromise =
      post('nodes/postNode', nodeOb)
      .then((nodeResponse)=>{
-   	   //console.log('scuess')
 	   return nodeResponse.json()
      })
    return nodeInfoPromise
@@ -179,23 +177,32 @@ const getUserPromise = function(googleId) {
 	  return res.json()
 	})
 	.then(resJson=>{
-	  return resJson[0]
+	  return resJson
 	})
-	.then(ew=>{
-	  console.log('this is what im returning', ew)
-	  return ew
-	})
+  .catch(console.log)
 }
 
 const getSelectedNodes = function(requestData) {
-  return get(`nodes/user/${requestData.userId}`)
+  return getUserPromise(store.googleId)
+  .then(user => get(`nodes/user/${user.id}`))
   .then(res => res.json())
   .then(nodesArr => {
     const nodesToReturn = nodesArr.filter(node => {
       return requestData.nodes[node.id]
     })
-    return nodesToReturn
+    return nodesToReturn.length ? nodesToReturn : nodesArr
   })
+  .catch(console.log)
+}
+
+const getSentimentByUserId = (nodesObj, googleId) => {
+  return getUserPromise(store.googleId)
+  .then(user => {
+    return post('rosette/sentiment', {nodes: nodesObj, userId: user.id})
+  })
+  .then(res => res.json())
+  .then(analysis => analysis)
+  .catch(console.log)
 }
 
 /* ******* SWITCH LISTENER FOR INCOMING MESSAGES********/
@@ -207,9 +214,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 				let title=formatTitle(request.data.title)
 				getContentPromise(title)
 				.then(contentText=>{
-					console.log('contentText', contentText)
 					request.data['content']=contentText
-					console.log('new request data', request.data)
 					return postNodePromise(request.data)
 				})
 				.then(node=>{
@@ -225,15 +230,14 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 					return history.userId
 				})
 				.then(userId=>{
-					//console.log('got to end')
 					return postLinkPromise(userId)
 				})
 				break
 
 			case 'getUser':
-				//console.log('request.data', request.data)
 				getUserPromise(request.data)
 				.then((user)=>{
+          // console.log('user???', user)
 					sendResponse(user)
 				})
 				return true
@@ -243,6 +247,22 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         .then(node => {
           sendResponse(node)
         })
+        return true
+
+      case 'GET_SENTIMENT_BY_USERID':
+        getSentimentByUserId(request.data)
+        .then(analysis => {
+          sendResponse(analysis)
+        })
+        return true
+
+      case 'SET_SELECTED':
+        store.selectedNodes = request.data
+        sendResponse(request.data)
+        return true
+
+      case 'GET_SELECTED':
+        sendResponse(store.selectedNodes)
         return true
 
 			default:
