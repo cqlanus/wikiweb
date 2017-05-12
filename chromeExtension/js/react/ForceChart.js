@@ -26,13 +26,14 @@ class ForceChart extends React.Component {
   }
 
   getHistory() {
+    const self = this
     chrome.identity.getProfileUserInfo(function(info){
       console.log('this is MY id',info.id)
       chrome.runtime.sendMessage({
         type: 'getUser',
         data: info.id
       }, (results) => {
-          this.setState({
+          self.setState({
             pageHistory: results.history.history
           })
       })
