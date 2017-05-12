@@ -36,7 +36,7 @@ const createForceChart = (googleId) => {
       .attr('class', 'rect')
       .attr('width', parentWidth)
       .attr('height', parentHeight)
-      .attr('fill', 'lightsteelblue')
+      .attr('fill', 'lightblue')
 
     const gDraw = gMain.append('g').classed('draw', true)
 

@@ -83,7 +83,7 @@ class ForceChart extends React.Component {
         </div> : null
       }
       </div>
-  </div>
+    </div>
   )}
 }
 
