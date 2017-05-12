@@ -10,7 +10,8 @@ let store = {
 	currentNode: '',
 	previousNode: '',
 	history: [],
-	googleId: ''
+	googleId: '',
+  selectedNodes: {}
 }
 
 /* *******  Wrappers ********/
@@ -79,7 +80,7 @@ function isMatchingHashedUrl(url1, url2) {
 
 function formatTitle(title) {
   let end=title.indexOf(' - Wikipedia')
-  console.log(end)
+
 	title = title.slice(0, end)
 	if (title.indexOf(' ')>-1) {
 	  newArr=[]
@@ -100,6 +101,7 @@ chrome.tabs.onActivated.addListener(function(tabId) {
 
 //postNode returns a promise for info on insertedNode
 const getContentPromise = (title) => {
+  console.log('title', title)
 	let contentPromise =  fetch(`https://en.wikipedia.org/w/api.php?action=query&prop=extracts&format=json&exintro=&titles=${title}`, {
     	method: 'GET',
 	})
@@ -107,6 +109,7 @@ const getContentPromise = (title) => {
 		return (contentRes.json())
 	})
 	.then(contentOb=>{
+    console.log('contentObj from wiki api', contentOb)
 		let finalCont=''
 		contentOb = contentOb.query.pages
 		let contentKeys = Object.keys(contentOb)
@@ -180,13 +183,14 @@ const getUserPromise = function(googleId) {
 }
 
 const getSelectedNodes = function(requestData) {
-  return get(`nodes/user/${requestData.userId}`)
+  return getUserPromise(store.googleId)
+  .then(user => get(`nodes/user/${user.id}`))
   .then(res => res.json())
   .then(nodesArr => {
     const nodesToReturn = nodesArr.filter(node => {
       return requestData.nodes[node.id]
     })
-    return nodesToReturn
+    return nodesToReturn.length ? nodesToReturn : nodesArr
   })
   .catch(console.log)
 }
@@ -233,6 +237,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 			case 'getUser':
 				getUserPromise(request.data)
 				.then((user)=>{
+          // console.log('user???', user)
 					sendResponse(user)
 				})
 				return true
@@ -249,6 +254,15 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         .then(analysis => {
           sendResponse(analysis)
         })
+        return true
+
+      case 'SET_SELECTED':
+        store.selectedNodes = request.data
+        sendResponse(request.data)
+        return true
+
+      case 'GET_SELECTED':
+        sendResponse(store.selectedNodes)
         return true
 
 			default:
