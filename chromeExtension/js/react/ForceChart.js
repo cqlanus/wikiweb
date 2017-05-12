@@ -109,21 +109,23 @@ class ForceChart extends React.Component {
       onMouseOver={this.getSelected}
       onClick={this.getSelected}
     ></svg>
-
-
-  </div>
-  <div className='btns'>
-      <button onClick={this.handleToggle}>history</button>
-    { this.state.historyView ?
-      <div>
-        <button onClick={this.handlePrevNode}>back</button>
-        <button onClick={this.handleNextNode}>forward</button>
-      </div> : null
-    }
+    <div className='btn-div'>
+      <div className="retrace-container">
+        <div className="retrace">RETRACE YOUR STEPS</div>
+      </div>
+      <button className='main-button' onClick={this.handleToggle}>HISTORY</button>
+      { this.state.historyView ?
+        <div className='btn-div2'>
+          <button className='sub-button' onClick={this.handlePrevNode}>BACK</button>
+          <button className='sub-button' onClick={this.handleNextNode}>FORWARD</button>
+        </div> : null
+      }
+      </div>
     </div>
     {/*<svg height="300" width="300" id="barchart"></svg>*/}
     <Modal/>
     <UserModal/>
+  </div>
   </div>
   )}
 }

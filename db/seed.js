@@ -3,13 +3,11 @@ const db = require('./db.js')
 const {User, Node, Link, History} = require('./models')
 
 const data = {
-  users: [
-    {name: 'Chris', googleId:'115897382801290454219'}, {name: 'Nick', googleId:'215893302668387505418'}, {name: 'Ellie', googleId: '115893302668387505418'}
-  ],
+  users: [],
 
   nodes: [
     
-  {title: 'A', url: 'wiki/A', visitCount: 4, userId: 3, content: 'hi'}, // 1
+  //{title: 'A', url: 'wiki/A', visitCount: 4, userId: 3, content: 'hi'}, // 1
   //   {title: 'B', url: 'wiki/B', visitCount: 2, userId: 3, content: 'hi'}, // 2
   //   {title: 'C', url: 'wiki/C', visitCount: 1, userId: 3, content: 'hi'}, // 3
   //   {title: 'D', url: 'wiki/D', visitCount: 1, userId: 3, content: 'hi'},//4
