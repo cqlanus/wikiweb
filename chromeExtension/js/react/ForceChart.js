@@ -1,6 +1,7 @@
 import React from 'react'
 import createForceChart from '../d3/dashboard.js'
 import Modal from './Modal'
+import UserModal from './UserModal'
 const d3 = require('d3')
 const d3Zoom = require('../d3/historyzoomer')
 
@@ -28,6 +29,7 @@ class ForceChart extends React.Component {
   }
 
   getHistory() {
+    const self = this
     chrome.identity.getProfileUserInfo(function(info){
       console.log('this is MY id',info.id)
       chrome.runtime.sendMessage({
@@ -87,6 +89,7 @@ class ForceChart extends React.Component {
         </div>
       </div>
         <Modal/>
+        <UserModal/>
     </div>
   )}
 }

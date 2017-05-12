@@ -1,7 +1,5 @@
 import React from 'react'
-import createForceChart from '../d3/dashboard.js'
 const d3 = require('d3')
-const d3Zoom = require('../d3/historyzoomer')
 
 
 
@@ -11,8 +9,11 @@ class Modal extends React.Component {
 
     this.state = {
      viewtodisplay: null,
-     nodeData: [{title:'Barack Obama', category:"President", visitCount:2, lastVisit:"January 1, 2017", url:'wwI'},{title:'WWII', category:" WAR",  visitCount:1, lastVisit:"May 2, 2016", url:'wwII'},{title:'Mercedes', category:"Transportation", visitCount:4, lastVisit:"May 2, 2016", url:'Mercedes'},{title:'Truck', category:"Transportation",visitCount:2, lastVisit:"May 2, 2016", url:'truck'}]
-    }
+     nodeData: [{title:'Barack Obama', category:"President", visitCount:2, lastVisit:"January 1, 2017", url:'wwI'},{title:'WWII', category:" WAR",  visitCount:1, lastVisit:"May 2, 2016", url:'wwII'},{title:'Mercedes', category:"Transportation", visitCount:4, lastVisit:"May 2, 2016", url:'Mercedes'},{title:'Truck', category:"Transportation",visitCount:2, lastVisit:"May 2, 2016", url:'truck'}],
+     selectedNodes: {2: true},
+     totalArticles: 18,
+     totalPageVisits: 30,
+  }
     //function bindnign statment ehre
   }
 
@@ -34,9 +35,9 @@ class Modal extends React.Component {
               <th>Page Url</th>
               <th>Last Visit Date</th>
             </tr>
-            {this.state.nodeData.map(data => {
+            { this.state.nodeData.map(data => {
               return(
-                <tr className="dataRow">
+                <tr key={data.url} className="dataRow">
                   <th>{data.title}</th>
                   <th>{data.category}</th>
                   <th>{data.visitCount}</th>
@@ -45,7 +46,7 @@ class Modal extends React.Component {
                   <th>{data.lastVisit}</th>
                 </tr>
                 )
-            })   }
+            })}
             </tbody>
         </table>
     </div>
