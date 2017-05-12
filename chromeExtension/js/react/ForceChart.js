@@ -118,7 +118,7 @@ class ForceChart extends React.Component {
       </div> : null
     }
     </div>
-    <svg height="300" width="300" id="barchart"></svg>
+    {/*<svg height="300" width="300" id="barchart"></svg>*/}
   </div>
   )}
 }

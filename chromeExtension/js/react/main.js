@@ -24,7 +24,7 @@ const Main = props => (
 const onWebEnter = () => {
   chrome.identity.getProfileUserInfo(function(info){
       createForceChart(info.id)
-      createBarChart({war: 5, sports: 2, travel: 3, politics: 10, food: 6})
+      // createBarChart({war: 5, sports: 2, travel: 3, politics: 10, food: 6})
   })
 
 }
