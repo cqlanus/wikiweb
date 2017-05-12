@@ -126,7 +126,6 @@ class ForceChart extends React.Component {
     <Modal/>
     <UserModal/>
   </div>
-  </div>
   )}
 }
 
