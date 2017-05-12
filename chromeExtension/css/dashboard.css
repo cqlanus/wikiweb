@@ -81,3 +81,28 @@ body {
 .selected {
   fill: yellow;
 }
+
+
+.tableHeader {
+  background-color: whitesmoke;
+  color: darkslategrey;
+  width: 90%;
+  align: center;
+  margin: 0 auto;
+  margin-top: 10px;
+
+}
+
+.descRow > th {
+  background-color:#e2e4eb;
+  margin: 20px;
+  font-size: 16px;
+  padding: 10px 0px 10px 0px;
+}
+
+.dataRow {
+  margin: 20px;
+  font-size: 16px;
+  padding: 10px 0px 10px 0px;
+  border-bottom: thick dotted #ff0000;
+}

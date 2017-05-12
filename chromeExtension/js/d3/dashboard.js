@@ -126,7 +126,7 @@ const createForceChart = (googleId) => {
             if(elementExists) elementExists.remove()
             const infoModal = d3.select("body").append("div").attr("id","infoModal")
             infoModal.style("position", 'absolute')
-            infoModal.style("width", "550px")
+            infoModal.style("width", "850px")
             infoModal.style("height", "150px")
             infoModal.style("padding", "20px")
             infoModal.style("background-color","ivory")

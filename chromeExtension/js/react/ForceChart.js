@@ -1,7 +1,9 @@
 import React from 'react'
 import createForceChart from '../d3/dashboard.js'
+import Modal from './Modal'
 const d3 = require('d3')
 const d3Zoom = require('../d3/historyzoomer')
+
 
 class ForceChart extends React.Component {
   constructor() {
@@ -71,18 +73,21 @@ class ForceChart extends React.Component {
     this.state.pageHistory.length && this.state.historyView ? this.zoomFn() : null
 
   return (
-  <div className="canvas-container">
-    <svg height="700" width="100%"></svg>
-    <div className='btns'>
-      <button onClick={this.handleToggle}>history</button>
-    { this.state.historyView ?
-      <div>
-        <button onClick={this.handlePrevNode}>back</button>
-        <button onClick={this.handleNextNode}>forward</button>
-      </div> : null
-    }
+    <div>
+      <div className="canvas-container">
+        <svg height="700" width="100%"></svg>
+        <div className='btns'>
+          <button onClick={this.handleToggle}>history</button>
+        { this.state.historyView ?
+          <div>
+            <button onClick={this.handlePrevNode}>back</button>
+            <button onClick={this.handleNextNode}>forward</button>
+          </div> : null
+        }
+        </div>
+      </div>
+        <Modal/>
     </div>
-  </div>
   )}
 }
 
