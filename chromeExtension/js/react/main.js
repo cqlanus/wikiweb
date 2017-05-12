@@ -52,14 +52,6 @@ const onSentimentEnter = () => {
   })
 }
 
-const onSentimentEnter = () => {
-  chrome.runtime.sendMessage({
-    type: 'GET_SENTIMENT_BY_USERID',
-    data: {}
-  }, analysis => {
-    createSentimentMap(analysis)
-  })
-}
 
 ReactDOM.render(
   <Router history={hashHistory} >

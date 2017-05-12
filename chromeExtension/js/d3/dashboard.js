@@ -26,7 +26,7 @@ const buildWikiWeb = (results) => {
     .attr('class', 'rect')
     .attr('width', parentWidth)
     .attr('height', parentHeight)
-    .attr('fill', 'lightsteelblue')
+    .attr('fill', '#7f7e7b')
 
   const gDraw = gMain.append('g').classed('draw', true)
 
