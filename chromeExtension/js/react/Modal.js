@@ -11,7 +11,7 @@ class Modal extends React.Component {
 
     this.state = {
      viewtodisplay: null,
-     nodeData: [{title:'WWI',visitCount:2,url:'wiki/wwI'},{title:'WWII',visitCount:1,url:'wiki/wwII'},{title:'Mercedes',visitCount:4,url:'wiki/Mercedes'},{title:'Truck',visitCount:2,url:'wiki/truck'}]
+     nodeData: [{title:'Barack Obama', category:"President", visitCount:2, lastVisit:"January 1, 2017", url:'wiki/wwI'},{title:'WWII', category:" WAR",  visitCount:1, lastVisit:"May 2, 2016", url:'wiki/wwII'},{title:'Mercedes', category:"Transportation", visitCount:4, lastVisit:"May 2, 2016", url:'wiki/Mercedes'},{title:'Truck', category:"Transportation",visitCount:2, lastVisit:"May 2, 2016", url:'wiki/truck'}]
     }
     //function bindnign statment ehre
   }
@@ -29,11 +29,21 @@ class Modal extends React.Component {
          <tbody>
             <tr className="descRow">
               <th>Page Title</th>
+              <th>Page Category</th>
               <th>Visit Count</th>
               <th>Page Url</th>
+              <th>Last Visit Date</th>
             </tr>
             {this.state.nodeData.map(data => {
-              return<tr className="dataRow"><th>{data.title}</th><th>{data.visitCount}</th><th>/{data.url}</th></tr>
+              return(
+                <tr className="dataRow">
+                  <th>{data.title}</th>
+                  <th>{data.category}</th>
+                  <th>{data.visitCount}</th>
+                  <th>/{data.url}</th>
+                  <th>{data.lastVisit}</th>
+                </tr>
+                )
             })   }
             </tbody>
         </table>
