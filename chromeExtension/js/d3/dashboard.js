@@ -80,7 +80,6 @@ const buildWikiWeb = (results) => {
   })
   createToolTip(node)
 
-
   function dragstarted(d) {
     if (!d3.event.active) simulation.alphaTarget(0.3).restart();
 
@@ -253,7 +252,6 @@ function createToolTip(node) {
 }
 
 const createForceChartWrapper = (googleId) => {
-
   /* MAKE A GET REQUEST FOR CURRENT USER */
   chrome.runtime.sendMessage({
     type: 'getUser',
