@@ -235,6 +235,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 			case 'getUser':
 				getUserPromise(request.data)
 				.then((user)=>{
+          console.log('user???', user)
 					sendResponse(user)
 				})
 				return true

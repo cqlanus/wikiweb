@@ -19,16 +19,13 @@ class ForceChart extends React.Component {
   }
 
   componentDidMount() {
-    //  chrome.identity.getProfileUserInfo(function(info) {
-    //   	console.log('in getProfileUserInfo, going to set store', info)
-    //   })
     this.getHistory()
   }
 
   getHistory() {
     const self = this
     chrome.identity.getProfileUserInfo(function(info){
-      console.log('this is MY id',info.id)
+      // console.log('this is MY id',info.id)
       chrome.runtime.sendMessage({
         type: 'getUser',
         data: info.id
@@ -39,7 +36,6 @@ class ForceChart extends React.Component {
       })
   })
 }
-
 
   handleToggle(evt) {
     console.log('toggle')
