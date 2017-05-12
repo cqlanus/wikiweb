@@ -11,7 +11,7 @@ class Modal extends React.Component {
 
     this.state = {
      viewtodisplay: null,
-     nodeData: [{title:'Barack Obama', category:"President", visitCount:2, lastVisit:"January 1, 2017", url:'wiki/wwI'},{title:'WWII', category:" WAR",  visitCount:1, lastVisit:"May 2, 2016", url:'wiki/wwII'},{title:'Mercedes', category:"Transportation", visitCount:4, lastVisit:"May 2, 2016", url:'wiki/Mercedes'},{title:'Truck', category:"Transportation",visitCount:2, lastVisit:"May 2, 2016", url:'wiki/truck'}]
+     nodeData: [{title:'Barack Obama', category:"President", visitCount:2, lastVisit:"January 1, 2017", url:'wwI'},{title:'WWII', category:" WAR",  visitCount:1, lastVisit:"May 2, 2016", url:'wwII'},{title:'Mercedes', category:"Transportation", visitCount:4, lastVisit:"May 2, 2016", url:'Mercedes'},{title:'Truck', category:"Transportation",visitCount:2, lastVisit:"May 2, 2016", url:'truck'}]
     }
     //function bindnign statment ehre
   }
@@ -40,7 +40,8 @@ class Modal extends React.Component {
                   <th>{data.title}</th>
                   <th>{data.category}</th>
                   <th>{data.visitCount}</th>
-                  <th>/{data.url}</th>
+
+                  <th><a href={`https://en.wikipedia.org/wiki/`+data.url}>{data.url}</a></th>
                   <th>{data.lastVisit}</th>
                 </tr>
                 )
