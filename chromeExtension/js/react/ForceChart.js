@@ -100,12 +100,16 @@ class ForceChart extends React.Component {
   render() {
     this.state.pageHistory.length && this.state.historyView ? this.zoomFn() : null
   return (
+  <div>
   <div className="canvas-container">
     <svg height="700" width="100%"
       onMouseOver={this.getSelected}
       onClick={this.getSelected}
     ></svg>
-    <div className='btns'>
+
+
+  </div>
+  <div className='btns'>
       <button onClick={this.handleToggle}>history</button>
     { this.state.historyView ?
       <div>
@@ -114,6 +118,7 @@ class ForceChart extends React.Component {
       </div> : null
     }
     </div>
+    <svg height="300" width="300" id="barchart"></svg>
   </div>
   )}
 }

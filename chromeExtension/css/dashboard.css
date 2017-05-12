@@ -89,3 +89,11 @@ body {
 .bubbletext {
   font-size: 9px;
 }
+
+#barchart {
+  background-color: white;
+}
+
+.bar:hover {
+  fill: indianred;
+}
