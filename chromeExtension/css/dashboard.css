@@ -14,9 +14,13 @@ body {
 
 }
 
-.btns {
+.btn-div {
+  width: 15%;
   display: flex;
   flex-direction: column;
+  background-color: grey;
+  justify-content: center;
+  align-items: center;
 }
 
 .links {
@@ -80,4 +84,24 @@ body {
 
 .selected {
   fill: yellow;
+}
+
+.main-button {
+  width: 80%;
+  height: 50px;
+  border-radius: 50px;
+  box-shadow: none;
+  background: white;
+  color: lightsteelblue;
+  border-color: lightsteelblue;
+  border-style: solid;
+}
+
+.sub-button {
+  border-radius: 50px;
+  box-shadow: none;
+  background: white;
+  color: lightsteelblue;
+  border-color: lightsteelblue;
+  border-style: solid;
 }

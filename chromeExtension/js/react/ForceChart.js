@@ -26,6 +26,7 @@ class ForceChart extends React.Component {
   }
 
   getHistory() {
+    const self=this
     chrome.identity.getProfileUserInfo(function(info){
       console.log('this is MY id',info.id)
       chrome.runtime.sendMessage({
@@ -73,15 +74,15 @@ class ForceChart extends React.Component {
   return (
   <div className="canvas-container">
     <svg height="700" width="100%"></svg>
-    <div className='btns'>
-      <button onClick={this.handleToggle}>history</button>
-    { this.state.historyView ?
-      <div>
-        <button onClick={this.handlePrevNode}>back</button>
-        <button onClick={this.handleNextNode}>forward</button>
-      </div> : null
-    }
-    </div>
+    <div className='btn-div'>
+      <button className='main-button' onClick={this.handleToggle}>HISTORY</button>
+      { this.state.historyView ?
+        <div className='btn-div'>
+          <button className='sub-button' onClick={this.handlePrevNode}>BACK</button>
+          <button className='sub-button' onClick={this.handleNextNode}>FORWARD</button>
+        </div> : null
+      }
+      </div>
   </div>
   )}
 }
