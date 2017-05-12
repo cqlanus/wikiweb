@@ -30,7 +30,7 @@ module.exports = require('express').Router()
         },
         include: [Node, Link, History]
     })
-    .then(foundUser => {
+    .spread((foundUser, created) => {
       res.json(foundUser)
     })
     .catch(next)
@@ -40,7 +40,7 @@ module.exports = require('express').Router()
   .post('/', (req, res, next) => {
     console.log('in post for user', req.body)
     User.findOrCreate({
-      where: {googleId: req.body.googleId}, 
+      where: {googleId: req.body.googleId},
       defaults: {googleId: req.body.googleId}
     })
     .then(res2 => {
@@ -49,7 +49,7 @@ module.exports = require('express').Router()
     })
     .catch(next)
   })
-  
+
   .put('/:id', (req, res, next) => {
     User.update(req.body, {
       where: { id: req.params.id }
