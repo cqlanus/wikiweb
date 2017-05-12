@@ -67,11 +67,10 @@ body {
     display: none;
     width: auto;
     height: auto;
-    background: none repeat scroll 0 0 white;
+    background: none repeat scroll 0 0 black;
     border: 0 none;
-    border-radius: 8px 8px 8px 8px;
-    box-shadow: -3px 3px 15px #333;
-    color: black;
+    border-radius: 4px;
+    color: white;
     font: 12px sans-serif;
     padding: 5px;
     text-align: center;
@@ -80,4 +79,13 @@ body {
 
 .selected {
   fill: yellow;
+}
+
+.bubble:hover {
+  stroke: yellow;
+  stroke-width: 3px;
+}
+
+.bubbletext {
+  font-size: 9px;
 }

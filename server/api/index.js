@@ -7,6 +7,7 @@ api
   .use('/nodes', require('./nodes'))
   .use('/links', require('./links'))
   .use('/history', require('./histories'))
+  .use('/rosette', require('./rosette'))
   // .use('/categories', require('./categories'))
 
 // No routes matched? 404.
