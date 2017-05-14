@@ -123,12 +123,14 @@ body {
   padding: 10px 0px 10px 0px;
 }
 
+
+
 .dataRow {
   margin: 20px;
   font-size: 14px;
 }
 
-.dataRow > th {
+.dataRow > td {
   padding: 10px 0px 10px 0px;
   border-bottom: solid  #e2e4eb;
   }
