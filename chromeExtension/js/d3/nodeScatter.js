@@ -77,7 +77,7 @@ const createNodeScatter = (nodesArray) => {
     .enter().append('circle')
     // .classed('dot show', true)
     .attr('class', d => {
-      return `${d.category.split(' ').join('')} show`})
+      return `${d.category.split(' ').join('')} show dot`})
     .attr('cx', d => xScale(d.date))
     .attr('cy', d => yScale(d.time))
     .attr('r', 10)
