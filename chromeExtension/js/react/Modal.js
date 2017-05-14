@@ -38,12 +38,12 @@ class Modal extends React.Component {
             { this.state.nodeData.map(data => {
               return(
                 <tr key={data.url} className="dataRow">
-                  <th>{data.title}</th>
-                  <th>{data.category}</th>
-                  <th>{data.visitCount}</th>
+                  <td>{data.title}</td>
+                  <td>{data.category}</td>
+                  <td>{data.visitCount}</td>
 
-                  <th><a href={`https://en.wikipedia.org/wiki/`+data.url}>{data.url}</a></th>
-                  <th>{data.lastVisit}</th>
+                  <td><a href={`https://en.wikipedia.org/wiki/`+data.url}>{data.url}</a></td>
+                  <td>{data.lastVisit}</td>
                 </tr>
                 )
             })}

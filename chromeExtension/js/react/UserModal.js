@@ -71,7 +71,10 @@ class UserModal extends React.Component {
               <th>Number of Visits</th>
             </tr>
               {sortedARR.map(data => {
-                return <tr className="dataRow" key={Object.keys(data)[0]}> <th>{Object.keys(data)[0]}</th> <th>{data[Object.keys(data)[0]]}</th></tr>
+                return <tr className="dataRow" key={Object.keys(data)[0]}>
+                  <td>{Object.keys(data)[0]}</td>
+                  <td>{data[Object.keys(data)[0]]}</td>
+                </tr>
               })}
             </tbody>
         </table>
