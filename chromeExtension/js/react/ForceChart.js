@@ -56,6 +56,7 @@ class ForceChart extends React.Component {
           totalArticles: results.nodes.length,
           totalPageVisits: totalPageVisits
         })
+        //console.log('this is state',self.state)
       })
     })
   }
@@ -124,7 +125,7 @@ class ForceChart extends React.Component {
     </div>
     {/*<svg height="300" width="300" id="barchart"></svg>*/}
     <Modal/>
-    <UserModal/>
+    <UserModal cat={this.state.categories} />  {/* coming down as undefined*/}
   </div>
   )}
 }

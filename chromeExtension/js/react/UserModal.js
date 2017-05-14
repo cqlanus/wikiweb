@@ -2,11 +2,11 @@ import React from 'react'
 const d3 = require('d3')
 
 class UserModal extends React.Component {
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
     this.state = {
       viewtodisplay: null,
-      Categories: {
+      ACategories: {
       'Law': 2,
       'Culture': 8,
       'Movies': 4,
@@ -29,13 +29,12 @@ class UserModal extends React.Component {
    this.SortCat = this.SortCat.bind(this)
   }
 
-  componentDidMount() {
-    //  let arr = this.ObjtoArr(this.state.Categories);
-    //   console.log('arra', Array.isArray(arr)  )
-    //   console.log(this.SortCat)
-    //   let sortedARR = arr.sort(this.SortCat)
-    //   console.log('sorted array', sortedARR)
 
+  componentWillMount() {
+    console.log('props in did mount',this.props.cat)
+   this.setState({
+     ACategories: this.props.cat
+   })
    }
 
   ObjtoArr(cat){
@@ -58,9 +57,10 @@ class UserModal extends React.Component {
 
 
   render() {
-    let arr = this.ObjtoArr(this.state.Categories);
+    let arr = this.ObjtoArr(this.props.cat);
     let sortedARR = arr.sort(this.SortCat)
-   // console.log(sortedARR)
+    let topFive = this.CalculateTopCategories(sortedARR)
+   // console.log('props in render',this.props.cat)
 
   return (
     <div>
@@ -70,7 +70,7 @@ class UserModal extends React.Component {
               <th>Top Catagories</th>
               <th>Number of Visits</th>
             </tr>
-              {sortedARR.map(data => {
+              {topFive.map(data => {
                 return <tr className="dataRow" key={Object.keys(data)[0]}>
                   <td>{Object.keys(data)[0]}</td>
                   <td>{data[Object.keys(data)[0]]}</td>
