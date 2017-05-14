@@ -35,6 +35,11 @@ const buildWikiWeb = (results) => {
   /* CREATE COLOR SCALE */
   const color = d3.scaleOrdinal(d3.schemeCategory20);
 
+  const categories = results.nodes.map(node => node.category)
+  const catSet = new Set(categories)
+  const catArr = new Array(...catSet)
+  createLegend(catArr, parentWidth, parentHeight, color)
+
   const gBrushHolder = gDraw.append('g')
   let gBrush = null
   let brushMode = false
@@ -47,7 +52,8 @@ const buildWikiWeb = (results) => {
     .selectAll("line")
     .data(results.links)
     .enter().append("line")
-      .attr("stroke-width", function(d) { return Math.sqrt(d.strength); })
+      .attr("stroke-width", function(d) { return d.strength; })
+      .attr('stroke', '#fff')
 
   /* ATTACH CIRCLES TO SVG AS NODES */
   let node = gDraw.append("g")
@@ -56,7 +62,7 @@ const buildWikiWeb = (results) => {
     .data(results.nodes)
     .enter().append("circle")
       .attr("r", function(d){return d.visitCount * 10})
-      .attr("fill", d => color(d.visitCount))
+      .attr("fill", d => color(d.category))
       .attr('id', d => d.id)
       .call(d3.drag()
         .on("start", dragstarted)
@@ -132,10 +138,10 @@ const buildWikiWeb = (results) => {
 function createForceSim(options) {
   /* DEFINE FORCE GRAPH RULES */
   const simulation = d3.forceSimulation()
-    .force("link", d3.forceLink().id(function(d) { return d.id; }).distance(d => 70/d.strength))
+    .force("link", d3.forceLink().id(function(d) { return d.id; }).distance(d => (options.h - 100)/d.strength))
     .force("charge", d3.forceManyBody().distanceMax(200))
-    .force("center", d3.forceCenter(options.w / 2, options.h / 2))
-    .velocityDecay(0.7)
+    .force("center", d3.forceCenter(options.w / (2), options.h / 2))
+    .velocityDecay(0.5)
 
   simulation
     .nodes(options.results.nodes)
@@ -252,12 +258,33 @@ function createToolTip(node) {
       let elementData = elements[l].__data__
       // console.log(elementData)
       divTooltip.html(`
-        ${elementData.id} ${elementData.title}
+        ${elementData.title} <br>
+        ${elementData.category}
       `);
       });
     node.on("mouseout", function(d){
       divTooltip.style("display", "none");
       })
+}
+
+function createLegend(dataArr, width, height, colors) {
+  const legend = d3.select('.g-main').selectAll('.legend')
+    .data(dataArr)
+    .enter().append('g')
+    .attr('class', 'legend')
+
+  legend.append('rect')
+    .attr('x', 10)
+    .attr('y', (d, i) => height - (i*25 + 30))
+    .attr('width', 18)
+    .attr('height', 18)
+    .attr('fill', d => colors(d))
+
+  legend.append('text')
+    .attr('x', 35)
+    .attr('y', (d, i) => height - (i*25 + 18))
+    .text(d => d)
+    .attr('fill', 'white')
 }
 
 const createForceChartWrapper = (googleId) => {

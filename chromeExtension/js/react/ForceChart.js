@@ -3,7 +3,7 @@ import createForceChart from '../d3/dashboard.js'
 import Modal from './Modal'
 import UserModal from './UserModal'
 const d3 = require('d3')
-const d3Zoom = require('../d3/historyzoomer')
+const {d3Zoom,} = require('../d3/historyzoomer')
 
 
 class ForceChart extends React.Component {
@@ -84,6 +84,10 @@ class ForceChart extends React.Component {
     d3Zoom(this.state.pageHistory, this.state.currentNodeId)
   }
 
+  // zoomOutFn() {
+  //   d3ZoomOut(this.state.pageHistory, this.state.currentNodeId)
+  // }
+
   getSelected(evt) {
     const selectedObj = {}
     d3.selectAll('.selected').nodes()
@@ -101,7 +105,9 @@ class ForceChart extends React.Component {
   }
 
   render() {
-    this.state.pageHistory.length && this.state.historyView ? this.zoomFn() : null
+    this.state.pageHistory.length && this.state.historyView && this.zoomFn()
+
+    // this.state.pageHistory.length && this.state.historyView === false ? this.zoomOutFn() : null
   return (
   <div>
   <div className="canvas-container">
@@ -109,6 +115,8 @@ class ForceChart extends React.Component {
       onMouseOver={this.getSelected}
       onClick={this.getSelected}
     ></svg>
+
+    </div>
     <div className='btn-div'>
       <div className="retrace-container">
         <div className="retrace">RETRACE YOUR STEPS</div>
@@ -121,7 +129,6 @@ class ForceChart extends React.Component {
         </div> : null
       }
       </div>
-    </div>
     {/*<svg height="300" width="300" id="barchart"></svg>*/}
     <Modal/>
     <UserModal/>
