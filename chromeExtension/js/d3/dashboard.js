@@ -138,7 +138,7 @@ const buildWikiWeb = (results) => {
 function createForceSim(options) {
   /* DEFINE FORCE GRAPH RULES */
   const simulation = d3.forceSimulation()
-    .force("link", d3.forceLink().id(function(d) { return d.id; }).distance(d => (options.h - 100)/d.strength))
+    .force("link", d3.forceLink().id(function(d) { return d.id; }).distance(d => (options.h - 120)/d.strength))
     .force("charge", d3.forceManyBody().distanceMax(200))
     .force("center", d3.forceCenter(options.w / (2), options.h / 2))
     .velocityDecay(0.5)
