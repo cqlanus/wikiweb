@@ -4,25 +4,29 @@ const d3 = require('d3')
 
 
 class Modal extends React.Component {
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
 
     this.state = {
-     viewtodisplay: null,
-     nodeData: [{title:'Barack Obama', category:"President", visitCount:2, lastVisit:"January 1, 2017", url:'wwI'},{title:'WWII', category:" WAR",  visitCount:1, lastVisit:"May 2, 2016", url:'wwII'},{title:'Mercedes', category:"Transportation", visitCount:4, lastVisit:"May 2, 2016", url:'Mercedes'},{title:'Truck', category:"Transportation",visitCount:2, lastVisit:"May 2, 2016", url:'truck'}],
-     selectedNodes: {2: true},
-     totalArticles: 18,
-     totalPageVisits: 30,
-  }
+     selectedNodes: [{title:'Barack Obama', category:"President", visitCount:2, lastVisit:"January 1, 2017", url:'wwI'},{title:'WWII', category:" WAR",  visitCount:1, lastVisit:"May 2, 2016", url:'wwII'},{title:'Mercedes', category:"Transportation", visitCount:4, lastVisit:"May 2, 2016", url:'Mercedes'},{title:'Truck', category:"Transportation",visitCount:2, lastVisit:"May 2, 2016", url:'truck'}],
+    }
     //function bindnign statment ehre
   }
 
-  componentDidMount() {
-
-  }
-
-
+  ObjtoArr(cat){
+    return Object.keys(cat).map(key=>{
+      return {[key]:cat[key]}
+  })
+}
   render() {
+    // let selectedNodes = [this.props.nodes]
+    // console.log('SELECTED NODES',selectedNodes[0])
+//    let categories = this.ObjtoArr(this.props.nodes)
+    //console.log('????????',this.props.nodes)
+    let categories = this.state.selectedNodes
+    if(this.props.nodes){
+        categories = this.ObjtoArr(this.props.nodes)
+    }
 
   return (
     <div>
@@ -35,7 +39,7 @@ class Modal extends React.Component {
               <th>Page Url</th>
               <th>Last Visit Date</th>
             </tr>
-            { this.state.nodeData.map(data => {
+            { categories.map(data => {
               return(
                 <tr key={data.url} className="dataRow">
                   <td>{data.title}</td>

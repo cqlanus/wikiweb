@@ -89,7 +89,6 @@ class ForceChart extends React.Component {
     const selectedObj = {}
     d3.selectAll('.selected').nodes()
       .forEach(node => {selectedObj[parseInt(node.id)] = true})
-
     chrome.runtime.sendMessage({
       type: 'SET_SELECTED',
       data: selectedObj
@@ -101,7 +100,15 @@ class ForceChart extends React.Component {
     })
   }
 
+      // chrome.runtime.sendMessage({type: 'GET_SELECTED_DATA', data:selected}, (results)=> {
+      //   this.setState({
+      //     selectedNodesData:results
+      //   })
+      // })
+
   render() {
+    //console.log('render')
+    //console.log('selected ndoes', this.state.selectedNodes)
     this.state.pageHistory.length && this.state.historyView ? this.zoomFn() : null
   return (
   <div>
@@ -124,8 +131,8 @@ class ForceChart extends React.Component {
       </div>
     </div>
     {/*<svg height="300" width="300" id="barchart"></svg>*/}
-    <Modal/>
-    <UserModal cat={this.state.categories} />  {/* coming down as undefined*/}
+    <Modal nodes={this.state.selectedNodesData} />
+    <UserModal cat={this.state.categories} />
   </div>
   )}
 }

@@ -22,7 +22,7 @@ class UserModal extends React.Component {
   }
 
   CalculateTopCategories(arr){
-    console.log('arr', arr)
+    //console.log('arr', arr)
     const sortedCat = arr.sort(this.SortCat)
     return sortedCat.slice(-5).reverse()
   }
