@@ -8,8 +8,6 @@ function d3Zoom(history, idx, historyView) {
       return node.id === history[idx]
     })
 
-    console.log('currentNodeData', currentNodeData)
-
     const currentD3Node = d3NodeArr.find(node => node.__data__.id === currentNodeData.id)
 
     d3.selectAll('circle').classed('selected', false)
@@ -33,7 +31,7 @@ function d3Zoom(history, idx, historyView) {
     // createToolTip(currentNodeData, xTranslation, yTranslation)
     }
     const drawSpace = d3.selectAll('.draw')
-    drawSpace.call(zoom.transform, d3.zoomIdentity)
+    drawSpace.call(zoom.transform)
 }
 
 function createToolTip(node, xTrans, yTrans) {

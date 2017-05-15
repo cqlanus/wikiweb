@@ -49,11 +49,11 @@ const createSentimentMap = (sentimentAnalysis) => {
     .attr('r', d => d.r)
     .attr('fill', d => {
       if (d.data.sentiment && d.data.sentiment.label === 'pos') {
-        return 'DarkSeaGreen'}
+        return d3.hsl(110, d.data.sentiment.confidence, (1.15-d.data.sentiment.confidence))}
       else if (d.data.sentiment && d.data.sentiment.label === 'neg') {
-        return 'indianred'
+        return d3.hsl(0, d.data.sentiment.confidence, (1.15-d.data.sentiment.confidence))
       } else if (d.data.sentiment && d.data.sentiment.label === 'neu') {
-        return '#ccc'
+        return d3.hsl(0, 0, 1.3-d.data.sentiment.confidence)
       } else { return '#333'}
      })
 
@@ -69,7 +69,8 @@ const createSentimentMap = (sentimentAnalysis) => {
           l = l-1
           let elementData = elements[l].__data__
           elementData.data.mention ? divTooltip.html(`
-            ${elementData.data.mention}
+            ${elementData.data.mention} <br>
+            ${elementData.data.sentiment.confidence.toFixed(4)}
           `) : divTooltip.style('display', 'none')
           });
         node.on("mouseout", function(d){

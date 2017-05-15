@@ -28,7 +28,8 @@ const buildWikiWeb = (results) => {
     .attr('height', parentHeight)
     .attr('fill', '#7f7e7b')
 
-  const gDraw = gMain.append('g').classed('draw', true)
+  const gDraw = gMain.append('g')
+    .classed('draw', true)
 
   createZoomBehavior(gMain, gDraw)
 
@@ -87,18 +88,17 @@ const buildWikiWeb = (results) => {
   createToolTip(node)
 
   rect.on('click', () => {
-      console.log('getting called')
-      node.each(d => {
-        d.selected = false
-        d.previouslySelected = false
-      })
+      // node.each(d => {
+      //   d.selected = false
+      //   d.previouslySelected = false
+      // })
       node.classed('selected', false)
     })
 
   function dragstarted(d) {
     if (!d3.event.active) simulation.alphaTarget(0.3).restart();
 
-    if (!d3.selected & !shiftKey) {
+    if (!shiftKey) {
       node.classed('selected', p => {
         return p.selected = p.previouslySelected = false
       })
