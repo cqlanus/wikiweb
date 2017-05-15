@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router'
 import Modal from './modal'
+import SentimentModal from './SentimentModal'
 
 class Sentiment extends React.Component {
   constructor() {
@@ -21,7 +22,10 @@ class Sentiment extends React.Component {
         selectedNodes: selected
       })
     })
+    //console.log('state after mount', this.state)
   }
+
+
 
   handleClick(evt) {
     const textContent = evt.target.__data__.data.mention
@@ -39,17 +43,17 @@ class Sentiment extends React.Component {
   }
 
 render(){
+  let nodeDataArr= this.state.foundNodes
+  console.log('STATE SENDING ', nodeDataArr)
   return (
   <div>
     <div className="canvas-container">
       <svg height="700" width="100%" onClick={this.handleClick}></svg>
     </div>
-    <div className="foundNodes">
-    {
-      this.state.foundNodes.length && this.state.foundNodes.map(node =>{
-        return <div key={node.id}>{formatTitle(node.title)}</div>
-      })
-    }
+    <div>
+      {nodeDataArr && 
+           <SentimentModal nodeData={nodeDataArr}/>
+      }
     </div>
   </div>
 )}
@@ -61,3 +65,11 @@ function formatTitle(title) {
 }
 
 export default Sentiment
+
+/*
+
+{this.state.foundNodes.length>0 && 
+           <SentimentModal nodeData={this.state.foundNodes}/>
+      }
+
+      */
