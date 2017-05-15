@@ -76,7 +76,7 @@ class Modal extends React.Component {
                   <td>{formatTitle(data.title)}</td>
                   <td>{data.category}</td>
                   <td>{data.visitCount}</td>
-                  <td><a href={`https://en.wikipedia.org/wiki/`+data.url}>Click Here</a></td>
+                  <td><a href={data.url}>Click Here</a></td>
 
                   <td>{data.updatedAt}</td>
                 </tr>

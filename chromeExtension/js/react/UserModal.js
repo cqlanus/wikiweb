@@ -8,21 +8,7 @@ class UserModal extends React.Component {
     super()
     this.state = {
       viewtodisplay: null,
-      Categories: {
-      'Law': 2,
-      'Culture': 8,
-      'Movies': 4,
-      'Science': 2,
-      'People': 1,
-      'Actors': 1,
-      'Beer': 2,
-      'Government': 7,
-      'Education': 4,
-      'Politics': 9,
-      'Religion': 12,
-      'Weather': 2 ,
-      'Real Estate': 1
-    },
+      Categories: {},
       CategoryArray: [],
       pageHistory: [2,3,5,],
       totalArticles: 18,
