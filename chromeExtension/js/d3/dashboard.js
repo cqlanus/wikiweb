@@ -10,7 +10,7 @@ const d3 = require('d3')
 
 const buildWikiWeb = (results) => {
   let parentWidth = d3.select('svg').node().parentNode.clientWidth,
-      parentHeight = 500;
+      parentHeight = 600;
 
   /* GET SVG ELEMENT ON PAGE */
   const svg = d3.select("svg")
@@ -28,7 +28,8 @@ const buildWikiWeb = (results) => {
     .attr('height', parentHeight)
     .attr('fill', '#7f7e7b')
 
-  const gDraw = gMain.append('g').classed('draw', true)
+  const gDraw = gMain.append('g')
+    .classed('draw', true)
 
   createZoomBehavior(gMain, gDraw)
 
@@ -39,6 +40,11 @@ const buildWikiWeb = (results) => {
   const catSet = new Set(categories)
   const catArr = new Array(...catSet)
   createLegend(catArr, parentWidth, parentHeight, color)
+
+  let legend = d3.select('.legend')
+  legend.on('click', d => {
+    console.log(d)
+  })
 
   const gBrushHolder = gDraw.append('g')
   let gBrush = null
@@ -87,18 +93,17 @@ const buildWikiWeb = (results) => {
   createToolTip(node)
 
   rect.on('click', () => {
-      console.log('getting called')
-      node.each(d => {
-        d.selected = false
-        d.previouslySelected = false
-      })
+      // node.each(d => {
+      //   d.selected = false
+      //   d.previouslySelected = false
+      // })
       node.classed('selected', false)
     })
 
   function dragstarted(d) {
     if (!d3.event.active) simulation.alphaTarget(0.3).restart();
 
-    if (!d3.selected & !shiftKey) {
+    if (!shiftKey) {
       node.classed('selected', p => {
         return p.selected = p.previouslySelected = false
       })
@@ -138,7 +143,7 @@ const buildWikiWeb = (results) => {
 function createForceSim(options) {
   /* DEFINE FORCE GRAPH RULES */
   const simulation = d3.forceSimulation()
-    .force("link", d3.forceLink().id(function(d) { return d.id; }).distance(d => (options.h - 120)/d.strength))
+    .force("link", d3.forceLink().id(function(d) { return d.id; }).distance(d => (options.h - 200)/d.strength))
     .force("charge", d3.forceManyBody().distanceMax(200))
     .force("center", d3.forceCenter(options.w / (2), options.h / 2))
     .velocityDecay(0.5)
@@ -258,8 +263,7 @@ function createToolTip(node) {
       let elementData = elements[l].__data__
       // console.log(elementData)
       divTooltip.html(`
-        ${elementData.title} <br>
-        ${elementData.category}
+        ${formatTitle(elementData.title)} <br>
       `);
       });
     node.on("mouseout", function(d){
@@ -285,6 +289,12 @@ function createLegend(dataArr, width, height, colors) {
     .attr('y', (d, i) => height - (i*25 + 18))
     .text(d => d)
     .attr('fill', 'white')
+
+}
+
+function formatTitle(title) {
+  const idx = title.indexOf(' - Wiki')
+  return title.substring(0, idx)
 }
 
 const createForceChartWrapper = (googleId) => {
