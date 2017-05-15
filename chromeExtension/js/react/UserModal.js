@@ -1,53 +1,93 @@
 import React from 'react'
 const d3 = require('d3')
 
+
+
 class UserModal extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = { }
-   this.CalculateTopCategories = this.CalculateTopCategories.bind(this)
-   this.SortCat = this.SortCat.bind(this)
+  constructor() {
+    super()
+    this.state = {
+      viewtodisplay: null,
+      Categories: {
+      'Law': 2,
+      'Culture': 8,
+      'Movies': 4,
+      'Science': 2,
+      'People': 1,
+      'Actors': 1,
+      'Beer': 2,
+      'Government': 7,
+      'Education': 4,
+      'Politics': 9,
+      'Religion': 12,
+      'Weather': 2 ,
+      'Real Estate': 1
+    },
+      CategoryArray: [],
+      pageHistory: [2,3,5,],
+      totalArticles: 18,
+      totalPageVisits: 30,
+    }
+
   }
 
-  ObjtoArr(cat){
-    return Object.keys(cat).map(key=>{
-      return {[key]:cat[key]}
-  })
-}
 
-  SortCat(a,b){
-    if(a[Object.keys(a)[0]] < b[Object.keys(b)[0]]) { return -1 }
-    if(b[Object.keys(b)[0]] < a[Object.keys(a)[0]]) { return 1  }
-    return 0
-  }
 
-  CalculateTopCategories(arr){
-    //console.log('arr', arr)
-    const sortedCat = arr.sort(this.SortCat)
-    return sortedCat.slice(-5).reverse()
+  componentDidMount() {
+    fetch('http://localhost:8000/api/nodes/cat', {
+      method: 'GET',
+    })
+    .then((nodeResponse)=>{
+     return nodeResponse.json()
+     })
+    .then((results)=>{
+      let categoryOb = {}
+      results.forEach(cat=>{
+        let catName=cat.category
+        let catCount=cat.visitCount
+        if (categoryOb[catName]) {
+          categoryOb[catName]+=catCount
+        } else {
+          categoryOb[catName]=catCount
+        }
+      })
+      return categoryOb
+
+    })
+    .then(categoryOb=>{
+        let categoryNames = Object.keys(categoryOb)
+        let categoryCounts = Object.values(categoryOb)
+        let catArr=[]
+        for (var i=0; i<categoryNames.length; i++) {
+          catArr.push({name: categoryNames[i], count: categoryCounts[i]})
+        }
+        catArr.sort(function(a, b){
+          return b.count-a.count
+        })
+        this.setState({
+          Categories: categoryOb,
+          CategoryArray: catArr
+        })
+        //return orderCatArr
+      })
   }
+    
+ 
 
 
   render() {
-    let arr = this.ObjtoArr(this.props.cat);
-    let sortedARR = arr.sort(this.SortCat)
-    let topFive = this.CalculateTopCategories(sortedARR)
-   // console.log('props in render',this.props.cat)
 
   return (
     <div>
        <table className="tableHeader">
          <tbody>
             <tr className="descRow">
-              <th>Top 5 Catagories</th>
+              <th>Top Categories</th>
               <th>Number of Visits</th>
             </tr>
-              {topFive.map(data => {
-                return <tr className="dataRow" key={Object.keys(data)[0]}>
-                  <td>{Object.keys(data)[0]}</td>
-                  <td>{data[Object.keys(data)[0]]}</td>
-                </tr>
-              })}
+              {this.state.CategoryArray.map(data => {
+                return <tr className="dataRow" key={data.name}> <th>{data.name}</th> <th>{data.count}</th></tr>
+              })} 
             </tbody>
         </table>
     </div>
@@ -56,3 +96,11 @@ class UserModal extends React.Component {
 }
 
 export default UserModal
+
+/*
+
+removed 
+{sortedARR.map(data => {
+                return <tr className="dataRow" key={Object.keys(data)[0]}> <th>{Object.keys(data)[0]}</th> <th>{data[Object.keys(data)[0]]}</th></tr>
+              })} 
+*/
