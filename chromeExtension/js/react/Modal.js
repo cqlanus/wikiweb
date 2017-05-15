@@ -4,8 +4,8 @@ const d3 = require('d3')
 
 
 class Modal extends React.Component {
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
 
     this.state = {
      viewtodisplay: null,
@@ -66,12 +66,11 @@ class Modal extends React.Component {
             {this.state.nodeData.map(data => {
               return(
                 <tr key={data.url} className="dataRow">
-                  <th>{data.title}</th>
-                  <th>{data.category}</th>
-                  <th>{data.visitCount}</th>
-
-                  <th><a href={`https://en.wikipedia.org/wiki/`+data.url}>{data.url}</a></th>
-                  <th>{data.updatedAt}</th>
+                  <td>{data.title}</td>
+                  <td>{data.category}</td>
+                  <td>{data.visitCount}</td>
+                  <td><a href={`https://en.wikipedia.org/wiki/`+data.url}>{data.url}</a></td>
+                  <td>{data.updatedAt}</td>
                 </tr>
                 )
             })}

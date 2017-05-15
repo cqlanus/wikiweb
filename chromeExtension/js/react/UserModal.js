@@ -1,14 +1,7 @@
 import React from 'react'
 const d3 = require('d3')
 
-function compare(obA, obB) {
-  if (obA.count<obB.count) {
-    return -1
-  } 
-  if (obA.count>obB.count) {
-    return 0
-  }
-}
+
 
 class UserModal extends React.Component {
   constructor() {
@@ -37,6 +30,7 @@ class UserModal extends React.Component {
     }
 
   }
+
 
 
   componentDidMount() {
@@ -82,9 +76,7 @@ class UserModal extends React.Component {
 
 
   render() {
-    // let arr = this.ObjtoArr(this.state.Categories);
-    // let sortedARR = arr.sort(this.SortCat)
-   // console.log(sortedARR)
+
   return (
     <div>
        <table className="tableHeader">

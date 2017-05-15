@@ -278,6 +278,20 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         .then(nodes => sendResponse(nodes))
         return true
 
+			case 'GET_SELECTED_DATA':
+				console.log('this is the data format',request.data)
+				let array = []
+					for(key in request.data){
+						array.push(parseInt(key))
+					}
+					let dataObj = {nodes:array}
+				  getSelectedNodes(dataObj)
+					.then(node => {
+						//console.log('this is result', node)
+						sendResponse(node)
+					})
+        return true
+
 			default:
 				return console.error('error in switch')
 		}
