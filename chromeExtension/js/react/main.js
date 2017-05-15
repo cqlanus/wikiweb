@@ -42,7 +42,6 @@ const onSentimentEnter = () => {
   chrome.runtime.sendMessage({
     type: 'GET_SELECTED',
   }, selectedNodes => {
-    console.log('these are selectedNodes', selectedNodes)
     chrome.runtime.sendMessage({
       type: 'GET_SENTIMENT_BY_USERID',
       data: selectedNodes,
