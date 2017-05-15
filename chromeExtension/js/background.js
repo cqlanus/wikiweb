@@ -122,6 +122,7 @@ const getContentPromise = (title) => {
 }
 
 const postNodePromise = (nodeOb) => {
+	console.log('nodeOb', nodeOb)
    let nodeInfoPromise =
      post('nodes/postNode', nodeOb)
      .then((nodeResponse)=>{

@@ -20,6 +20,10 @@ const Node = db.define('nodes', {
     type: Sequelize.INTEGER,
     defaultValue: 1,
   },
+  pictureUrl: {
+    type: Sequelize.STRING,
+    //defaultValue: 'http://placehold.it/350x150'
+  },
   content: {
     type: Sequelize.TEXT,
   },
