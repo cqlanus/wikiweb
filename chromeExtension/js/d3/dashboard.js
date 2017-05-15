@@ -10,7 +10,7 @@ const d3 = require('d3')
 
 const buildWikiWeb = (results) => {
   let parentWidth = d3.select('svg').node().parentNode.clientWidth,
-      parentHeight = 500;
+      parentHeight = 600;
 
   /* GET SVG ELEMENT ON PAGE */
   const svg = d3.select("svg")
@@ -40,6 +40,11 @@ const buildWikiWeb = (results) => {
   const catSet = new Set(categories)
   const catArr = new Array(...catSet)
   createLegend(catArr, parentWidth, parentHeight, color)
+
+  let legend = d3.select('.legend')
+  legend.on('click', d => {
+    console.log(d)
+  })
 
   const gBrushHolder = gDraw.append('g')
   let gBrush = null
@@ -138,7 +143,7 @@ const buildWikiWeb = (results) => {
 function createForceSim(options) {
   /* DEFINE FORCE GRAPH RULES */
   const simulation = d3.forceSimulation()
-    .force("link", d3.forceLink().id(function(d) { return d.id; }).distance(d => (options.h - 120)/d.strength))
+    .force("link", d3.forceLink().id(function(d) { return d.id; }).distance(d => (options.h - 200)/d.strength))
     .force("charge", d3.forceManyBody().distanceMax(200))
     .force("center", d3.forceCenter(options.w / (2), options.h / 2))
     .velocityDecay(0.5)
