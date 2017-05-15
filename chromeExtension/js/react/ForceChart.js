@@ -33,7 +33,6 @@ class ForceChart extends React.Component {
   getUserInfo() {
     const self = this
     chrome.identity.getProfileUserInfo(function(info){
-      // console.log('this is MY id',info.id)
       chrome.runtime.sendMessage({
         type: 'getUser',
         data: info.id
@@ -85,10 +84,6 @@ class ForceChart extends React.Component {
     d3Zoom(this.state.pageHistory, this.state.currentNodeId, this.state.historyView)
   }
 
-  // zoomOutFn() {
-  //   d3ZoomOut(this.state.pageHistory, this.state.currentNodeId)
-  // }
-
   getSelected(evt) {
     const selectedObj = {}
     d3.selectAll('.selected').nodes()
@@ -102,25 +97,17 @@ class ForceChart extends React.Component {
       })
 
     })
-    // console.log('selected nodes!', this.state.selectedNodes)
+    console.log('selected nodes!', this.state.selectedNodes)
   }
-
-      // chrome.runtime.sendMessage({type: 'GET_SELECTED_DATA', data:selected}, (results)=> {
-      //   this.setState({
-      //     selectedNodesData:results
-      //   })
-      // })
 
   render() {
     this.state.pageHistory.length && this.state.historyView ? this.zoomFn() : d3.selectAll('.pageInfo').remove()
-
-    // this.state.pageHistory.length && this.state.historyView === false ? this.zoomOutFn() : null
+    // this.getSelected()
   return (
   <div>
   <div className="canvas-container">
     <svg height="700" width="100%"
       onMouseOver={this.getSelected}
-      onClick={this.getSelected}
     ></svg>
 
     </div>

@@ -34,15 +34,14 @@ class Modal extends React.Component {
           return nodeResponse.json()
         })
         .then((results)=>{
-          console.log('results', results)
           let nodeData=[]
           let keys=Object.keys(results)
-          console.log('keys', keys)
+
           keys.forEach(key=>{
             let nodeOb = results[key]
             let newDate = new Date(nodeOb.updatedAt).toString()
             newDate=newDate.slice(0, newDate.indexOf('GMT'))
-            console.log('newDate', newDate)
+
             results[key].updatedAt=newDate
             nodeData.push(results[key])
           })
