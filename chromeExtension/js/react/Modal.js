@@ -53,8 +53,7 @@ class Modal extends React.Component {
   render() {
 
   return (
-
-        <div className="container-fluid" style={{"margin-top": "10px"}}>
+      <div className="TopRow">
           <div className="table-row header">
             <div className="text">Title</div>
             <div className="text">Category</div>
@@ -62,6 +61,7 @@ class Modal extends React.Component {
             <div className="num">Updated</div>
 
           </div>
+        <div className="container-fluid">
 
           {this.state.nodeData.map(data => {
             return (
@@ -73,6 +73,7 @@ class Modal extends React.Component {
               </div>
             )
           } ) }
+        </div>
         </div>
     )
 
