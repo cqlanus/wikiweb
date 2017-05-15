@@ -9,8 +9,8 @@ class Modal extends React.Component {
 
     this.state = {
      viewtodisplay: null,
-     nodeData: [{title:'Barack Obama', category:"President", visitCount:2, lastVisit:"January 1, 2017", url:'wwI'},{title:'WWII', category:" WAR",  visitCount:1, lastVisit:"May 2, 2016", url:'wwII'},{title:'Mercedes', category:"Transportation", visitCount:4, lastVisit:"May 2, 2016", url:'Mercedes'},{title:'Truck', category:"Transportation",visitCount:2, lastVisit:"May 2, 2016", url:'truck'}],
-     selectedNodes: {2: true},
+     nodeData: [],
+     selectedNodes: {},
      totalArticles: 18,
      totalPageVisits: 30,
   }
@@ -21,7 +21,7 @@ class Modal extends React.Component {
   }
 
   componentWillReceiveProps() {
-    console.log('component will receive prop')
+    console.log('component will receive prop', this.props)
     if (this.props.selectedNodes) {
       let nodeIdsArr= Object.keys(this.props.selectedNodes)
       let modalProm = fetch('http://localhost:8000/api/nodes/byId', {
@@ -35,12 +35,19 @@ class Modal extends React.Component {
           return nodeResponse.json()
         })
         .then((results)=>{
+          console.log('results', results)
           let nodeData=[]
           let keys=Object.keys(results)
+          console.log('keys', keys)
           keys.forEach(key=>{
-          nodeData.push(results[key])
+            let nodeOb = results[key]
+            let newDate = new Date(nodeOb.updatedAt).toString()
+            newDate=newDate.slice(0, newDate.indexOf('GMT'))
+            console.log('newDate', newDate)
+            results[key].updatedAt=newDate
+            nodeData.push(results[key])
           })
-          console.log('nodeData', nodeData)
+          console.log('final Node Data', nodeData)
           this.setState({
             nodeData: nodeData,
           })
@@ -66,10 +73,11 @@ class Modal extends React.Component {
             {this.state.nodeData.map(data => {
               return(
                 <tr key={data.url} className="dataRow">
-                  <td>{data.title}</td>
+                  <td>{formatTitle(data.title)}</td>
                   <td>{data.category}</td>
                   <td>{data.visitCount}</td>
-                  <td><a href={`https://en.wikipedia.org/wiki/`+data.url}>{data.url}</a></td>
+                  <td><a href={`https://en.wikipedia.org/wiki/`+data.url}>Click Here</a></td>
+
                   <td>{data.updatedAt}</td>
                 </tr>
                 )
@@ -79,6 +87,11 @@ class Modal extends React.Component {
     </div>
     )
   }
+}
+
+function formatTitle(title) {
+  const index = title.indexOf(' - Wiki')
+  return title.substring(0, index)
 }
 
 export default Modal
