@@ -102,6 +102,7 @@ class ForceChart extends React.Component {
       })
 
     })
+    console.log('selected nodes!', this.state.selectedNodes)
   }
 
       // chrome.runtime.sendMessage({type: 'GET_SELECTED_DATA', data:selected}, (results)=> {
@@ -136,10 +137,11 @@ class ForceChart extends React.Component {
       }
       </div>
     {/*<svg height="300" width="300" id="barchart"></svg>*/}
-    <Modal nodes={this.state.selectedNodesData} />
-    <UserModal cat={this.state.categories} />
+    <Modal nodeId={this.state.currentNodeId} selectedNodes={this.state.selectedNodes}/>
+    <UserModal />
   </div>
-  )}
+  )
+}
 }
 
 export default ForceChart

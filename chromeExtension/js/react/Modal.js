@@ -8,28 +8,52 @@ class Modal extends React.Component {
     super(props)
 
     this.state = {
-     selectedNodes: [{title:'Barack Obama', category:"President", visitCount:2, lastVisit:"January 1, 2017", url:'wwI'},{title:'WWII', category:" WAR",  visitCount:1, lastVisit:"May 2, 2016", url:'wwII'},{title:'Mercedes', category:"Transportation", visitCount:4, lastVisit:"May 2, 2016", url:'Mercedes'},{title:'Truck', category:"Transportation",visitCount:2, lastVisit:"May 2, 2016", url:'truck'}],
-    }
-    //function bindnign statment ehre
+     viewtodisplay: null,
+     nodeData: [{title:'Barack Obama', category:"President", visitCount:2, lastVisit:"January 1, 2017", url:'wwI'},{title:'WWII', category:" WAR",  visitCount:1, lastVisit:"May 2, 2016", url:'wwII'},{title:'Mercedes', category:"Transportation", visitCount:4, lastVisit:"May 2, 2016", url:'Mercedes'},{title:'Truck', category:"Transportation",visitCount:2, lastVisit:"May 2, 2016", url:'truck'}],
+     selectedNodes: {2: true},
+     totalArticles: 18,
+     totalPageVisits: 30,
+  }
   }
 
-  ObjtoArr(cat){
-    return Object.keys(cat).map(key=>{
-      return {[key]:cat[key]}
-  })
-}
-  render() {
-    // let selectedNodes = [this.props.nodes]
-    // console.log('SELECTED NODES',selectedNodes[0])
-//    let categories = this.ObjtoArr(this.props.nodes)
-    //console.log('????????',this.props.nodes)
-    let categories = this.state.selectedNodes
-    if(this.props.nodes){
-        categories = this.ObjtoArr(this.props.nodes)
-    }
+  componentDidMount() {
+    
+  }
 
-  return (
-    <div>
+  componentWillReceiveProps() {
+    console.log('component will receive prop')
+    if (this.props.selectedNodes) {
+      let nodeIdsArr= Object.keys(this.props.selectedNodes)
+      let modalProm = fetch('http://localhost:8000/api/nodes/byId', {
+          method: 'POST',
+          headers: {
+          "Content-type": "application/json"
+          },
+          body: JSON.stringify(nodeIdsArr)
+        })
+        .then((nodeResponse)=>{
+          return nodeResponse.json()
+        })
+        .then((results)=>{
+          let nodeData=[]
+          let keys=Object.keys(results)
+          keys.forEach(key=>{
+          nodeData.push(results[key])
+          })
+          console.log('nodeData', nodeData)
+          this.setState({
+            nodeData: nodeData,
+          })
+        })
+      return modalProm
+  }
+}
+
+
+  render() {
+    console.log('rendering with this node data', this.state.nodeData)
+    return (
+      <div>
        <table className="tableHeader">
          <tbody>
             <tr className="descRow">
@@ -39,23 +63,22 @@ class Modal extends React.Component {
               <th>Page Url</th>
               <th>Last Visit Date</th>
             </tr>
-            { categories.map(data => {
+            {this.state.nodeData.map(data => {
               return(
                 <tr key={data.url} className="dataRow">
                   <td>{data.title}</td>
                   <td>{data.category}</td>
                   <td>{data.visitCount}</td>
-
                   <td><a href={`https://en.wikipedia.org/wiki/`+data.url}>{data.url}</a></td>
-                  <td>{data.lastVisit}</td>
+                  <td>{data.updatedAt}</td>
                 </tr>
                 )
             })}
             </tbody>
         </table>
     </div>
-
-  )}
+    )
+  }
 }
 
 export default Modal
