@@ -97,7 +97,7 @@ class ForceChart extends React.Component {
       })
 
     })
-    console.log('selected nodes!', this.state.selectedNodes)
+    // console.log('selected nodes!', this.state.selectedNodes)
   }
 
   render() {
