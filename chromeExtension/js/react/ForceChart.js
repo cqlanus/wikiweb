@@ -82,7 +82,7 @@ class ForceChart extends React.Component {
   }
 
   zoomFn() {
-    d3Zoom(this.state.pageHistory, this.state.currentNodeId)
+    d3Zoom(this.state.pageHistory, this.state.currentNodeId, this.state.historyView)
   }
 
   // zoomOutFn() {
@@ -102,7 +102,7 @@ class ForceChart extends React.Component {
       })
 
     })
-    console.log('selected nodes!', this.state.selectedNodes)
+    // console.log('selected nodes!', this.state.selectedNodes)
   }
 
       // chrome.runtime.sendMessage({type: 'GET_SELECTED_DATA', data:selected}, (results)=> {
@@ -112,7 +112,7 @@ class ForceChart extends React.Component {
       // })
 
   render() {
-    this.state.pageHistory.length && this.state.historyView && this.zoomFn()
+    this.state.pageHistory.length && this.state.historyView ? this.zoomFn() : d3.selectAll('.pageInfo').remove()
 
     // this.state.pageHistory.length && this.state.historyView === false ? this.zoomOutFn() : null
   return (

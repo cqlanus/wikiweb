@@ -263,8 +263,7 @@ function createToolTip(node) {
       let elementData = elements[l].__data__
       // console.log(elementData)
       divTooltip.html(`
-        ${elementData.title} <br>
-        ${elementData.category}
+        ${formatTitle(elementData.title)} <br>
       `);
       });
     node.on("mouseout", function(d){
@@ -291,6 +290,11 @@ function createLegend(dataArr, width, height, colors) {
     .text(d => d)
     .attr('fill', 'white')
 
+}
+
+function formatTitle(title) {
+  const idx = title.indexOf(' - Wiki')
+  return title.substring(0, idx)
 }
 
 const createForceChartWrapper = (googleId) => {

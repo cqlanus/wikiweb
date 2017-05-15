@@ -17,11 +17,11 @@ class Modal extends React.Component {
   }
 
   componentDidMount() {
-    
+
   }
 
   componentWillReceiveProps() {
-    console.log('component will receive prop')
+    // console.log('component will receive prop')
     if (this.props.selectedNodes) {
       let nodeIdsArr= Object.keys(this.props.selectedNodes)
       let modalProm = fetch('http://localhost:8000/api/nodes/byId', {
@@ -40,7 +40,7 @@ class Modal extends React.Component {
           keys.forEach(key=>{
           nodeData.push(results[key])
           })
-          console.log('nodeData', nodeData)
+          // console.log('nodeData', nodeData)
           this.setState({
             nodeData: nodeData,
           })
@@ -51,7 +51,7 @@ class Modal extends React.Component {
 
 
   render() {
-    console.log('rendering with this node data', this.state.nodeData)
+    // console.log('rendering with this node data', this.state.nodeData)
     return (
       <div>
        <table className="tableHeader">
