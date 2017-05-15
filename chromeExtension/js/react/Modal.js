@@ -71,7 +71,7 @@ class Modal extends React.Component {
                   <th>{data.visitCount}</th>
 
                   <th><a href={`https://en.wikipedia.org/wiki/`+data.url}>{data.url}</a></th>
-                  <th>{data.lastVisit}</th>
+                  <th>{data.updatedAt}</th>
                 </tr>
                 )
             })}
