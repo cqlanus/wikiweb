@@ -285,6 +285,7 @@ function createLegend(dataArr, width, height, colors) {
     .attr('y', (d, i) => height - (i*25 + 18))
     .text(d => d)
     .attr('fill', 'white')
+
 }
 
 const createForceChartWrapper = (googleId) => {

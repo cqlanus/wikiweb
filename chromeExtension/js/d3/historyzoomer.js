@@ -8,6 +8,8 @@ function d3Zoom(history, idx, historyView) {
       return node.id === history[idx]
     })
 
+    console.log('currentNodeData', currentNodeData)
+
     const currentD3Node = d3NodeArr.find(node => node.__data__.id === currentNodeData.id)
 
     d3.selectAll('circle').classed('selected', false)
