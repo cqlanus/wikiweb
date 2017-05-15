@@ -124,7 +124,7 @@ class ForceChart extends React.Component {
     </div>
     {/*<svg height="300" width="300" id="barchart"></svg>*/}
     <Modal/>
-    <UserModal/>
+    <UserModal nodeId={this.state.currentNodeId} selectedNodes={this.state.selectedNodes}/>
   </div>
   )}
 }

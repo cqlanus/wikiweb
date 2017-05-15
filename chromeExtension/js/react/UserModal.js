@@ -1,6 +1,15 @@
 import React from 'react'
 const d3 = require('d3')
 
+function compare(obA, obB) {
+  if (obA.count<obB.count) {
+    return -1
+  } 
+  if (obA.count>obB.count) {
+    return 0
+  }
+}
+
 class UserModal extends React.Component {
   constructor() {
     super()
@@ -21,45 +30,61 @@ class UserModal extends React.Component {
       'Weather': 2 ,
       'Real Estate': 1
     },
+      CategoryArray: [],
       pageHistory: [2,3,5,],
       totalArticles: 18,
       totalPageVisits: 30,
     }
-   this.CalculateTopCategories = this.CalculateTopCategories.bind(this)
-   this.SortCat = this.SortCat.bind(this)
+
   }
+
 
   componentDidMount() {
-    //  let arr = this.ObjtoArr(this.state.Categories);
-    //   console.log('arra', Array.isArray(arr)  )
-    //   console.log(this.SortCat)
-    //   let sortedARR = arr.sort(this.SortCat)
-    //   console.log('sorted array', sortedARR)
+    console.log('in mount, ', this.props)
+    fetch('http://localhost:8000/api/nodes/cat', {
+      method: 'GET',
+    })
+    .then((nodeResponse)=>{
+     return nodeResponse.json()
+     })
+    .then((results)=>{
+      let categoryOb = {}
+      results.forEach(cat=>{
+        let catName=cat.category
+        let catCount=cat.visitCount
+        if (categoryOb[catName]) {
+          categoryOb[catName]+=catCount
+        } else {
+          categoryOb[catName]=catCount
+        }
+      })
+      return categoryOb
 
-   }
-
-  ObjtoArr(cat){
-    return Object.keys(cat).map(key=>{
-      return {[key]:cat[key]}
-  })
-}
-
-  SortCat(a,b){
-    if(a[Object.keys(a)[0]] < b[Object.keys(b)[0]]) { return -1 }
-    if(b[Object.keys(b)[0]] < a[Object.keys(a)[0]]) { return 1  }
-    return 0
-  }
-
-  CalculateTopCategories(arr){
-    console.log('arr', arr)
-    const sortedCat = arr.sort(this.SortCat)
-    return sortedCat.slice(-5).reverse()
-  }
+    })
+    .then(categoryOb=>{
+        let categoryNames = Object.keys(categoryOb)
+        let categoryCounts = Object.values(categoryOb)
+        let catArr=[]
+        for (var i=0; i<categoryNames.length; i++) {
+          catArr.push({name: categoryNames[i], count: categoryCounts[i]})
+        }
+        catArr.sort(function(a, b){
+          return b.count-a.count
+        })
+        this.setState({
+          Categories: categoryOb,
+          CategoryArray: catArr
+        })
+        console.log('new state please', this.state)
+        //return orderCatArr
+      })
+    
+ 
 
 
   render() {
-    let arr = this.ObjtoArr(this.state.Categories);
-    let sortedARR = arr.sort(this.SortCat)
+    // let arr = this.ObjtoArr(this.state.Categories);
+    // let sortedARR = arr.sort(this.SortCat)
    // console.log(sortedARR)
 
   return (
@@ -67,12 +92,13 @@ class UserModal extends React.Component {
        <table className="tableHeader">
          <tbody>
             <tr className="descRow">
-              <th>Top Catagories</th>
+              <th>Top Categories</th>
               <th>Number of Visits</th>
             </tr>
-              {sortedARR.map(data => {
-                return <tr className="dataRow" key={Object.keys(data)[0]}> <th>{Object.keys(data)[0]}</th> <th>{data[Object.keys(data)[0]]}</th></tr>
-              })}
+              {this.state.CategoryArray.map(data => {
+                console.log('data', data)
+                return <tr className="dataRow" key={data.name}> <th>{data.name}</th> <th>{data.count}</th></tr>
+              })} 
             </tbody>
         </table>
     </div>
@@ -81,3 +107,11 @@ class UserModal extends React.Component {
 }
 
 export default UserModal
+
+/*
+
+removed 
+{sortedARR.map(data => {
+                return <tr className="dataRow" key={Object.keys(data)[0]}> <th>{Object.keys(data)[0]}</th> <th>{data[Object.keys(data)[0]]}</th></tr>
+              })} 
+*/

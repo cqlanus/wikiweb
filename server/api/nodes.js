@@ -6,12 +6,21 @@ const variables = require('../../variables.json')
 var Api = require('rosette-api')
 var api = new Api(variables.rosette)
 let endpoint='categories'
+const db = require('../../db')
 
 module.exports = require('express').Router()
   .get('/', (req, res, next) => {
     Node.findAll()
       .then(nodes => res.json(nodes))
       .catch(next)
+  })
+
+  .get('/cat', (req, res, next) => {
+    Node.findAll({
+      attributes: ['category', 'visitCount']
+    })
+    .then(node => res.json(node))
+    .catch(next)
   })
 
   .get('/:id', (req, res, next) => {
