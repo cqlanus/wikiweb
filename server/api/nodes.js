@@ -29,6 +29,17 @@ module.exports = require('express').Router()
     .catch(next)
   })
 
+  .post('/byId', (req, res, next) => {
+    console.log('IN FIND BY ID ROUTE')
+    let idArr=req.body
+    console.log('idArr', idArr)
+    Node.findAll({
+      where: {id: idArr}
+    })
+    .then(node => res.json(node))
+    .catch(next)
+  })
+
   .post('/', (req, res, next) => {
     console.log('req body',req.body)
     Node.findOrCreate({

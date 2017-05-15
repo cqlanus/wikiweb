@@ -14,18 +14,46 @@ class Modal extends React.Component {
      totalArticles: 18,
      totalPageVisits: 30,
   }
-    //function bindnign statment ehre
   }
 
   componentDidMount() {
-
+    
   }
+
+  componentWillReceiveProps() {
+    console.log('component will receive prop')
+    if (this.props.selectedNodes) {
+      let nodeIdsArr= Object.keys(this.props.selectedNodes)
+      let modalProm = fetch('http://localhost:8000/api/nodes/byId', {
+          method: 'POST',
+          headers: {
+          "Content-type": "application/json"
+          },
+          body: JSON.stringify(nodeIdsArr)
+        })
+        .then((nodeResponse)=>{
+          return nodeResponse.json()
+        })
+        .then((results)=>{
+          let nodeData=[]
+          let keys=Object.keys(results)
+          keys.forEach(key=>{
+          nodeData.push(results[key])
+          })
+          console.log('nodeData', nodeData)
+          this.setState({
+            nodeData: nodeData,
+          })
+        })
+      return modalProm
+  }
+}
 
 
   render() {
-
-  return (
-    <div>
+    console.log('rendering with this node data', this.state.nodeData)
+    return (
+      <div>
        <table className="tableHeader">
          <tbody>
             <tr className="descRow">
@@ -35,7 +63,7 @@ class Modal extends React.Component {
               <th>Page Url</th>
               <th>Last Visit Date</th>
             </tr>
-            { this.state.nodeData.map(data => {
+            {this.state.nodeData.map(data => {
               return(
                 <tr key={data.url} className="dataRow">
                   <th>{data.title}</th>
@@ -50,8 +78,8 @@ class Modal extends React.Component {
             </tbody>
         </table>
     </div>
-
-  )}
+    )
+  }
 }
 
 export default Modal

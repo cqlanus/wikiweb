@@ -98,6 +98,7 @@ class ForceChart extends React.Component {
       })
 
     })
+    console.log('selected nodes!', this.state.selectedNodes)
   }
 
   render() {
@@ -123,10 +124,11 @@ class ForceChart extends React.Component {
       </div>
     </div>
     {/*<svg height="300" width="300" id="barchart"></svg>*/}
-    <Modal/>
-    <UserModal nodeId={this.state.currentNodeId} selectedNodes={this.state.selectedNodes}/>
+    <Modal nodeId={this.state.currentNodeId} selectedNodes={this.state.selectedNodes}/>
+    <UserModal />
   </div>
-  )}
+  )
+}
 }
 
 export default ForceChart

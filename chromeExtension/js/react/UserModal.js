@@ -40,7 +40,6 @@ class UserModal extends React.Component {
 
 
   componentDidMount() {
-    console.log('in mount, ', this.props)
     fetch('http://localhost:8000/api/nodes/cat', {
       method: 'GET',
     })
@@ -75,9 +74,9 @@ class UserModal extends React.Component {
           Categories: categoryOb,
           CategoryArray: catArr
         })
-        console.log('new state please', this.state)
         //return orderCatArr
       })
+  }
     
  
 
@@ -86,7 +85,6 @@ class UserModal extends React.Component {
     // let arr = this.ObjtoArr(this.state.Categories);
     // let sortedARR = arr.sort(this.SortCat)
    // console.log(sortedARR)
-
   return (
     <div>
        <table className="tableHeader">
@@ -96,7 +94,6 @@ class UserModal extends React.Component {
               <th>Number of Visits</th>
             </tr>
               {this.state.CategoryArray.map(data => {
-                console.log('data', data)
                 return <tr className="dataRow" key={data.name}> <th>{data.name}</th> <th>{data.count}</th></tr>
               })} 
             </tbody>
