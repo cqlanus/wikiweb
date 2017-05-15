@@ -1,4 +1,5 @@
 const d3 = require('d3')
+const d3Colors = require('d3-scale-chromatic')
 
 const createSentimentMap = (sentimentAnalysis) => {
   let parentWidth = d3.select('svg').node().parentNode.clientWidth,
@@ -44,18 +45,34 @@ const createSentimentMap = (sentimentAnalysis) => {
       return `translate(${d.x}, ${d.y})`
     })
 
+  const redScale = d3.scaleThreshold()
+    .domain([0.2, 0.4, 0.6, 0.8])
+    .range(d3Colors.schemeReds[5])
+
+  const greenScale = d3.scaleThreshold()
+    .domain([0.2, 0.4, 0.6, 0.8])
+    .range(d3Colors.schemeGreens[5])
+
+  const greyScale = d3.scaleThreshold()
+    .domain([0.2, 0.4, 0.6, 0.8])
+    .range(d3Colors.schemeGreys[5])
+
   node.append('circle')
     .attr('class', d => d.children ? null : 'bubble')
     .attr('r', d => d.r)
     .attr('fill', d => {
       if (d.data.sentiment && d.data.sentiment.label === 'pos') {
-        return d3.hsl(110, d.data.sentiment.confidence, (1.15-d.data.sentiment.confidence))}
+        return greenScale(d.data.sentiment.confidence)}
       else if (d.data.sentiment && d.data.sentiment.label === 'neg') {
-        return d3.hsl(0, d.data.sentiment.confidence, (1.15-d.data.sentiment.confidence))
+        return redScale(d.data.sentiment.confidence)
       } else if (d.data.sentiment && d.data.sentiment.label === 'neu') {
-        return d3.hsl(0, 0, 1.3-d.data.sentiment.confidence)
+        return greyScale(d.data.sentiment.confidence)
       } else { return '#333'}
      })
+
+  createLegend(greenScale, 10, 36)
+  createLegend(redScale, 10, 28)
+  createLegend(greyScale, 0, 0, true)
 
   /* CREATE HOVERABLE TOOLTIPS */
     const divTooltip = d3.select("body").append("div").attr("class", "toolTip")
@@ -63,16 +80,15 @@ const createSentimentMap = (sentimentAnalysis) => {
           divTooltip.style("left", d3.event.pageX+10+"px");
           divTooltip.style("top", d3.event.pageY-25+"px");
           divTooltip.style("display", "inline-block");
-          let x = d3.event.pageX, y = d3.event.pageY
           let elements = document.querySelectorAll(':hover');
           let l = elements.length
           l = l-1
           let elementData = elements[l].__data__
           elementData.data.mention ? divTooltip.html(`
             ${elementData.data.mention} <br>
-            ${elementData.data.sentiment.confidence.toFixed(4)}
+            ${(elementData.data.sentiment.confidence *100).toFixed(2)}%
           `) : divTooltip.style('display', 'none')
-          });
+          })
         node.on("mouseout", function(d){
           divTooltip.style("display", "none");
           })
@@ -82,9 +98,53 @@ const createSentimentMap = (sentimentAnalysis) => {
       .attr('dx', d => d.r/-2)
       .attr("dy", "0.3em")
       .text(function(d) { return d.data.mention.substring(0, d.r / 4); })
-      .attr('fill', d => d.data.sentiment && d.data.sentiment.label === 'neu' ? 'black' : 'white')
+      .attr('fill', 'white')
+
+}
+
+function createLegend(scale, xOff, yOff, ticks) {
+
+  const x = d3.scaleLinear()
+    .domain([0, 1])
+    .range([0, 240]);
+
+  const xAxis = d3.axisBottom(x)
+    .tickValues(scale.domain())
+    .tickSize(31)
+    .tickFormat(d3.format(",.0%"))
+
+  const main = d3.select('.g-main').append('g')
+  const rect = main.selectAll('.range')
+    .data(scale.range().map(color => {
+      let d = scale.invertExtent(color)
+      if (!d[0]) {d[0] = x.domain()[0]}
+      if (!d[1]) {d[1] = x.domain()[1]}
+      return d
+    }))
+
+    rect.enter().append('rect')
+      .attr('class', 'range')
+      .attr('height', 8)
+      .attr('x', d => (xOff + x(d[0])))
+      .attr('y', yOff)
+      .attr('width', d => (x(d[1]) - x(d[0])))
+      .attr('fill', d => scale(d[0]))
+
+  if (ticks) {
+    main.append('text')
+      .text('% Confidence (neu/neg/pos)')
+      .attr('transform', 'translate(80, -5)')
+
+    main.call(xAxis)
+    .attr('class', 'axis-x')
+    .attr('transform', `translate(10, 20)`)
+
+    main.append('text')
+      .text('Sentiment Analysis courtesy of Rosette Text Analytics')
+      .attr('transform', 'translate(145, 670)')
 
 
+  }
 }
 
 const startTree = () => {

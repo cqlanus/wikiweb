@@ -192,7 +192,7 @@ body {
 .axis-y path,
 .axis-x path {
   fill: none;
-  stroke: white;
+  stroke: none;
 }
 
 .brush {
