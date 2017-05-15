@@ -71,8 +71,8 @@ class UserModal extends React.Component {
         //return orderCatArr
       })
   }
-    
- 
+
+
 
 
   render() {
@@ -82,12 +82,12 @@ class UserModal extends React.Component {
        <table className="tableHeader">
          <tbody>
             <tr className="descRow">
-              <th>Top Categories</th>
-              <th>Number of Visits</th>
+              <th className="theader">Top Categories</th>
+              <th className="theader">Number of Visits</th>
             </tr>
               {this.state.CategoryArray.map(data => {
                 return <tr className="dataRow" key={data.name}> <th>{data.name}</th> <th>{data.count}</th></tr>
-              })} 
+              })}
             </tbody>
         </table>
     </div>
@@ -99,8 +99,8 @@ export default UserModal
 
 /*
 
-removed 
+removed
 {sortedARR.map(data => {
                 return <tr className="dataRow" key={Object.keys(data)[0]}> <th>{Object.keys(data)[0]}</th> <th>{data[Object.keys(data)[0]]}</th></tr>
-              })} 
+              })}
 */
