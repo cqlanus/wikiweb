@@ -89,7 +89,7 @@ class ForceChart extends React.Component {
     chrome.runtime.sendMessage({
       type: 'GET_SELECTED',
     }, (selected) => {
-      console.log('selected from store', selected)
+      // console.log('selected from store', selected)
       this.setState({
           selectedNodes: selected
         })
