@@ -30,7 +30,8 @@ class Modal extends React.Component {
           </div>
         <div className="container-fluid">
 
-          {this.state.nodeData.map(data => {
+          {this.props.selectedNodes.map(node => {
+            const data = node.__data__
             return (
                <div className="table-row">
                 <div className="text">{data.title}</div>
