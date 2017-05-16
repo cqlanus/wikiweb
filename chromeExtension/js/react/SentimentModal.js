@@ -14,32 +14,34 @@ class SentimentModal extends React.Component {
   }
 
   render() {
+
     return (
-      <div>
-       <table className="tableHeader">
-         <tbody>
-            <tr className="descRow">
-              <th>Page Title</th>
-              <th>Page Category</th>
-              <th>Visit Count</th>
-              <th>Page Url</th>
-              <th>Last Visit Date</th>
-            </tr>
-            {this.props.nodeData.map(data => {
-              return(
-                <tr key={data.url} className="dataRow">
-                  <td>{formatTitle(data.title)}</td>
-                  <td>{data.category}</td>
-                  <td>{data.visitCount}</td>
-                  <td><a href={`https://en.wikipedia.org/wiki/`+data.url}>Link</a></td>
-                  <td>{formatDate(data.updatedAt)}</td>
-                </tr>
-                )
-            })}
-            </tbody>
-        </table>
-    </div>
-    )
+        <div className="TopRow">
+          <div className="table-row header">
+            <div className="text">Title</div>
+            <div className="text">Category</div>
+            <div className="num">Visit Count</div>
+            <div className="num">Page URL</div>
+            <div className="num">Updated</div>
+          </div>
+          <div className="container-fluid">
+              {this.props.nodeData.map(data => {
+              //const data = node.__data__
+              return (
+                <div key={data.url} className="table-row">
+                  <div className="text">{data.title}</div>
+                  <div className="text">{data.category}</div>
+                  <div className="num">{data.visitCount}</div>
+                  <div className="num">
+                      <a href={data.url}>Link</a>
+                  </div>
+                  <div className="num">{formatDate(data.updatedAt)}</div>
+                </div>
+              )
+            } ) }
+          </div>
+        </div>
+      )
   }
 }
 
