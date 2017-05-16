@@ -44,6 +44,14 @@ const onScatterEnter = () => {
   })
 }
 
+const onAllScatterEnter = () => {
+  chrome.runtime.sendMessage({
+    type: 'GET_NODEIDS_BY_USER'
+  }, selectedNodes => {
+    createNodeScatter(selectedNodes)
+  })
+}
+
 const onSentimentEnter = () => {
   chrome.runtime.sendMessage({
     type: 'GET_SELECTED',
@@ -80,6 +88,7 @@ ReactDOM.render(
     <Route path='/' component={Main}>
       <IndexRedirect to='/web' />
       <Route path='/web' component={ForceChart} onEnter={onWebEnter}/>
+      <Route path='/allhistory' component={History} onEnter={onAllScatterEnter}/>
       <Route path='/history' component={History} onEnter={onScatterEnter}/>
       <Route path='/sentiment' component={Sentiment} onEnter={onSentimentEnter}/>
       <Route path='/allsentiment' component={Sentiment} onEnter={onAllSentimentEnter}/>

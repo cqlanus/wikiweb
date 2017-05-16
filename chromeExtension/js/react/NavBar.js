@@ -6,7 +6,7 @@ const NavBar = props => (
     <div id="title">My Dashboard</div>
     <ul>
       <li className="btn"><Link to="/">WikiWeb</Link></li>
-      <li className="btn"><Link to="/history">WikiHistory</Link></li>
+      <li className="btn"><Link to="/allhistory">WikiHistory</Link></li>
       <li className="btn"><Link to="/allsentiment">WikiAnalysis</Link></li>
     </ul>
   </nav>
