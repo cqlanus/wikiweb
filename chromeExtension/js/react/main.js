@@ -51,6 +51,8 @@ const onSentimentEnter = () => {
   })
 }
 
+
+
 ReactDOM.render(
   <Router history={hashHistory} >
     <Route path='/' component={Main}>
