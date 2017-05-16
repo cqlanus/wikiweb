@@ -56,13 +56,11 @@ class ForceChart extends React.Component {
           totalArticles: results.nodes.length,
           totalPageVisits: totalPageVisits
         })
-        //console.log('this is state',self.state)
       })
     })
   }
 
   handleToggle(evt) {
-    console.log('toggle')
     this.setState({
       historyView: !this.state.historyView,
       currentNodeId: 0
