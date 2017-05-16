@@ -18,6 +18,7 @@ class Modal extends React.Component {
 
   render() {
 
+
   return (
       <div className="TopRow">
           <div className="table-row header">

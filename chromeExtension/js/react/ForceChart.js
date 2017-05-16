@@ -70,12 +70,14 @@ class ForceChart extends React.Component {
   }
 
   handleNextNode(evt) {
+    console.log('in next node handler')
     this.setState({
       currentNodeId: this.state.currentNodeId + 1
     })
   }
 
   handlePrevNode(evt) {
+    console.log('in prev node handler')
     this.setState({
       currentNodeId: this.state.currentNodeId - 1
     })
@@ -102,15 +104,41 @@ class ForceChart extends React.Component {
     this.state.pageHistory.length && this.state.historyView ? this.zoomFn() : d3.selectAll('.pageInfo').remove()
   return (
   <div>
-  <div className="canvas-container">
-    <svg height="700" width="100%"
-      onClick={this.setSelected}
-      onMouseOver={this.setSelected}
-    ></svg>
-
+  <div className='svghistory'>
+    <div className="canvas-container">
+      <svg height="700" width="100%"
+        onClick={this.setSelected}
+        onMouseOver={this.setSelected}
+      ></svg>
     </div>
     <div className='btn-div'>
-      <div className="retrace-container">
+      { this.state.historyView ?
+        <img src="../../assets/left_arrow.png" className='sub-button' onClick={this.handlePrevNode} height="20px" width="20px"/>
+        : null
+      }
+      <button className='main-button' onClick={this.handleToggle}>VIEW HISTORY</button>
+      { this.state.historyView ?
+        <img src="../../assets/right_arrow.png" className='sub-button' onClick={this.handleNextNode} height="20px" width="20px"/>
+          : null
+      }
+    </div>
+  </div>
+  <div className='dashboardtables'>
+    <Modal nodeId={this.state.currentNodeId} selectedNodes={d3.selectAll('.selected').nodes()}/>
+    <UserModal nodes={d3.selectAll('circle').nodes()}/>
+    {<svg height="300" width="300" id="pieChart"></svg>}
+  </div>
+  </div>
+  )
+}
+}
+
+export default ForceChart
+
+
+ /* old html
+
+ <div className="retrace-container">
         <div className="retrace">RETRACE YOUR STEPS</div>
       </div>
       <button className='main-button' onClick={this.handleToggle}>HISTORY</button>
@@ -120,13 +148,5 @@ class ForceChart extends React.Component {
           <button className='sub-button' onClick={this.handleNextNode}>FORWARD</button>
         </div> : null
       }
-      </div>
-    <Modal nodeId={this.state.currentNodeId} selectedNodes={d3.selectAll('.selected').nodes()}/>
-    <UserModal nodes={d3.selectAll('circle').nodes()}/>
-    {<svg height="300" width="300" id="pieChart"></svg>}
-  </div>
-  )
-}
-}
 
-export default ForceChart
+*/

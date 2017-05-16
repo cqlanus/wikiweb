@@ -11,16 +11,25 @@ body {
   width: 95%;
   background-color: white;
   border: 2px solid white;
+}
 
+.svghistory {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .btn-div {
-  width: 50%;
+  width: 95%;
+  height: 50px;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   background-color: #7f7e7b;
-  justify-content: flex-start;
+  justify-content: space-around;
   align-items: center;
+  border: 2px solid white;
+  border-top: none;
+
 }
 
 .links {
@@ -87,7 +96,7 @@ body {
 
 .main-button {
   width: 40%;
-  height: 12%;
+  height: 50%;
   border-radius: 5px;
   box-shadow: none;
   background: orange;
@@ -97,13 +106,14 @@ body {
 }
 
 .sub-button {
-  border-radius: 5px;
+  border-radius: 2px;
   height: 50%
   box-shadow: none;
-  background: #1d4191;
+  background: transparent;
   color: white;
+  /*border-width: 1px;
   border-color: white;
-  border-style: solid;
+  border-style: solid;*/
 }
 
 .tableHeader {
