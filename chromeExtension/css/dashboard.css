@@ -338,6 +338,7 @@ color:darkslategrey;
   white-space: nowrap;
   text-overflow: ellipsis;
   text-align: center;
+  padding-bottom : 5px;
   /*padding-right: 20px;*/
 
 color:darkslategrey;
@@ -366,4 +367,8 @@ color:darkslategrey;
 }
 .divdiv {
   z-index: 9999
+}
+
+#pieChart {
+  border: 1px solid yellow;
 }

@@ -26,31 +26,42 @@ class UserModal extends React.Component {
 
   }
 
-
-  getCatObj(nodes) {
+  getCatArr(nodes, charToCount) {
     const catObj = {}
-
-    nodes.forEach(node => {
-      if(catObj[node.__data__.category]){
-        catObj[node.__data__.category] = catObj[node.__data__.category] + 1
-      } else {
-        catObj[node.__data__.category] = 1
-      }
-    })
+    if (charToCount === 'articles') {
+      nodes.forEach(node => {
+        if(catObj[node.__data__.category]){
+          catObj[node.__data__.category] = catObj[node.__data__.category] + 1
+        } else {
+          catObj[node.__data__.category] = 1
+        }
+      })
+    } else {
+      nodes.forEach(node => {
+        if(catObj[node.__data__.category]){
+          catObj[node.__data__.category] = catObj[node.__data__.category] + node.__data__.visitCount
+        } else {
+          catObj[node.__data__.category] = node.__data__.visitCount
+        }
+      })
+    }
 
     const catObjArr = Object.keys(catObj).map(key => ({
       name: key,
       count: catObj[key]
     }))
 
+
     return catObjArr
   }
 
-
   render() {
-    const topCategories = this.getCatObj(this.props.nodes)
-    console.log('modal render')
-    createPieChart(topCategories)
+    const categoryArticles = this.getCatArr(this.props.nodes, 'articles')
+    const categoryViews = this.getCatArr(this.props.nodes, 'views')
+    // console.log(categoryViews)
+    // console.log('modal render', topCategories.map(cat => cat.name))
+    createPieChart(categoryArticles, 'pieChartArticles')
+    createPieChart(categoryViews, 'pieChartViews')
     return (
       <div>
         <div className="TopRow-Cat CatTable" style={{display: 'inline-block'}}>
@@ -59,8 +70,7 @@ class UserModal extends React.Component {
             <div className="text-Cat">Number of Visits</div>
           </div>
         <div className="container-fluid-Cat">
-
-          {topCategories.sort((a,b) => b.count-a.count).slice(0,5).map((data, i) => {
+          {categoryArticles.sort((a,b) => b.count-a.count).slice(0,5).map((data, i) => {
             return (
               <div className="table-row-Cat" key={i}>
                 <div className="text-Cat">{data.name}</div>
@@ -70,8 +80,8 @@ class UserModal extends React.Component {
           } ) }
         </div>
         </div>
-
-        <svg id="pieChart"></svg>
+        <svg height="170" width="200" id="pieChartArticles"></svg>
+        <svg height="170" width="200" id="pieChartViews"></svg>
       </div>
         )
   }
