@@ -13,47 +13,8 @@ class Modal extends React.Component {
      selectedNodes: {},
      totalArticles: 18,
      totalPageVisits: 30,
+    }
   }
-  }
-
-  componentDidMount() {
-
-  }
-
-  componentWillReceiveProps() {
-    if (this.props.selectedNodes) {
-      let nodeIdsArr= Object.keys(this.props.selectedNodes)
-      let modalProm = fetch('http://localhost:8000/api/nodes/byId', {
-          method: 'POST',
-          headers: {
-          "Content-type": "application/json"
-          },
-          body: JSON.stringify(nodeIdsArr)
-        })
-        .then((nodeResponse)=>{
-          return nodeResponse.json()
-        })
-        .then((results)=>{
-          console.log('results', results)
-          let nodeData=[]
-          let keys=Object.keys(results)
-          console.log('keys', keys)
-          keys.forEach(key=>{
-            let nodeOb = results[key]
-            let newDate = new Date(nodeOb.updatedAt).toString()
-            newDate=newDate.slice(0, newDate.indexOf('GMT'))
-            console.log('newDate', newDate)
-            results[key].updatedAt=newDate
-            nodeData.push(results[key])
-          })
-          this.setState({
-            nodeData: nodeData,
-          })
-        })
-      return modalProm
-  }
-}
-
 
   render() {
 
@@ -69,7 +30,8 @@ class Modal extends React.Component {
           </div>
         <div className="container-fluid">
 
-          {this.state.nodeData.map(data => {
+          {this.props.selectedNodes.map(node => {
+            const data = node.__data__
             return (
                <div className="table-row">
                 <div className="text">{data.title}</div>

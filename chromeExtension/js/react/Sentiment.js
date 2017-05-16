@@ -22,7 +22,6 @@ class Sentiment extends React.Component {
         selectedNodes: selected
       })
     })
-    //console.log('state after mount', this.state)
   }
 
 
@@ -44,14 +43,13 @@ class Sentiment extends React.Component {
 
 render(){
   let nodeDataArr= this.state.foundNodes
-  console.log('STATE SENDING ', nodeDataArr)
   return (
   <div>
     <div className="canvas-container">
       <svg height="700" width="100%" onClick={this.handleClick}></svg>
     </div>
     <div>
-      {nodeDataArr && 
+      {nodeDataArr &&
            <SentimentModal nodeData={nodeDataArr}/>
       }
     </div>
@@ -68,7 +66,7 @@ export default Sentiment
 
 /*
 
-{this.state.foundNodes.length>0 && 
+{this.state.foundNodes.length>0 &&
            <SentimentModal nodeData={this.state.foundNodes}/>
       }
 
