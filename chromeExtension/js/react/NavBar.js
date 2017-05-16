@@ -7,7 +7,7 @@ const NavBar = props => (
     <ul>
       <li className="btn"><Link to="/">WikiWeb</Link></li>
       <li className="btn"><Link to="/history">WikiHistory</Link></li>
-      <li className="btn"><Link to="/sentiment">WikiAnalysis</Link></li>
+      <li className="btn"><Link to="/allsentiment">WikiAnalysis</Link></li>
     </ul>
   </nav>
 )

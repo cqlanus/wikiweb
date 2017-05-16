@@ -57,6 +57,22 @@ const onSentimentEnter = () => {
   })
 }
 
+const onAllSentimentEnter = () => {
+  chrome.runtime.sendMessage({
+    type: 'GET_NODEIDS_BY_USER',
+  }, selectedNodes => {
+    console.log('selectedNodes in on enter', selectedNodes)
+    chrome.runtime.sendMessage({
+      type: 'GET_SENTIMENT_BY_USERID',
+      data: selectedNodes,
+    }, analysis => {
+      createSentimentMap(analysis)
+    })
+  })
+}
+
+
+
 
 
 ReactDOM.render(
@@ -66,6 +82,7 @@ ReactDOM.render(
       <Route path='/web' component={ForceChart} onEnter={onWebEnter}/>
       <Route path='/history' component={History} onEnter={onScatterEnter}/>
       <Route path='/sentiment' component={Sentiment} onEnter={onSentimentEnter}/>
+      <Route path='/allsentiment' component={Sentiment} onEnter={onAllSentimentEnter}/>
     </Route>
   </Router>,
   document.getElementById('app'))
