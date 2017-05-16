@@ -245,7 +245,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 			case 'getUser':
 				getUserPromise(request.data)
 				.then((user)=>{
-          // console.log('user???', user)
 					sendResponse(user)
 				})
 				return true
@@ -266,7 +265,8 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 
       case 'SET_SELECTED':
         store.selectedNodes = request.data
-        sendResponse(request.data)
+        console.log('selected', store.selectedNodes)
+        sendResponse(store.selectedNodes)
         return true
 
       case 'GET_SELECTED':
@@ -287,7 +287,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 					let dataObj = {nodes:array}
 				  getSelectedNodes(dataObj)
 					.then(node => {
-						//console.log('this is result', node)
 						sendResponse(node)
 					})
         return true

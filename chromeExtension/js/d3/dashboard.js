@@ -93,30 +93,29 @@ const buildWikiWeb = (results) => {
   createToolTip(node)
 
   rect.on('click', () => {
-      // node.each(d => {
-      //   d.selected = false
-      //   d.previouslySelected = false
-      // })
-      node.classed('selected', false)
-    })
+    node.classed('selected', false)
+  })
 
   function dragstarted(d) {
     if (!d3.event.active) simulation.alphaTarget(0.3).restart();
 
-    if (!shiftKey) {
-      node.classed('selected', p => {
-        return p.selected = p.previouslySelected = false
-      })
-    }
-    d3.select(this).classed("selected", function(p) {
-      d.previouslySelected = d.selected;
-      return d.selected = true; })
+    d3.select(this).classed("selected", true)
 
     node.filter(d => d.selected)
       .each(d => {
         d.fx = d.x;
         d.fy = d.y;
       })
+    const selectedObj = {}
+    d3.selectAll('.selected').nodes()
+      .forEach(node => {selectedObj[parseInt(node.id)] = true})
+
+    chrome.runtime.sendMessage({
+      type: 'SET_SELECTED',
+      data: selectedObj
+    }, (selected) => {
+      // console.log('selected', selected)
+    })
   }
 
   function dragged(d) {
@@ -193,6 +192,17 @@ function createBrushBehavior (options) {
       (extent[0][0] <= d.x && d.x < extent[1][0]
        && extent[0][1] <= d.y && d.y < extent[1][1])
     })
+
+    const selectedObj = {}
+    d3.selectAll('.selected').nodes()
+      .forEach(node => {selectedObj[parseInt(node.id)] = true})
+
+    chrome.runtime.sendMessage({
+      type: 'SET_SELECTED',
+      data: selectedObj
+    }, (selected) => {
+      // console.log('selected', selected)
+    })
   }
 
   function brushended() {
@@ -256,7 +266,6 @@ function createToolTip(node) {
       divTooltip.style("left", d3.event.pageX+10+"px");
       divTooltip.style("top", d3.event.pageY-25+"px");
       divTooltip.style("display", "inline-block");
-      let x = d3.event.pageX, y = d3.event.pageY
       let elements = document.querySelectorAll(':hover');
       let l = elements.length
       l = l-1
