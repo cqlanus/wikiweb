@@ -30,10 +30,21 @@ body {
   border: 2px solid white;
 }
 
+.btn-div-top {
+  width: 95%;
+  height: 110px;
+  display: flex;
+  flex-direction: row;
+  background-color: #7f7e7b;
+  justify-content: space-around;
+  align-items: center;
+  border: 2px solid white;
+}
+
 .sentiment-div {
   color: white;
   border-radius: 76px;
-  width: 10%;
+  width: 150px;
   height: 50px;
   display: flex;
   flex-direction: row;
@@ -41,13 +52,22 @@ body {
   justify-content: space-around;
   align-items: center;
   border: 2px solid white;
-  text-decoration: none
+  margin: 0 auto;
 }
-h3 {
+.sentiment-div p {
+  text-decoration: none !important; text-align: center;
+  }
+
+/*h3 {
   width: 95%;
     text-align: center;
-}
+}*/
 
+#btnLink {
+ display:inline-block;
+  width:100%;
+  height:100%;
+}
 .links {
   stroke: #000;
   stroke-opacity: 0.6;
