@@ -13,49 +13,10 @@ class Modal extends React.Component {
      selectedNodes: {},
      totalArticles: 18,
      totalPageVisits: 30,
+    }
   }
-  }
-
-  componentDidMount() {
-
-  }
-
-  componentWillReceiveProps() {
-    if (this.props.selectedNodes) {
-      let nodeIdsArr= Object.keys(this.props.selectedNodes)
-      let modalProm = fetch('http://localhost:8000/api/nodes/byId', {
-          method: 'POST',
-          headers: {
-          "Content-type": "application/json"
-          },
-          body: JSON.stringify(nodeIdsArr)
-        })
-        .then((nodeResponse)=>{
-          return nodeResponse.json()
-        })
-        .then((results)=>{
-          let nodeData=[]
-          let keys=Object.keys(results)
-
-          keys.forEach(key=>{
-            let nodeOb = results[key]
-            let newDate = new Date(nodeOb.updatedAt).toString()
-            newDate=newDate.slice(0, newDate.indexOf('GMT'))
-
-            results[key].updatedAt=newDate
-            nodeData.push(results[key])
-          })
-          this.setState({
-            nodeData: nodeData,
-          })
-        })
-      return modalProm
-  }
-}
-
 
   render() {
-    // console.log('rendering with this node data', this.state.nodeData)
     return (
       <div>
        <table className="tableHeader">
@@ -67,7 +28,8 @@ class Modal extends React.Component {
               <th>Page Url</th>
               <th>Last Visit Date</th>
             </tr>
-            {this.state.nodeData.map(data => {
+            {this.props.selectedNodes.map(node => {
+              const data = node.__data__
               return(
                 <tr key={data.url} className="dataRow">
                   <td>{formatTitle(data.title)}</td>

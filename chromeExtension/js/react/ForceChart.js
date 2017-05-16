@@ -23,11 +23,12 @@ class ForceChart extends React.Component {
     this.handleNextNode = this.handleNextNode.bind(this)
     this.handlePrevNode = this.handlePrevNode.bind(this)
     this.getUserInfo = this.getUserInfo.bind(this)
-    this.getSelected = this.getSelected.bind(this)
+    this.setSelected = this.setSelected.bind(this)
   }
 
   componentDidMount() {
     this.getUserInfo()
+    this.setSelected()
   }
 
   getUserInfo() {
@@ -84,30 +85,27 @@ class ForceChart extends React.Component {
     d3Zoom(this.state.pageHistory, this.state.currentNodeId, this.state.historyView)
   }
 
-  getSelected(evt) {
-    const selectedObj = {}
-    d3.selectAll('.selected').nodes()
-      .forEach(node => {selectedObj[parseInt(node.id)] = true})
+  setSelected(evt) {
     chrome.runtime.sendMessage({
-      type: 'SET_SELECTED',
-      data: selectedObj
+      type: 'GET_SELECTED',
     }, (selected) => {
+      console.log('selected from store', selected)
       this.setState({
-        selectedNodes: selected
-      })
+          selectedNodes: selected
+        })
 
     })
-    // console.log('selected nodes!', this.state.selectedNodes)
+
   }
 
   render() {
     this.state.pageHistory.length && this.state.historyView ? this.zoomFn() : d3.selectAll('.pageInfo').remove()
-    // this.getSelected()
   return (
   <div>
   <div className="canvas-container">
     <svg height="700" width="100%"
-      onMouseOver={this.getSelected}
+      onClick={this.setSelected}
+      onMouseOver={this.setSelected}
     ></svg>
 
     </div>
@@ -124,7 +122,7 @@ class ForceChart extends React.Component {
       }
       </div>
     {/*<svg height="300" width="300" id="barchart"></svg>*/}
-    <Modal nodeId={this.state.currentNodeId} selectedNodes={this.state.selectedNodes}/>
+    <Modal nodeId={this.state.currentNodeId} selectedNodes={d3.selectAll('.selected').nodes()}/>
     <UserModal />
   </div>
   )
