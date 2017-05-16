@@ -56,7 +56,6 @@ class Modal extends React.Component {
 
 
   render() {
-<<<<<<< HEAD
 
   return (
       <div className="TopRow">
@@ -76,7 +75,9 @@ class Modal extends React.Component {
                 <div className="text">{data.title}</div>
                 <div className="text">{data.category}</div>
                 <div className="num">{data.visitCount}</div>
-                <div className="num">{data.url}</div>
+                <div className="num">
+                    <a href="{data.url}">Link</a>
+                 </div>
                 <div className="num">{data.updatedAt}</div>
               </div>
             )
