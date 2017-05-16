@@ -196,7 +196,7 @@ body {
 .axis-y path,
 .axis-x path {
   fill: none;
-  stroke: white;
+  stroke: none;
 }
 
 .brush {
@@ -208,6 +208,7 @@ body {
   display: none;
 }
 
+<<<<<<< HEAD
 
 /*
  * Define the widths: play around with these to get a best fit.
@@ -332,3 +333,8 @@ color:darkslategrey;
   padding-top: 8px;
   padding-bottom: 8px;
 }
+=======
+.divdiv {
+  z-index: 9999
+}
+>>>>>>> master
