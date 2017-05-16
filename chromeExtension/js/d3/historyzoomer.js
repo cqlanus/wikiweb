@@ -4,6 +4,12 @@ function d3Zoom(history, idx, historyView) {
 
     const d3NodeArr = d3.selectAll('circle').empty() ? 'empty' : d3.selectAll('circle').nodes()
     const nodeDataArr = d3.selectAll('circle').empty() ? 'empty' : d3.selectAll('circle').nodes().map(node => node.__data__)
+      if (idx < 0) {
+        idx = history.length - 1
+      }
+       else if (idx > history.length - 1) {
+        idx = 0
+      }
     const currentNodeData = nodeDataArr.find(node => {
       return node.id === history[idx]
     })
