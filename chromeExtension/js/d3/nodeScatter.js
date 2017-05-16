@@ -1,7 +1,7 @@
 const d3 = require('d3')
 
 const createNodeScatter = (nodesArray) => {
-
+  d3.select('.scatter').remove()
   let dates = []
   nodesArray.forEach(node => {
     let nestArr = node.datesVisited.map(date => {
@@ -26,7 +26,7 @@ const createNodeScatter = (nodesArray) => {
   const svg = d3.select("svg")
     .attr('width', parentWidth)
     .attr('height', parentHeight)
-    .attr('class', 'svg')
+    .attr('class', 'scatter svg')
 
   svg.append("defs").append("clipPath")
     .attr("id", "clip")

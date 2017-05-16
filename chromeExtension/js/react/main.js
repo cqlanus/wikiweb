@@ -14,6 +14,7 @@ import createForceChart from '../d3/dashboard.js'
 import createNodeScatter from '../d3/nodeScatter.js'
 import createSentimentMap from '../d3/sentimentmap.js'
 import createBarChart from '../d3/barchart.js'
+import createPieChart from '../d3/piechart.js'
 
 const Main = props => (
  <div>
@@ -26,6 +27,11 @@ const onWebEnter = () => {
   chrome.identity.getProfileUserInfo(function(info){
       createForceChart(info.id)
       // createBarChart({war: 5, sports: 2, travel: 3, politics: 10, food: 6})
+      // createPieChart([
+      //   {category: 'TRAVEL', visitCount: 10},
+      //   {category: 'SPORTS', visitCount: 15},
+      //   {category: 'EDUCATION', visitCount: 12},
+      //   {category: 'PETS', visitCount: 5}])
   })
 
 }
