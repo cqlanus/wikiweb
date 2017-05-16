@@ -27,11 +27,11 @@ const onWebEnter = () => {
   chrome.identity.getProfileUserInfo(function(info){
       createForceChart(info.id)
       // createBarChart({war: 5, sports: 2, travel: 3, politics: 10, food: 6})
-      createPieChart([
-        {category: 'TRAVEL', visitCount: 10},
-        {category: 'SPORTS', visitCount: 15},
-        {category: 'EDUCATION', visitCount: 12},
-        {category: 'PETS', visitCount: 5}])
+      // createPieChart([
+      //   {category: 'TRAVEL', visitCount: 10},
+      //   {category: 'SPORTS', visitCount: 15},
+      //   {category: 'EDUCATION', visitCount: 12},
+      //   {category: 'PETS', visitCount: 5}])
   })
 
 }

@@ -1,8 +1,8 @@
 import React from 'react'
 import createForceChart from '../d3/dashboard.js'
+import createNodeScatter from '../d3/nodeScatter.js'
 import Modal from './Modal'
 import UserModal from './UserModal'
-import createPieChart from '../d3/piechart.js'
 const d3 = require('d3')
 const {d3Zoom,} = require('../d3/historyzoomer')
 
@@ -126,7 +126,7 @@ class ForceChart extends React.Component {
   <div className='dashboardtables'>
     <Modal nodeId={this.state.currentNodeId} selectedNodes={d3.selectAll('.selected').nodes()}/>
     <UserModal nodes={d3.selectAll('circle').nodes()}/>
-    {<svg height="300" width="300" id="pieChart"></svg>}
+    <svg id='#scatter'></svg>
   </div>
   </div>
   )

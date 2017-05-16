@@ -34,11 +34,12 @@ const buildWikiWeb = (results) => {
   createZoomBehavior(gMain, gDraw)
 
   /* CREATE COLOR SCALE */
-  const color = d3.scaleOrdinal(d3.schemeCategory20);
 
   const categories = results.nodes.map(node => node.category)
   const catSet = new Set(categories)
   const catArr = new Array(...catSet)
+  const color = d3.scaleOrdinal(d3.schemeCategory20).domain(catArr)
+  console.log('sports color in dash', color('SPORTS'))
   createLegend(catArr, parentWidth, parentHeight, color)
 
   let legend = d3.select('.legend')
