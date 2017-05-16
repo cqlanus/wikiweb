@@ -61,8 +61,9 @@ const onScatterEnter = () => {
 
 const onAllScatterEnter = () => {
   chrome.runtime.sendMessage({
-    type: 'GET_NODEIDS_BY_USER'
+    type: 'GET_NODES_BY_USER'
   }, selectedNodes => {
+    console.log('selectedNodes', selectedNodes)
     createNodeScatter(selectedNodes)
   })
 }
@@ -75,6 +76,7 @@ const onSentimentEnter = () => {
       type: 'GET_SENTIMENT_BY_USERID',
       data: selectedNodes,
     }, analysis => {
+      console.log('analysis', analysis)
       createSentimentMap(analysis)
     })
   })
@@ -82,15 +84,10 @@ const onSentimentEnter = () => {
 
 const onAllSentimentEnter = () => {
   chrome.runtime.sendMessage({
-    type: 'GET_NODEIDS_BY_USER',
-  }, selectedNodes => {
-    console.log('selectedNodes in on enter', selectedNodes)
-    chrome.runtime.sendMessage({
-      type: 'GET_SENTIMENT_BY_USERID',
-      data: selectedNodes,
-    }, analysis => {
-      createSentimentMap(analysis)
-    })
+    type: 'GET_SENTIMENT_BY_USERID',
+    data: {},
+  }, analysis => {
+    createSentimentMap(analysis)
   })
 }
 

@@ -25,6 +25,7 @@ const createLineChart = nodeArr => {
 
   group.append('g')
     .attr('transform', `translate(0, ${height})`)
+    .attr('class', 'axis-x')
     .call(d3.axisBottom(xScale).ticks(4))
     // .select('.domain').remove()
 

@@ -127,7 +127,7 @@ class ForceChart extends React.Component {
         <h3> To get a deeper analysis of your selected nodes, click below! </h3>
       </div>
 
-     
+
 
     </div>
 
@@ -153,7 +153,7 @@ class ForceChart extends React.Component {
   </div>
   <div className='dashboardtables'>
     <Modal nodeId={this.state.currentNodeId} selectedNodes={d3.selectAll('.selected').nodes()}/>
-    <UserModal nodes={d3.selectAll('circle').nodes()}/>
+    <UserModal nodes={d3.selectAll('.forceDots').nodes()}/>
     <svg id='#scatter'></svg>
   </div>
   </div>
