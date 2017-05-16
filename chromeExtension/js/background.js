@@ -11,7 +11,7 @@ let store = {
 	previousNode: '',
 	history: [],
 	googleId: '',
-  selectedNodes: {}
+  	selectedNodes: {}
 }
 
 /* *******  Wrappers ********/
@@ -183,6 +183,15 @@ const getUserPromise = function(googleId) {
   .catch(console.log)
 }
 
+const getNodesByUser = function() {
+	return getUserPromise(store.googleId)
+	.then(user=> get(`nodes/user/${user.id}`))
+	.then(res=> {
+		console.log('results from network request', res)
+		return res.json()
+	})
+}
+
 const getSelectedNodes = function(requestData) {
   return getUserPromise(store.googleId)
   .then(user => get(`nodes/user/${user.id}`))
@@ -249,6 +258,13 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 				})
 				return true
 
+	  case 'GET_NODEIDS_BY_USER':
+		getNodesByUser()
+		.then((nodes)=>{
+			sendResponse(nodes)
+		})
+
+
       case 'GET_SINGLE_NODE':
         getSelectedNodes(request.data)
         .then(node => {
@@ -272,6 +288,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
       case 'GET_SELECTED':
         sendResponse(store.selectedNodes)
         return true
+
 
       case 'GET_NODES_BY_TEXT_CONTENT':
         getNodesByText(request.data)

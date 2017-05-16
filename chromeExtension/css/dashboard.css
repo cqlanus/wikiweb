@@ -28,12 +28,37 @@ body {
   justify-content: space-around;
   align-items: center;
   border: 2px solid white;
+  border-top: none;
+}
+
+.btn-div-top {
+  width: 95%;
+  height: 105px;
+  display: flex;
+  flex-direction: row;
+  background-color: #7f7e7b;
+  justify-content: center;
+  align-items: center;
+  border-top: 2px solid white;
+  border-left: 2px solid white;
+  border-right: 2px solid white;
+}
+
+.half {
+  width: 50%;
+  height: 100%;
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  justify-content: center;
+  /*border: 2px solid white;*/
+
 }
 
 .sentiment-div {
   color: white;
   border-radius: 76px;
-  width: 10%;
+  width: 150px;
   height: 50px;
   display: flex;
   flex-direction: row;
@@ -41,13 +66,36 @@ body {
   justify-content: space-around;
   align-items: center;
   border: 2px solid white;
-  text-decoration: none
+  margin: 0 auto;
 }
-h3 {
+
+.sentiment-div2 {
+  color: white;
+  border-radius: 76px;
+  width: 150px;
+  height: 50px;
+  display: flex;
+  flex-direction: row;
+  background-color: rgb(219, 44, 45);
+  justify-content: space-around;
+  align-items: center;
+  border: 2px solid white;
+  margin: 0 auto;
+}
+/*.sentiment-div p {
+  text-decoration: none !important; text-align: center;
+  }*/
+
+.centertext {
   width: 95%;
     text-align: center;
 }
 
+#btnLink {
+ display:inline-block;
+  width:100%;
+  height:100%;
+}
 .links {
   stroke: #000;
   stroke-opacity: 0.6;

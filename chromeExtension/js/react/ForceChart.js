@@ -107,9 +107,30 @@ class ForceChart extends React.Component {
   return (
   <div>
   <div className='svghistory'>
-    <h3> The following node map represents each wikipedia article you have viewed. The lines connecting nodes highlight a jump from one article to another.
-    To learn more about the articles, click an individual node or press the “shift” key and highlight multiple nodes.
-     </h3>
+    <h3 className="centertext"> The following node map represents each wikipedia article you have viewed. The lines connecting nodes highlight a jump from one article to another.  To learn more about the articles, click an individual node or press the “shift” key and highlight multiple nodes. </h3>
+    <div className='btn-div-top'>
+     <div className="half">
+        <div className='sentiment-div2'>
+          <Link id="btnLink" style={{ textDecoration: 'none', color: 'white' }} to="/history">
+            <h4 className='centertext' style={{ textDecoration: 'none', color: 'white' }}>WikiHistory</h4>
+          </Link>
+        </div>
+        <h3> To view the history of your selected nodes, click below! </h3>
+      </div>
+
+      <div className="half">
+        <div className='sentiment-div'>
+          <Link id="btnLink" style={{ textDecoration: 'none', color: 'white' }} to="/sentiment">
+            <h4 className='centertext' style={{ textDecoration: 'none', color: 'white' }}>WikiAnalysis</h4>
+          </Link>
+        </div>
+        <h3> To get a deeper analysis of your selected nodes, click below! </h3>
+      </div>
+
+     
+
+    </div>
+
     <div className="canvas-container">
       <svg height="700" width="100%"
         onClick={this.setSelected}
@@ -129,10 +150,6 @@ class ForceChart extends React.Component {
       }
     </div>
     <h3> __________ </h3>
-    <div className='sentiment-div'>
-      <Link to="/sentiment" style={{ textDecoration: 'none', color: 'white' }}>WikiAnalysis</Link>
-    </div>
-    <h3> To get a deeper analysis of your selected nodes, click above! </h3>
   </div>
   <div className='dashboardtables'>
     <Modal nodeId={this.state.currentNodeId} selectedNodes={d3.selectAll('.selected').nodes()}/>
