@@ -13,20 +13,7 @@ class SentimentModal extends React.Component {
 
   }
 
-  componentDidMount() {
-    console.log('component did mount', this.props)
-
-  }
-
-  componentWillReceiveProps() {
-    console.log('props changed')
-  }
-  
-
-
-
   render() {
-    console.log('rendering SM with this node data', this.props.nodeData)
     return (
       <div>
        <table className="tableHeader">

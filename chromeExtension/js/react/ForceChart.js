@@ -23,17 +23,17 @@ class ForceChart extends React.Component {
     this.handleNextNode = this.handleNextNode.bind(this)
     this.handlePrevNode = this.handlePrevNode.bind(this)
     this.getUserInfo = this.getUserInfo.bind(this)
-    this.getSelected = this.getSelected.bind(this)
+    this.setSelected = this.setSelected.bind(this)
   }
 
   componentDidMount() {
     this.getUserInfo()
+    this.setSelected()
   }
 
   getUserInfo() {
     const self = this
     chrome.identity.getProfileUserInfo(function(info){
-      // console.log('this is MY id',info.id)
       chrome.runtime.sendMessage({
         type: 'getUser',
         data: info.id
@@ -56,13 +56,11 @@ class ForceChart extends React.Component {
           totalArticles: results.nodes.length,
           totalPageVisits: totalPageVisits
         })
-        //console.log('this is state',self.state)
       })
     })
   }
 
   handleToggle(evt) {
-    console.log('toggle')
     this.setState({
       historyView: !this.state.historyView,
       currentNodeId: 0
@@ -85,42 +83,27 @@ class ForceChart extends React.Component {
     d3Zoom(this.state.pageHistory, this.state.currentNodeId, this.state.historyView)
   }
 
-  // zoomOutFn() {
-  //   d3ZoomOut(this.state.pageHistory, this.state.currentNodeId)
-  // }
-
-  getSelected(evt) {
-    const selectedObj = {}
-    d3.selectAll('.selected').nodes()
-      .forEach(node => {selectedObj[parseInt(node.id)] = true})
+  setSelected(evt) {
     chrome.runtime.sendMessage({
-      type: 'SET_SELECTED',
-      data: selectedObj
+      type: 'GET_SELECTED',
     }, (selected) => {
+      // console.log('selected from store', selected)
       this.setState({
-        selectedNodes: selected
-      })
+          selectedNodes: selected
+        })
 
     })
-    // console.log('selected nodes!', this.state.selectedNodes)
-  }
 
-      // chrome.runtime.sendMessage({type: 'GET_SELECTED_DATA', data:selected}, (results)=> {
-      //   this.setState({
-      //     selectedNodesData:results
-      //   })
-      // })
+  }
 
   render() {
     this.state.pageHistory.length && this.state.historyView ? this.zoomFn() : d3.selectAll('.pageInfo').remove()
-
-    // this.state.pageHistory.length && this.state.historyView === false ? this.zoomOutFn() : null
   return (
   <div>
   <div className="canvas-container">
     <svg height="700" width="100%"
-      onMouseOver={this.getSelected}
-      onClick={this.getSelected}
+      onClick={this.setSelected}
+      onMouseOver={this.setSelected}
     ></svg>
 
     </div>
@@ -137,7 +120,7 @@ class ForceChart extends React.Component {
       }
       </div>
     {/*<svg height="300" width="300" id="barchart"></svg>*/}
-    <Modal nodeId={this.state.currentNodeId} selectedNodes={this.state.selectedNodes}/>
+    <Modal nodeId={this.state.currentNodeId} selectedNodes={d3.selectAll('.selected').nodes()}/>
     <UserModal />
   </div>
   )
