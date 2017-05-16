@@ -42,11 +42,15 @@ class Sentiment extends React.Component {
   }
 
 render(){
+  console.log('selectedNodes: ', this.state.selectedNodes)
   let nodeDataArr= this.state.foundNodes
   return (
   <div>
     <div className="canvas-container">
       <svg height="700" width="100%" onClick={this.handleClick}></svg>
+    </div>
+    <div className="svghistory">
+        <h3> The visual above, represents specific keywords found in your selected articles.  The grey nodes represent a neutral response, while green represents positive and red negative. Click an individual node to see every article that mentions the keyword. </h3>
     </div>
     <div>
       {nodeDataArr &&
