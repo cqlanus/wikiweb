@@ -1,5 +1,6 @@
 import React from 'react'
 import createForceChart from '../d3/dashboard.js'
+import createNodeScatter from '../d3/nodeScatter.js'
 import Modal from './Modal'
 import UserModal from './UserModal'
 const d3 = require('d3')
@@ -31,6 +32,7 @@ class ForceChart extends React.Component {
   componentDidMount() {
     this.getUserInfo()
     this.setSelected()
+
   }
 
   getUserInfo() {
@@ -134,7 +136,8 @@ class ForceChart extends React.Component {
   </div>
   <div className='dashboardtables'>
     <Modal nodeId={this.state.currentNodeId} selectedNodes={d3.selectAll('.selected').nodes()}/>
-    <UserModal />
+    <UserModal nodes={d3.selectAll('circle').nodes()}/>
+    <svg id='#scatter'></svg>
   </div>
   </div>
   )
