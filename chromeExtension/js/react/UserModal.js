@@ -1,5 +1,6 @@
 import React from 'react'
 import createPieChart from '../d3/piechart.js'
+import createLineChart from '../d3/linechart.js'
 
 const d3 = require('d3')
 
@@ -45,23 +46,60 @@ class UserModal extends React.Component {
         }
       })
     }
-
     const catObjArr = Object.keys(catObj).map(key => ({
       name: key,
       count: catObj[key]
     }))
-
-
     return catObjArr
+  }
+
+  formatVisitDates(nodes) {
+
+    function stringifyDate(dbDate) {
+      const dateSpecifier = "%x"
+      const dateFormat = d3.timeFormat(dateSpecifier)
+      var date = new Date(dbDate)
+      const output = dateFormat(date)
+
+      return output
+    }
+
+    function parseDate(dateString) {
+      const dateSpecifier = "%x"
+      const dateParse = d3.timeParse(dateSpecifier)
+
+      return dateParse(dateString)
+    }
+
+    const visitDateObj = {}
+    nodes.forEach(node => {
+      node.__data__.datesVisited.forEach(date => {
+        const stringDate = stringifyDate(date)
+        if (visitDateObj[stringDate]) {
+          visitDateObj[stringDate] = visitDateObj[stringDate] + 1
+        } else {
+          visitDateObj[stringDate] = 1
+        }
+      })
+    })
+
+    const visitDateArr = Object.keys(visitDateObj).map(key => ({
+      date: parseDate(key),
+      count: visitDateObj[key]
+    })).sort((a,b) => a.date-b.date)
+
+    return visitDateArr
   }
 
   render() {
     const categoryArticles = this.getCatArr(this.props.nodes, 'articles')
     const categoryViews = this.getCatArr(this.props.nodes, 'views')
-    // console.log(categoryViews)
-    // console.log('modal render', topCategories.map(cat => cat.name))
+    const visitDates = this.formatVisitDates(this.props.nodes)
+
     createPieChart(categoryArticles, 'pieChartArticles')
     createPieChart(categoryViews, 'pieChartViews')
+    createLineChart(visitDates)
+
     return (
       <div>
         <div className="TopRow-Cat CatTable" style={{display: 'inline-block'}}>
@@ -82,6 +120,8 @@ class UserModal extends React.Component {
         </div>
         <svg height="170" width="200" id="pieChartArticles"></svg>
         <svg height="170" width="200" id="pieChartViews"></svg>
+        <svg height="170" width="200" id="pieChartSent"></svg>
+        <svg height="230" width="400" id="lineChart"></svg>
       </div>
         )
   }

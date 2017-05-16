@@ -25,8 +25,7 @@ class Modal extends React.Component {
             <div className="text">Title</div>
             <div className="text">Category</div>
             <div className="num">Visit Count</div>
-            <div className="num">Page URL</div>
-            <div className="num">Updated</div>
+            <div className="num">Last Visited</div>
 
           </div>
         <div className="container-fluid">
@@ -35,13 +34,10 @@ class Modal extends React.Component {
             const data = node.__data__
             return (
                <div className="table-row" key={data.id}>
-                <div className="text">{data.title}</div>
+                <div className="text"><a href={data.url}>{formatTitle(data.title)}</a></div>
                 <div className="text">{data.category}</div>
                 <div className="num">{data.visitCount}</div>
-                <div className="num">
-                    <a href={data.url}>Link</a>
-                 </div>
-                <div className="num">{data.updatedAt}</div>
+                <div className="num">{fixTime(data.updatedAt)}</div>
               </div>
             )
           } ) }
@@ -56,5 +52,17 @@ function formatTitle(title) {
   const index = title.indexOf(' - Wiki')
   return title.substring(0, index)
 }
+
+function fixTime(dbDate) {
+  const dateSpecifier = "%x"
+  const dateFormat = d3.timeFormat(dateSpecifier)
+  var date = new Date(dbDate)
+  const output = dateFormat(date)
+  console.log()
+      // var offsetms = date.getTimezoneOffset() * 60 * 1000;
+      // let timeCorrect = Date.parse(dbDate)
+
+      return output
+    }
 
 export default Modal

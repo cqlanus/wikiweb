@@ -372,3 +372,7 @@ color:darkslategrey;
 #pieChart {
   border: 1px solid yellow;
 }
+
+#lineChart {
+  background-color: #7f7e7b;
+}

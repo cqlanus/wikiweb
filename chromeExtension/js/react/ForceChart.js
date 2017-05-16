@@ -115,7 +115,7 @@ class ForceChart extends React.Component {
         onClick={this.setSelected}
         onMouseOver={this.setSelected}
       ></svg>
-    </div> 
+    </div>
 
     <div className='btn-div'>
       { this.state.historyView ?
