@@ -118,10 +118,12 @@ class UserModal extends React.Component {
           } ) }
         </div>
         </div>
-        <svg height="170" width="200" id="pieChartArticles"></svg>
-        <svg height="170" width="200" id="pieChartViews"></svg>
-        <svg height="170" width="200" id="pieChartSent"></svg>
-        <svg height="230" width="400" id="lineChart"></svg>
+
+          <svg height="170" width="200" id="pieChartArticles"></svg>
+          <svg height="170" width="200" id="pieChartViews"></svg>
+          <svg height="170" width="200" id="pieChartSent"></svg>
+          <svg height="230" width="100%" id="lineChart"></svg>
+
       </div>
         )
   }
