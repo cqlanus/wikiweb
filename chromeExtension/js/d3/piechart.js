@@ -14,24 +14,25 @@ const createPieChart = (nodesArr, id) => {
 
   svg.style('display', 'inline-block')
   /* CREATE COLOR SCALE */
-  const color = d3.scaleOrdinal(d3.schemeCategory20)
+  const color = id === 'pieChartSent' ? d3.scaleOrdinal([d3.rgb(99, 99, 99), d3.rgb(49, 163, 84), d3.rgb(251, 96, 74)]) : d3.scaleOrdinal(d3.schemeCategory20)
   // console.log('nodesArr in pie', nodesArr.map(cat => cat.name))
   // console.log('sports color in pie', color('SPORTS'))
 
   const pie = d3.pie().sort(null).value(d => d.count)
 
   const path = d3.arc()
-    .outerRadius(radius-10)
+    .outerRadius(radius-5)
     .innerRadius(0)
 
   const label = d3.arc()
-    .outerRadius(radius)
-    .innerRadius(radius)
-  const newNodesArr = nodesArr.slice()
+    .outerRadius(radius-40)
+    .innerRadius(radius-40)
+
   const arc = group.selectAll('.arc')
-    .data(pie(newNodesArr))
+    .data(pie(nodesArr))
     .enter().append('g')
     .attr('class', 'arc')
+
 
   arc.append('path')
     .attr('d', path)
@@ -43,12 +44,13 @@ const createPieChart = (nodesArr, id) => {
       return `translate(${label.centroid(d)})`})
     .attr('dy', '0.35em')
     .attr('fill', 'white')
-    .text(d => d.data.count)
+    .text(d => {
+      if(d.endAngle - d.startAngle > 0.5){
+        return d.data.count
+      } else { return null }
+    })
 
   createToolTip(arc)
-
-  let parentWidth = d3.select('#pieChart').node()
-  console.log(parentWidth)
 }
 
 function createToolTip(node) {

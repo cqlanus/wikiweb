@@ -24,16 +24,31 @@ const Main = props => (
 )
 
 const onWebEnter = () => {
+  const self = this
   chrome.identity.getProfileUserInfo(function(info){
       createForceChart(info.id)
-      // createBarChart({war: 5, sports: 2, travel: 3, politics: 10, food: 6})
-      // createPieChart([
-      //   {category: 'TRAVEL', visitCount: 10},
-      //   {category: 'SPORTS', visitCount: 15},
-      //   {category: 'EDUCATION', visitCount: 12},
-      //   {category: 'PETS', visitCount: 5}])
+  chrome.runtime.sendMessage({
+      type: 'GET_SENTIMENT_BY_USERID',
+      data: {},
+    }, analysis => {
+      const analysisArray = formatAnalysis(analysis)
+      createPieChart(analysisArray, 'pieChartSent')
+
+    })
   })
 
+}
+
+const formatAnalysis = (analysis) => {
+  const analysisObj = {'neu': 0, 'pos': 0, 'neg': 0}
+  const array = analysis.entities.forEach(entity => {
+    analysisObj[entity.sentiment.label] = analysisObj[entity.sentiment.label] + 1
+  })
+  const analysisObjArr = Object.keys(analysisObj).map(key => ({
+    name: key,
+    count: analysisObj[key],
+  }))
+  return analysisObjArr
 }
 
 const onScatterEnter = () => {
