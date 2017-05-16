@@ -5,6 +5,8 @@ import Modal from './Modal'
 import UserModal from './UserModal'
 const d3 = require('d3')
 const {d3Zoom,} = require('../d3/historyzoomer')
+import { Link } from 'react-router'
+
 
 
 class ForceChart extends React.Component {
@@ -105,23 +107,32 @@ class ForceChart extends React.Component {
   return (
   <div>
   <div className='svghistory'>
+    <h3> The following node map represents each wikipedia article you have viewed. The lines connecting nodes highlight a jump from one article to another.
+    To learn more about the articles, click an individual node or press the “shift” key and highlight multiple nodes.
+     </h3>
     <div className="canvas-container">
       <svg height="700" width="100%"
         onClick={this.setSelected}
         onMouseOver={this.setSelected}
       ></svg>
-    </div>
+    </div> 
+
     <div className='btn-div'>
       { this.state.historyView ?
         <img src="../../assets/left_arrow.png" className='sub-button' onClick={this.handlePrevNode} height="20px" width="20px"/>
         : null
       }
-      <button className='main-button' onClick={this.handleToggle}>VIEW HISTORY</button>
+      <button className='main-button' onClick={this.handleToggle}>SELECT TO VIEW HISTORY</button>
       { this.state.historyView ?
         <img src="../../assets/right_arrow.png" className='sub-button' onClick={this.handleNextNode} height="20px" width="20px"/>
           : null
       }
     </div>
+    <h3> __________ </h3>
+    <div className='sentiment-div'>
+      <Link to="/sentiment" style={{ textDecoration: 'none', color: 'white' }}>WikiAnalysis</Link>
+    </div>
+    <h3> To get a deeper analysis of your selected nodes, click above! </h3>
   </div>
   <div className='dashboardtables'>
     <Modal nodeId={this.state.currentNodeId} selectedNodes={d3.selectAll('.selected').nodes()}/>
@@ -137,16 +148,7 @@ export default ForceChart
 
 
  /* old html
-
- <div className="retrace-container">
-        <div className="retrace">RETRACE YOUR STEPS</div>
-      </div>
-      <button className='main-button' onClick={this.handleToggle}>HISTORY</button>
-      { this.state.historyView ?
-        <div className='btn-div2'>
-          <button className='sub-button' onClick={this.handlePrevNode}>BACK</button>
-          <button className='sub-button' onClick={this.handleNextNode}>FORWARD</button>
-        </div> : null
-      }
-
+<div className='sentiment-div'>
+      <Link to="/sentiment" style={{ textDecoration: 'none', color: 'white' }}>WikiAnalysis</Link>
+    </div>
 */

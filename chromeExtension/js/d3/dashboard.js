@@ -39,8 +39,6 @@ const buildWikiWeb = (results) => {
   const catSet = new Set(categories)
   const catArr = new Array(...catSet)
   const color = d3.scaleOrdinal(d3.schemeCategory20).domain(catArr)
-  // console.log('catArr in dash', catArr)
-  // console.log('sports color in dash', color('SPORTS'))
   createLegend(catArr, parentWidth, parentHeight, color)
 
   let legend = d3.select('.legend')

@@ -26,7 +26,6 @@ class UserModal extends React.Component {
 
   }
 
-
   getCatArr(nodes, charToCount) {
     const catObj = {}
     if (charToCount === 'articles') {
@@ -52,9 +51,9 @@ class UserModal extends React.Component {
       count: catObj[key]
     }))
 
+
     return catObjArr
   }
-
 
   render() {
     const categoryArticles = this.getCatArr(this.props.nodes, 'articles')
@@ -71,7 +70,6 @@ class UserModal extends React.Component {
             <div className="text-Cat">Number of Visits</div>
           </div>
         <div className="container-fluid-Cat">
-
           {categoryArticles.sort((a,b) => b.count-a.count).slice(0,5).map((data, i) => {
             return (
               <div className="table-row-Cat" key={i}>
@@ -82,7 +80,6 @@ class UserModal extends React.Component {
           } ) }
         </div>
         </div>
-
         <svg height="170" width="200" id="pieChartArticles"></svg>
         <svg height="170" width="200" id="pieChartViews"></svg>
       </div>
