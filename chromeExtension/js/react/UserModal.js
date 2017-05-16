@@ -61,6 +61,7 @@ class UserModal extends React.Component {
 
   getCatObj(nodes) {
     const catObj = {}
+
     nodes.forEach(node => {
       if(catObj[node.__data__.category]){
         catObj[node.__data__.category] = catObj[node.__data__.category] + 1
@@ -69,13 +70,17 @@ class UserModal extends React.Component {
       }
     })
 
-    console.log(catObj)
+    const catObjArr = Object.keys(catObj).map(key => ({
+      name: key,
+      count: catObj[key]
+    })).sort((a,b) => b.count-a.count).slice(0, 5)
+
+    return catObjArr
   }
 
 
   render() {
-    console.log('nodes', this.props)
-    this.getCatObj(this.props.nodes)
+    const topCategories = this.getCatObj(this.props.nodes)
     return (
           <div className="TopRow-Cat CatTable">
               <div className="table-row-Cat header">
@@ -84,7 +89,7 @@ class UserModal extends React.Component {
               </div>
             <div className="container-fluid-Cat">
 
-              {this.state.CategoryArray.map((data, i) => {
+              {topCategories.map((data, i) => {
                 return (
                   <div className="table-row-Cat" key={i}>
                     <div className="text-Cat">{data.name}</div>
