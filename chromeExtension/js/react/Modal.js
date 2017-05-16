@@ -33,7 +33,7 @@ class Modal extends React.Component {
           {this.props.selectedNodes.map(node => {
             const data = node.__data__
             return (
-               <div className="table-row">
+               <div className="table-row" key={data.id}>
                 <div className="text">{data.title}</div>
                 <div className="text">{data.category}</div>
                 <div className="num">{data.visitCount}</div>

@@ -8,25 +8,11 @@ class UserModal extends React.Component {
     super()
     this.state = {
       viewtodisplay: null,
-      Categories: {
-      'Law': 2,
-      'Culture': 8,
-      'Movies': 4,
-      'Science': 2,
-      'People': 1,
-      'Actors': 1,
-      'Beer': 2,
-      'Government': 7,
-      'Education': 4,
-      'Politics': 9,
-      'Religion': 12,
-      'Weather': 2 ,
-      'Real Estate': 1
-    },
+      Categories: {},
       CategoryArray: [],
-      pageHistory: [2,3,5,],
-      totalArticles: 18,
-      totalPageVisits: 30,
+      pageHistory: [],
+      totalArticles: 0,
+      totalPageVisits: 0,
     }
 
   }
@@ -73,10 +59,23 @@ class UserModal extends React.Component {
   }
 
 
+  getCatObj(nodes) {
+    const catObj = {}
+    nodes.forEach(node => {
+      if(catObj[node.__data__.category]){
+        catObj[node.__data__.category] = catObj[node.__data__.category] + 1
+      } else {
+        catObj[node.__data__.category] = 1
+      }
+    })
+
+    console.log(catObj)
+  }
 
 
   render() {
-
+    console.log('nodes', this.props)
+    this.getCatObj(this.props.nodes)
     return (
           <div className="TopRow-Cat CatTable">
               <div className="table-row-Cat header">
@@ -85,9 +84,9 @@ class UserModal extends React.Component {
               </div>
             <div className="container-fluid-Cat">
 
-              {this.state.CategoryArray.map(data => {
+              {this.state.CategoryArray.map((data, i) => {
                 return (
-                  <div className="table-row-Cat">
+                  <div className="table-row-Cat" key={i}>
                     <div className="text-Cat">{data.name}</div>
                     <div className="num-Cat">{data.count}</div>
                   </div>

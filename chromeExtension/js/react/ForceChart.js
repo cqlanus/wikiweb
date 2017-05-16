@@ -2,6 +2,7 @@ import React from 'react'
 import createForceChart from '../d3/dashboard.js'
 import Modal from './Modal'
 import UserModal from './UserModal'
+import createPieChart from '../d3/piechart.js'
 const d3 = require('d3')
 const {d3Zoom,} = require('../d3/historyzoomer')
 
@@ -29,6 +30,7 @@ class ForceChart extends React.Component {
   componentDidMount() {
     this.getUserInfo()
     this.setSelected()
+
   }
 
   getUserInfo() {
@@ -119,9 +121,9 @@ class ForceChart extends React.Component {
         </div> : null
       }
       </div>
-    {/*<svg height="300" width="300" id="barchart"></svg>*/}
     <Modal nodeId={this.state.currentNodeId} selectedNodes={d3.selectAll('.selected').nodes()}/>
-    <UserModal />
+    <UserModal nodes={d3.selectAll('circle').nodes()}/>
+    {<svg height="300" width="300" id="pieChart"></svg>}
   </div>
   )
 }
