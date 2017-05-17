@@ -5,7 +5,7 @@ const createPieChart = (nodesArr, id, caption) => {
   d3.selectAll(`.${id}`).remove()
   const svg = d3.select(`#${id}`)
   console.log(d3.select(`#${id}`).node())
-  let width = 200,
+  let width = svg.node() ? svg.node().clientWidth : null,
       height = 250,
       margin = {top: 20, bottom: 20, left: 20, right: 20},
       radius = Math.min(width, height) / 2,
@@ -13,6 +13,7 @@ const createPieChart = (nodesArr, id, caption) => {
         .attr('transform', `translate(${width/2}, ${(height-10)/2})`)
         .attr('class', `pieGroup ${id}`)
 
+  console.log('width', width)
   svg.style('display', 'inline-block')
   /* CREATE COLOR SCALE */
   const color = id === 'pieChartSent' ? d3.scaleOrdinal([d3.rgb(99, 99, 99), d3.rgb(49, 163, 84), d3.rgb(251, 96, 74)]) : d3.scaleOrdinal(d3.schemeCategory20)
@@ -52,7 +53,7 @@ const createPieChart = (nodesArr, id, caption) => {
     })
 
   group.append('text')
-    .attr('transform', `translate(${-90}, ${120})`)
+    .attr('transform', `translate(${-90}, ${140})`)
     .attr('fill', 'white')
     .style('font-size', '15px')
     .text(`${caption}`)
