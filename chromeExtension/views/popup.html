@@ -7,6 +7,8 @@
       body {
         font-family: "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
         font-size: 100%;
+        margin:0px !important;
+        border-radius: 5px;
       }
       #status {
         /* avoid an excessively wide status text */
@@ -15,6 +17,33 @@
         overflow: hidden;
         max-width: 400px;
       }
+      /*#toDash {
+        border: solid 2px #ff7f0e  ;
+        color: #1f77b4 ;
+        background-color: black;
+        font-weight:700;
+      }*/
+
+        #toDash {
+          border: solid 2px #ff7f0e ;
+          border-radius: 2px;
+          color: #1f77b4;
+          background-color: black;
+          font-weight: 500;
+          -webkit-box-shadow: none;
+        }
+
+        #toDash:active {
+            border: solid 2px #ff7f0e  ;
+          color: #1f77b4 ;
+          background-color: black;
+          font-weight: 500;
+          -webkit-box-shadow: none;
+          background-color: #0a150a;
+          box-shadow: 0 5px #8a8a8a;
+          transform: translateY(2px);
+        }
+
     </style>
     <script src="popup.js"></script>
   </head>
