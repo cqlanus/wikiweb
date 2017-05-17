@@ -186,10 +186,9 @@ const getUserPromise = function(googleId) {
 const getNodesByUser = function() {
 	return getUserPromise(store.googleId)
 	.then(user=> get(`nodes/user/${user.id}`))
-	.then(res=> {
-		console.log('results from network request', res)
-		return res.json()
-	})
+	.then(res => res.json())
+  .then(nodes => nodes)
+  .catch(console.log)
 }
 
 const getSelectedNodes = function(requestData) {
@@ -258,12 +257,12 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 				})
 				return true
 
-	  case 'GET_NODEIDS_BY_USER':
-		getNodesByUser()
-		.then((nodes)=>{
-			sendResponse(nodes)
-		})
-
+  	  case 'GET_NODES_BY_USER':
+  		getNodesByUser()
+  		.then(nodes => {
+  			sendResponse(nodes)
+  		})
+      return true
 
       case 'GET_SINGLE_NODE':
         getSelectedNodes(request.data)

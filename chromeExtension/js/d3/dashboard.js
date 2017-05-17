@@ -70,6 +70,7 @@ const buildWikiWeb = (results) => {
       .attr("r", function(d){return d.visitCount * 10})
       .attr("fill", d => color(d.category))
       .attr('id', d => d.id)
+      .attr('class', 'forceDots')
       .call(d3.drag()
         .on("start", dragstarted)
         .on("drag", dragged)

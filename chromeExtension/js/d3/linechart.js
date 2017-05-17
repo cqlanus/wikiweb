@@ -1,10 +1,10 @@
 const d3 = require('d3')
 
 const createLineChart = nodeArr => {
-  console.log('nodeArr', nodeArr.sort())
   d3.select('.lineGroup').remove()
   const svg = d3.select('#lineChart')
-  let width = 350,
+
+  let width = svg.node() ? svg.node().parentNode.clientWidth : null,
       height = 170,
       margin = {top: 20, bottom: 20, left: 30, right: 20},
       group = svg.append('g')
@@ -12,7 +12,7 @@ const createLineChart = nodeArr => {
         .attr('class', `lineGroup`)
 
   const xScale = d3.scaleTime()
-    .rangeRound([0, width])
+    .rangeRound([0, width-margin.right-margin.left])
     .domain(d3.extent(nodeArr, d => d.date))
 
   const yScale = d3.scaleLinear()
@@ -25,6 +25,7 @@ const createLineChart = nodeArr => {
 
   group.append('g')
     .attr('transform', `translate(0, ${height})`)
+    .attr('class', 'axis-x')
     .call(d3.axisBottom(xScale).ticks(4))
     // .select('.domain').remove()
 

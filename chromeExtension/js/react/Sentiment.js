@@ -22,7 +22,7 @@ class Sentiment extends React.Component {
         selectedNodes: selected
       })
     })
-    console.log('after mounting, seletedNodes are: ', this.state.selectedNodes)
+    // console.log('after mounting, seletedNodes are: ', this.state.selectedNodes)
   }
 
 

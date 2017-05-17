@@ -73,6 +73,7 @@ class UserModal extends React.Component {
 
     const visitDateObj = {}
     nodes.forEach(node => {
+      // console.log('node in formatVisitDates', node)
       node.__data__.datesVisited.forEach(date => {
         const stringDate = stringifyDate(date)
         if (visitDateObj[stringDate]) {
@@ -91,7 +92,12 @@ class UserModal extends React.Component {
     return visitDateArr
   }
 
+  createCharts() {
+
+  }
+
   render() {
+    // console.log('nodes on render', this.props.nodes)
     const categoryArticles = this.getCatArr(this.props.nodes, 'articles')
     const categoryViews = this.getCatArr(this.props.nodes, 'views')
     const visitDates = this.formatVisitDates(this.props.nodes)
@@ -118,10 +124,12 @@ class UserModal extends React.Component {
           } ) }
         </div>
         </div>
-        <svg height="170" width="200" id="pieChartArticles"></svg>
-        <svg height="170" width="200" id="pieChartViews"></svg>
-        <svg height="170" width="200" id="pieChartSent"></svg>
-        <svg height="230" width="400" id="lineChart"></svg>
+
+          <svg height="170" width="200" id="pieChartArticles"></svg>
+          <svg height="170" width="200" id="pieChartViews"></svg>
+          <svg height="170" width="200" id="pieChartSent"></svg>
+          <svg height="230" width="100%" id="lineChart"></svg>
+
       </div>
         )
   }
