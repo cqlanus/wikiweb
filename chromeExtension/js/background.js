@@ -49,7 +49,7 @@ function makeUniquePageRequest(tab) {
 }
 
 function post(endRoute, body) {
-	return fetch(`http://localhost:8000/api/${endRoute}`, {
+	return fetch(`http://thewikiweb.herokuapp.com/api/${endRoute}`, {
   	  method: 'POST',
       headers: {
       "Content-type": "application/json"
@@ -59,7 +59,7 @@ function post(endRoute, body) {
 }
 
 function get(endRoute) {
-	return fetch(`http://localhost:8000/api/${endRoute}`, {
+	return fetch(`http://thewikiweb.herokuapp.com/api/${endRoute}`, {
     	method: 'GET',
     	})
 }
