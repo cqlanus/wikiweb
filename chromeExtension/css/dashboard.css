@@ -110,11 +110,18 @@ body {
   display: flex;
   justify-content: space-between;
   width: 100%;
-  padding: 20px;
+  /*padding: 5px;*/
+  /*padding-left: 2.25%;
+  padding-right: 5.25%;*/
+  margin-left: 2.25%;
+  margin-right: 2.25%;
 }
+
 
 #title {
   font-size: 2.5em;
+  height: 75px;
+
 }
 
 hr {
@@ -129,6 +136,7 @@ hr {
   justify-content: space-around;
   list-style: none;
   width: 40%;
+  margin-right: 5%;
 }
 
 .navigation a {
@@ -427,4 +435,10 @@ color:darkslategrey;
   background-color: #7f7e7b;
   border: 2px solid white;
 
+}
+
+#toDash {
+  border: solid 2px #ff7f0e  ;
+  color: #1f77b4 ;
+  background-color: black;
 }
