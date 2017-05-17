@@ -17,9 +17,9 @@ let store = {
 /* *******  Wrappers ********/
 function activateListeners() {
 	chrome.tabs.onUpdated.addListener(function(id, info, tab){
-	  if(tab.url.indexOf('wikipedia.org') > -1){
+	  // if(tab.url.indexOf('wikipedia.org') > -1){
 	    chrome.pageAction.show(tab.id)
-	  }
+	  // }
 
 	  if (info.status==='complete' && tab.active && tab.url!='https://www.wikipedia.org/' && tab.url!='https://en.wikipedia.org/wiki/Main_Page' ) {
 	  	makeUniquePageRequest(tab)
