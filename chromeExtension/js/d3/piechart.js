@@ -1,11 +1,12 @@
 const d3 = require('d3')
 
-const createPieChart = (nodesArr, id) => {
+const createPieChart = (nodesArr, id, caption) => {
   // console.log('nodesArr in pie', nodesArr.map(cat => cat.name))
   d3.selectAll(`.${id}`).remove()
   const svg = d3.select(`#${id}`)
+  console.log(d3.select(`#${id}`).node())
   let width = 200,
-      height = 170,
+      height = 250,
       margin = {top: 20, bottom: 20, left: 20, right: 20},
       radius = Math.min(width, height) / 2,
       group = svg.append('g')
@@ -49,6 +50,12 @@ const createPieChart = (nodesArr, id) => {
         return d.data.count
       } else { return null }
     })
+
+  group.append('text')
+    .attr('transform', `translate(${-90}, ${120})`)
+    .attr('fill', 'white')
+    .style('font-size', '15px')
+    .text(`${caption}`)
 
   createToolTip(arc)
 }

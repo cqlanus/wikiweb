@@ -146,8 +146,8 @@ class ForceChart extends React.Component {
     <h3> __________ </h3>
   </div>
   <div className='dashboardtables'>
-    <Modal nodeId={this.state.currentNodeId} selectedNodes={d3.selectAll('.selected').nodes()}/>
     <UserModal nodes={d3.selectAll('.forceDots').nodes()}/>
+    <Modal nodeId={this.state.currentNodeId} selectedNodes={d3.selectAll('.selected').nodes()}/>
     <svg id='#scatter'></svg>
   </div>
   </div>

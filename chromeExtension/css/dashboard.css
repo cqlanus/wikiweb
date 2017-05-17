@@ -367,11 +367,14 @@ color:darkslategrey;
 
 
 /* CAT TABLE*/
+.CatTable {
+  display: inline-block;
+}
 
 .TopRow-Cat {
-  padding-top: 20px;
-  width: 25%;
+  width: 40%;
   margin-left:2.5%;
+  border: 2px solid white;
  }
 
 .container-fluid-Cat {
@@ -387,9 +390,8 @@ color:darkslategrey;
   flex-direction: row;     -webkit-flex-direction: row;
   flex-grow: 0;            -webkit-flex-grow: 0;
   flex-wrap: wrap;         -webkit-flex-wrap: wrap;
-  /*width: 100%;*/
-  padding-left: 15px;
-  padding-right: 15px;
+  padding: 10px;
+  /*padding-right: 15px;*/
   border-bottom:solid 2px;
   background-color: whitesmoke;
 }
@@ -410,21 +412,22 @@ color:darkslategrey;
   width:100px;
 }
 .num-Cat {
-  width: 100px;
+  width: 50px;
   color:darkslategrey;
 }
 
 .table-row-Cat {
   border-bottom: 2px solid #e2e4eb;
   border-collapse: collapse;
-  padding-top: 5px;
+  padding-top: 6px;
   background-color: white;
 }
 
 .table-row-Cat.header {
   background-color: #e2e4eb;
   font-weight: bold;
-  padding-top: 8px;
+  font-size: 12px;
+  padding-top: 10px;
   padding-bottom: 8px;
 }
 .divdiv {
@@ -436,13 +439,23 @@ color:darkslategrey;
 }
 
 #lineChart {
-  margin-left: 2.5%;
-  margin-top: 10px;
+  display: inline-block;
+  margin: 0 2.5%;
   background-color: #7f7e7b;
   border: 2px solid white;
-  width: 95%;
+  width: 100%;
 }
 
 .bottomChart {
-  width: 23%;
+  display: inline-block;
+  width: 30%;
+  margin-left: 2.5%;
+  /*border: 2px solid white;*/
+  /*background-color: #7f7e7b;*/
+}
+
+.row {
+  display: flex;
+  padding-top: 20px;
+  width: 100%;
 }

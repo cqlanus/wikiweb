@@ -12,7 +12,7 @@ const createLineChart = nodeArr => {
         .attr('class', `lineGroup`)
 
   const xScale = d3.scaleTime()
-    .rangeRound([0, width*.90])
+    .rangeRound([0, width*.61])
     .domain(d3.extent(nodeArr, d => d.date))
 
   const yScale = d3.scaleLinear()
@@ -30,7 +30,8 @@ const createLineChart = nodeArr => {
     // .select('.domain').remove()
 
   group.append('g')
-    .call(d3.axisLeft(yScale))
+    .attr('class', 'axis-y')
+    .call(d3.axisLeft(yScale).ticks(6))
 
   group.append('path')
     .datum(nodeArr)
@@ -40,6 +41,12 @@ const createLineChart = nodeArr => {
     .attr('stroke-linecap', 'round')
     .attr('stroke-width', 5)
     .attr('d', line)
+
+  group.append('text')
+    .attr('transform', `translate(${width/2-100}, 10)`)
+    .text('Page Views Over Time')
+    .attr('fill', 'white')
+    .style('font-size', '18px')
 }
 
 function stringifyTime(dbDate) {

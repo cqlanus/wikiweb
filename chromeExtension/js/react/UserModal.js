@@ -102,34 +102,37 @@ class UserModal extends React.Component {
     const categoryViews = this.getCatArr(this.props.nodes, 'views')
     const visitDates = this.formatVisitDates(this.props.nodes)
 
-    createPieChart(categoryArticles, 'pieChartArticles')
-    createPieChart(categoryViews, 'pieChartViews')
+    createPieChart(categoryArticles, 'pieChartArticles', 'Articles Read by Category')
+    createPieChart(categoryViews, 'pieChartViews', 'Page Views by Category')
     createLineChart(visitDates)
 
     return (
       <div>
+        <div className="row">
         <div className="TopRow-Cat CatTable" style={{display: 'inline-block'}}>
           <div className="table-row-Cat header">
             <div className="text-Cat">Top Categories</div>
-            <div className="text-Cat">Number of Visits</div>
+            <div className="text-Cat">Page Views</div>
           </div>
-        <div className="container-fluid-Cat">
-          {categoryArticles.sort((a,b) => b.count-a.count).slice(0,5).map((data, i) => {
-            return (
-              <div className="table-row-Cat" key={i}>
-                <div className="text-Cat">{data.name}</div>
-                <div className="num-Cat">{data.count}</div>
-              </div>
-            )
-          } ) }
+          <div className="container-fluid-Cat">
+            {categoryArticles.sort((a,b) => b.count-a.count).slice(0,5).map((data, i) => {
+              return (
+                <div className="table-row-Cat" key={i}>
+                  <div className="text-Cat">{data.name}</div>
+                  <div className="num-Cat">{data.count}</div>
+                </div>
+              )
+            } ) }
+          </div>
         </div>
+          <svg height="230" width="100%" id="lineChart" className=""></svg>
         </div>
 
-          <svg height="170" width="200" id="pieChartArticles" className="bottomChart"></svg>
-          <svg height="170" width="200" id="pieChartViews" className="bottomChart"></svg>
-          <svg height="170" width="200" id="pieChartSent" className="bottomChart"></svg>
-          <svg height="230" width="100%" id="lineChart" className="bottomChart"></svg>
-
+        <div className="row">
+          <svg height="270" width="200" id="pieChartArticles" className="bottomChart"></svg>
+          <svg height="270" width="200" id="pieChartViews" className="bottomChart"></svg>
+          <svg height="270" width="200" id="pieChartSent" className="bottomChart"></svg>
+          </div>
       </div>
         )
   }
