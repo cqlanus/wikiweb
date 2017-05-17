@@ -13,6 +13,21 @@ body {
   border: 2px solid white;
 }
 
+.canvas-container.force {
+  border-top: none;
+  border-bottom: none;
+}
+
+h3 > a {
+  text-decoration: none;
+  color: rgb(255, 127, 14);
+}
+
+h3 > a:visited {
+  text-decoration: none;
+  color: rgb(255, 127, 14);
+}
+
 .svghistory {
   display: flex;
   flex-direction: column;
@@ -33,15 +48,14 @@ body {
 
 .btn-div-top {
   width: 95%;
-  height: 105px;
+  padding: 10px 0;
   display: flex;
   flex-direction: row;
   background-color: #7f7e7b;
   justify-content: center;
   align-items: center;
-  border-top: 2px solid white;
-  border-left: 2px solid white;
-  border-right: 2px solid white;
+  border: 2px solid white;
+  border-bottom: none;
 }
 
 .half {
@@ -62,7 +76,7 @@ body {
   height: 25px;
   display: flex;
   flex-direction: row;
-  background-color: lightblue;
+  background-color: rgb(31, 119, 180);
   justify-content: space-around;
   align-items: center;
   border: 2px solid white;
@@ -76,7 +90,7 @@ body {
   height: 25px;
   display: flex;
   flex-direction: row;
-  background-color: rgb(219, 44, 45);
+  background-color: rgb(214, 39, 40);
   justify-content: space-around;
   align-items: center;
   border: 2px solid white;
@@ -120,7 +134,7 @@ body {
 
 #title {
   font-size: 2.5em;
-  height: 75px;
+  height: 60px;
 
 }
 
@@ -178,7 +192,7 @@ hr {
   height: 25px;
   border-radius: 5px;
   box-shadow: none;
-  background: orange;
+  background: rgb(255, 127, 14);
   color: white;
   border-color: white;
   border-style: solid;
@@ -302,8 +316,8 @@ hr {
  */
  .TopRow {
   padding-top: 20px;
-  max-width: 80%;
-  margin: 0 auto;
+  max-width: 95%;
+  margin-left:2.5%;
  }
 
 .container-fluid {
@@ -361,11 +375,14 @@ color:darkslategrey;
 
 
 /* CAT TABLE*/
+.CatTable {
+  display: inline-block;
+}
 
 .TopRow-Cat {
-  padding-top: 20px;
-  max-width: 40%;
-  margin-left:10%;
+  width: 40%;
+  margin-left:2.5%;
+  border: 2px solid white;
  }
 
 .container-fluid-Cat {
@@ -381,9 +398,8 @@ color:darkslategrey;
   flex-direction: row;     -webkit-flex-direction: row;
   flex-grow: 0;            -webkit-flex-grow: 0;
   flex-wrap: wrap;         -webkit-flex-wrap: wrap;
-  /*width: 100%;*/
-  padding-left: 15px;
-  padding-right: 15px;
+  padding: 10px;
+  /*padding-right: 15px;*/
   border-bottom:solid 2px;
   background-color: whitesmoke;
 }
@@ -404,21 +420,22 @@ color:darkslategrey;
   width:100px;
 }
 .num-Cat {
-  width: 100px;
+  width: 50px;
   color:darkslategrey;
 }
 
 .table-row-Cat {
   border-bottom: 2px solid #e2e4eb;
   border-collapse: collapse;
-  padding-top: 5px;
+  padding-top: 6px;
   background-color: white;
 }
 
 .table-row-Cat.header {
   background-color: #e2e4eb;
   font-weight: bold;
-  padding-top: 8px;
+  font-size: 12px;
+  padding-top: 10px;
   padding-bottom: 8px;
 }
 .divdiv {
@@ -430,15 +447,29 @@ color:darkslategrey;
 }
 
 #lineChart {
-  margin: 0 auto;
-  margin-top: 10px;
+  display: inline-block;
+  margin: 0 2.5%;
   background-color: #7f7e7b;
   border: 2px solid white;
+  width: 100%;
+}
 
+.bottomChart {
+  display: inline-block;
+  width: 30%;
+  margin-left: 2.5%;
+  /*border: 2px solid white;*/
+  /*background-color: #7f7e7b;*/
 }
 
 #toDash {
   border: solid 2px #ff7f0e  ;
   color: #1f77b4 ;
   background-color: black;
+}
+
+.row {
+  display: flex;
+  padding-top: 20px;
+  width: 100%;
 }

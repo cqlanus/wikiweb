@@ -162,7 +162,7 @@ function createBrushX(width, height, margin, outerX, outerY, outerXAxis, dataArr
       .attr('class', 'dotContext')
       .attr('r', 5)
       .style('opacity', 0.5)
-      .attr('cx', d => xScale(d.full))
+      .attr('cx', d => xScale(d.date))
       .attr('cy', 15)
 
   context.append('g')

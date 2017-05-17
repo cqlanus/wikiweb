@@ -32,7 +32,7 @@ const onWebEnter = () => {
       data: {},
     }, analysis => {
       const analysisArray = formatAnalysis(analysis)
-      createPieChart(analysisArray, 'pieChartSent')
+      createPieChart(analysisArray, 'pieChartSent', 'Quick Sentiment Analysis')
 
     })
   })
