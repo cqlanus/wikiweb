@@ -21,8 +21,9 @@ module.exports = app
     res.sendStatus(500)
   })
 
+const port = process.env.PORT || 8000
 
-  const server = app.listen(8000, (err) => {
+  const server = app.listen(port, (err) => {
     if (err) { throw err }
     console.log('--- Started HTTP Server ---')
     console.log('--- Listening on http://localhost:8000 ---')
