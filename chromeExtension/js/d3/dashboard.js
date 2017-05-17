@@ -46,6 +46,22 @@ const buildWikiWeb = (results) => {
     console.log(d)
   })
 
+  let text = gMain.append('text')
+    .attr('transform', `translate(${parentWidth - 250}, ${parentHeight - 50})`)
+    .style('font-size', '15px')
+    .style('fill', 'white')
+
+  text.append('tspan')
+    .attr('x', 0)
+    .attr('dy', '1em')
+    .text('Click to select a node')
+
+  text.append('tspan')
+    .attr('x', 0)
+    .attr('dy', '1.6em')
+    .text('Press shift to select multiple nodes')
+
+
   const gBrushHolder = gDraw.append('g')
   let gBrush = null
   let brushMode = false
@@ -94,19 +110,23 @@ const buildWikiWeb = (results) => {
   createToolTip(node)
 
   rect.on('click', () => {
+    node.each(d => {
+        d.selected = false
+        d.previouslySelected = false
+      })
     node.classed('selected', false)
   })
 
   function dragstarted(d) {
     if (!d3.event.active) simulation.alphaTarget(0.3).restart();
 
-    d3.select(this).classed("selected", true)
+    // d3.select(this).classed("selected", true)
 
-    node.filter(d => d.selected)
-      .each(d => {
-        d.fx = d.x;
-        d.fy = d.y;
-      })
+    d3.select(this).classed("selected", function(p) {
+        d.previouslySelected = d.selected;
+        return d.selected = true; })
+
+
     const selectedObj = {}
     d3.selectAll('.selected').nodes()
       .forEach(node => {selectedObj[parseInt(node.id)] = true})
@@ -117,6 +137,12 @@ const buildWikiWeb = (results) => {
     }, (selected) => {
       // console.log('selected', selected)
     })
+
+    node.filter(d => d.selected)
+      .each(d => {
+        d.fx = d.x;
+        d.fy = d.y;
+      })
   }
 
   function dragged(d) {

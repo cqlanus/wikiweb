@@ -12,7 +12,7 @@ const createLineChart = nodeArr => {
         .attr('class', `lineGroup`)
 
   const xScale = d3.scaleTime()
-    .rangeRound([0, width-margin.right-margin.left])
+    .rangeRound([0, width*.90])
     .domain(d3.extent(nodeArr, d => d.date))
 
   const yScale = d3.scaleLinear()

@@ -47,11 +47,11 @@ render(){
   let nodeDataArr= this.state.foundNodes
   return (
   <div>
+    <div className="svghistory">
+        <h3 className="centertext"> The WikiAnalysis below uses the <a href="https://www.rosette.com/">Rosette Text Analysis</a> API to perform entity extraction and sentiment analysis on given Wikipedia article content.</h3>
+    </div>
     <div className="canvas-container">
       <svg height="700" width="100%" onClick={this.handleClick}></svg>
-    </div>
-    <div className="svghistory">
-        <h3> The visual above, represents specific keywords found in your selected articles.  The grey nodes represent a neutral response, while green represents positive and red negative. Click an individual node to see every article that mentions the keyword. </h3>
     </div>
     <div>
       {nodeDataArr &&
