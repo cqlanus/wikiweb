@@ -1,9 +1,9 @@
 const Rosette = require('rosette-api')
-const variables = require('../../../variables.json')
+// const variables = require('../../../variables.json')
 
 const getSentimentAnalysis = content => {
   const endpoint = 'sentiment'
-  const api = new Rosette(variables.rosette)
+  const api = new Rosette(process.env.rosette)
   api.parameters.content = content;
   const sentimentPromise = new Promise((resolve, reject) => {
     api.rosette(endpoint, function(err, results){

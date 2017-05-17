@@ -2,9 +2,9 @@ const db = require('../db');
 const Sequelize = require('sequelize')
 
 //set up Rosette
-const variables = require('../../variables.json')
+// const variables = require('../../variables.json')
 var Api = require('rosette-api')
-var api = new Api(variables.rosette)
+var api = new Api(process.env.rosette)
 
 
 const Node = db.define('nodes', {

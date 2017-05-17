@@ -2,3 +2,4 @@ node_modules/*
 chromeExtension/js/build/bundle.js
 chromeExtension/js/build/bundle.js.map
 variables.json
+.env

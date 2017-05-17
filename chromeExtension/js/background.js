@@ -49,7 +49,7 @@ function makeUniquePageRequest(tab) {
 }
 
 function post(endRoute, body) {
-	return fetch(`http://localhost:8000/api/${endRoute}`, {
+	return fetch(`http://thewikiweb.herokuapp.com/api/${endRoute}`, {
   	  method: 'POST',
       headers: {
       "Content-type": "application/json"
@@ -59,7 +59,7 @@ function post(endRoute, body) {
 }
 
 function get(endRoute) {
-	return fetch(`http://localhost:8000/api/${endRoute}`, {
+	return fetch(`http://thewikiweb.herokuapp.com/api/${endRoute}`, {
     	method: 'GET',
     	})
 }
@@ -101,7 +101,6 @@ chrome.tabs.onActivated.addListener(function(tabId) {
 
 //postNode returns a promise for info on insertedNode
 const getContentPromise = (title) => {
-  console.log('title', title)
 	let contentPromise =  fetch(`https://en.wikipedia.org/w/api.php?action=query&prop=extracts&format=json&exintro=&titles=${title}`, {
     	method: 'GET',
 	})
@@ -109,7 +108,6 @@ const getContentPromise = (title) => {
 		return (contentRes.json())
 	})
 	.then(contentOb=>{
-    console.log('contentObj from wiki api', contentOb)
 		let finalCont=''
 		contentOb = contentOb.query.pages
 		let contentKeys = Object.keys(contentOb)
@@ -122,7 +120,6 @@ const getContentPromise = (title) => {
 }
 
 const postNodePromise = (nodeOb) => {
-	console.log('nodeOb', nodeOb)
    let nodeInfoPromise =
      post('nodes/postNode', nodeOb)
      .then((nodeResponse)=>{
@@ -132,14 +129,8 @@ const postNodePromise = (nodeOb) => {
 }
 
 const checkUser = (nodeOb) => {
-	//console.log('in checkUser promise maker')
    let checkUserPromise =
      post('users/', store)
-    //  .then((nodeResponse)=>{
-   	//    console.log('scuess')
-	   // return nodeResponse.json()
-    //  })
-   //return nodeInfoPromise
 }
 
 const postHistoryPromise = function(userId) {
@@ -280,7 +271,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 
       case 'SET_SELECTED':
         store.selectedNodes = request.data
-        console.log('selected', store.selectedNodes)
         sendResponse(store.selectedNodes)
         return true
 
@@ -295,7 +285,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         return true
 
 			case 'GET_SELECTED_DATA':
-				console.log('this is the data format',request.data)
 				let array = []
 					for(key in request.data){
 						array.push(parseInt(key))
