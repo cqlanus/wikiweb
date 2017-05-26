@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha -w test/*.spec.js"
   },
   "repository": {
     "type": "git",
@@ -22,6 +22,7 @@
     "d3": "^4.8.0",
     "d3-scale-chromatic": "^1.1.1",
     "express": "^4.15.2",
+    "mysql": "^2.13.0",
     "nodemon": "^1.11.0",
     "pg": "^6.1.5",
     "pg-hstore": "^2.3.2",
